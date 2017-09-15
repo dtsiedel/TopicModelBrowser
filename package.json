@@ -1,0 +1,11 @@
+{
+  "name": "d3_project",
+  "version": "1.0.0",
+  "description": "To learn to use D3.",
+  "main": "main.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Drew Siedel",
+  "license": "ISC"
+}
