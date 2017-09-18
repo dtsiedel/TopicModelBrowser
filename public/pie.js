@@ -44,6 +44,7 @@ function main()
     g.append("path")
       .style("fill", function(d) { return color(d.data.name); })
       .transition().delay(function(d, i) { return i * 500; }).duration(500)
+      .attr("id", function(d,i) { return "arc_"+i; })
       .attrTween('d', function(d) {
            var i = d3.interpolate(d.startAngle, d.endAngle-.01); //calculate the in between positions to draw in 
            return function(t) {
@@ -51,5 +52,16 @@ function main()
              return arc(d);
            }
         });
-
+    
+    //Append the month names within the arcs
+    g.selectAll(".arcText")
+	    .data(data)
+       .enter().append("text")
+	    .attr("class", "monthText")
+	    .attr("x", 5) //Move the text from the start angle of the arc
+	    .attr("dy", 18) //Move the text down
+       .append("textPath")
+            .attr("xlink:href",function(d,i){return "#arc_"+i;})
+	    .text(function(d){return "Topic " + d.name;})
+	    .style("fill", "white");	 
 }
