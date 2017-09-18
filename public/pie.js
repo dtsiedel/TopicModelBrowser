@@ -1,12 +1,12 @@
 function main()
 {
     //need some data to represent
-    var data = [{name: "one", value: 430},
-                {name: "two", value: 500},
-                {name: "three", value: 275},
-                {name: "four", value: 400},
-                {name: "five", value: 600},
-                {name: "six", value: 350}];
+    var data = [{name: "one", value: 430, color:"#391029"},
+                {name: "two", value: 500, color:"#FEABCE"},
+                {name: "three", value: 275, color:"#123ABC"},
+                {name: "four", value: 400, color:"#ADDBAD"},
+                {name: "five", value: 600, color:"#FADCAB"},
+                {name: "six", value: 350, color:"#AFE421"}];
 
     //variables to control the graph result
     var margin = {top: 20, right: 20, bottom: 20, left: 20};
@@ -14,9 +14,6 @@ function main()
     var height = width - margin.top - margin.bottom;
     var radius = Math.min(width, height) / 2;
     
-    //colors of each section of the wheel
-    var color = d3.scaleOrdinal().range(["#391029", "#FEABCE", "#123ABC", "#ADDBAD", "#FADCAB", "#AFE421"]);
-
     // add the canvas to the DOM 
     var chart = d3.select("#pie-demo")
         .append('svg')
@@ -42,7 +39,7 @@ function main()
         .attr("class", "arc"); 
 
     g.append("path")
-      .style("fill", function(d) { return color(d.data.name); })
+      .style("fill", function(d) { return d.data.color; })
       .transition().delay(function(d, i) { return i * 500; }).duration(500)
       .attr("id", function(d,i) { return "arc_"+i; })
       .attrTween('d', function(d) {
