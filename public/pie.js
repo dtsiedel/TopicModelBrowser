@@ -3,7 +3,7 @@ function main()
     //need some data to represent
     var data = [{name: "one", value: 430, color:"#391029"},
                 {name: "two", value: 500, color:"#FEABCE"},
-                {name: "three", value: 275, color:"#123ABC"},
+                {name: "three", value: 200, color:"#123ABC"},
                 {name: "four", value: 400, color:"#ADDBAD"},
                 {name: "five", value: 600, color:"#FADCAB"},
                 {name: "six", value: 350, color:"#AFE421"}];
@@ -48,17 +48,20 @@ function main()
                d.endAngle = i(t);
              return arc(d);
            }
-        });
-    
-    //Append the month names within the arcs
-    g.selectAll(".arcText")
-	    .data(data)
-       .enter().append("text")
-	    .attr("class", "monthText")
-	    .attr("x", 7) //Move the text from the start angle of the arc
-	    .attr("dy", 18) //Move the text down
-       .append("textPath")
-            .attr("xlink:href",function(d,i){return "#arc_"+i;})
-	    .text(function(d){return "Topic " + d.name;})
-	    .style("fill", "white");	 
+        }).on("end", function(d,i) {
+            //Append the month names within the arcs
+            if(i == data.length - 1)
+            {
+                g.selectAll(".arcText")
+                        .data(data)
+                   .enter().append("text")
+                        .attr("class", "monthText")
+                        .attr("x", 7) //Move the text from the start angle of the arc
+                        .attr("dy", 18) //Move the text down
+                   .append("textPath")
+                        .attr("xlink:href",function(d,i){return "#arc_"+i;})
+                        .text(function(d){return "Topic " + d.name;})
+                        .style("fill", "white");	 
+            }
+    });
 }
