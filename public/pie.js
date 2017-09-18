@@ -58,7 +58,7 @@ function main()
 	    .data(data)
        .enter().append("text")
 	    .attr("class", "monthText")
-	    .attr("x", 5) //Move the text from the start angle of the arc
+	    .attr("x", 7) //Move the text from the start angle of the arc
 	    .attr("dy", 18) //Move the text down
        .append("textPath")
             .attr("xlink:href",function(d,i){return "#arc_"+i;})
