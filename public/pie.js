@@ -1,3 +1,11 @@
+//helper
+function invert(rgb) {
+  rgb = Array.prototype.join.call(arguments).match(/(-?[0-9\.]+)/g);
+  for (var i = 0; i < rgb.length; i++) {
+    rgb[i] = (i === 3 ? 1 : 255) - rgb[i];
+  }
+  return "rgb(" + rgb[0] + "," + rgb[1] + "," + rgb[2] + ")";
+}
 
 function main()
 {
@@ -53,11 +61,15 @@ function main()
         .enter().append("g")
         .attr("class", "arc");
 
+
+
     g.append("path")
       .on("mouseover", function(){return tooltip.style("visibility", "visible");}) //bind tooltip
       .on("mousemove", function(){
             var tip_text = d3.select(this).data()[0]["data"]["tooltip"]; //TODO: this is very ugly
-            return tooltip.style("top", (event.pageY-10)+"px").style("left",(event.pageX+10)+"px").text(tip_text);
+            var inverted_color = invert(d3.select(this).style("fill"));
+            console.log(inverted_color)
+            return tooltip.style("top", (event.pageY-10)+"px").style("left",(event.pageX+10)+"px").style("color", inverted_color).text(tip_text);
        })
       .on("mouseout", function(){return tooltip.style("visibility", "hidden");})
       .style("fill", function(d) { return d.data.color; })
