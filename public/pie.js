@@ -2,12 +2,12 @@
 function main()
 {
     //need some data to represent
-    var data = [{name: "one", value: 430, color:"#391029"},
-                {name: "two", value: 500, color:"#FEABCE"},
-                {name: "three", value: 250, color:"#123ABC"},
-                {name: "four", value: 400, color:"#ADDBAD"},
-                {name: "five", value: 600, color:"#FADCAB"},
-                {name: "six", value: 350, color:"#AFE421"}];
+    var data = [{name: "one", value: 430, color:"#391029", tooltip:"Various MetaData 1"},
+                {name: "two", value: 500, color:"#FEABCE", tooltip:"Various MetaData 2"},
+                {name: "three", value: 250, color:"#123ABC", tooltip:"Various MetaData 3"},
+                {name: "four", value: 400, color:"#ADDBAD", tooltip:"Various MetaData 4"},
+                {name: "five", value: 600, color:"#FADCAB", tooltip:"Various MetaData 5"},
+                {name: "six", value: 350, color:"#AFE421", tooltip:"Various MetaData 6"}];
 
     //variables to control the graph result
     var margin = {top: 20, right: 20, bottom: 20, left: 20};
@@ -19,12 +19,15 @@ function main()
       arc = d3.svg.arc().outerRadius(radius*1.1).innerRadius(radius-50).cornerRadius(5);
       return arc(d);
     }
-
-    function donutTween(b) {
-      b.outerRadius= radius * 1.2;
-      var i = d3.interpolate({outerRadius: 0}, b);
-      return function(t) { return arc(i(t)); };
-    }
+    
+    var tooltip = d3.select("body")
+    .append("div")
+    .attr("class", "tooltip")
+    .style("position", "absolute")
+    .style("z-index", "10") //put it in front of the arcs
+    .style("border-radius", "10px")
+    .style("visibility", "hidden")
+    .text("Error"); //bad to see this (obviously)
     
     // add the canvas to the DOM 
     var chart = d3.select("#pie-demo")
@@ -48,19 +51,15 @@ function main()
     var g = chart.selectAll(".arc")
         .data(pie(data))
         .enter().append("g")
-        .attr("class", "arc")
-        ;
-        /*
-        .on("mouseover", function(d){
-            console.log("on");
-            d3.select(d).transition().duration(250).attrTween("d",donutTween);
-        })
-        .on("mouseout", function(){
-            console.log("off")
-        });
-        */
+        .attr("class", "arc");
 
     g.append("path")
+      .on("mouseover", function(){return tooltip.style("visibility", "visible");}) //bind tooltip
+      .on("mousemove", function(){
+            var tip_text = d3.select(this).data()[0]["data"]["tooltip"]; //TODO: this is very ugly
+            return tooltip.style("top", (event.pageY-10)+"px").style("left",(event.pageX+10)+"px").text(tip_text);
+       })
+      .on("mouseout", function(){return tooltip.style("visibility", "hidden");})
       .style("fill", function(d) { return d.data.color; })
       .transition().delay(function(d, i) { return i * 500; }).duration(500)
       .attr("id", function(d,i) { return "arc_"+i; })
