@@ -14,8 +14,8 @@ function main()
     var height = 200;
 
     //create scales for both the x and y axes - these map a value from the input range to an output range
-    var x = d3.scaleLinear().domain([0, data.length]).range([0, width]);
-    var y = d3.scaleLinear().domain([0, d3.max(data, function(datum) { return datum.books; })]).rangeRound([0, height]);
+    var x = d3.scale.linear().domain([0, data.length]).range([0, width]);
+    var y = d3.scale.linear().domain([0, d3.max(data, function(datum) { return datum.books; })]).rangeRound([0, height]);
 
     // add the canvas to the DOM 
     var barDemo = d3.select("#bar-demo").append("svg:svg").attr("width", width).attr("height", height);
@@ -37,7 +37,7 @@ function main()
         duration(500).
         attr("y", function(d) { return height - y(d.books); }).
         attr("height", function(d) { return y(d.books); }).
-        on("end", add_text);
+        each("end", add_text);
 
 
 	function add_text()

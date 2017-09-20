@@ -16,7 +16,7 @@ function main()
     var radius = Math.min(width, height) / 2;
 
     function arcTween(d) {
-      arc = d3.arc().outerRadius(radius*1.1).innerRadius(radius-50).cornerRadius(5);
+      arc = d3.svg.arc().outerRadius(radius*1.1).innerRadius(radius-50).cornerRadius(5);
       return arc(d);
     }
 
@@ -34,12 +34,12 @@ function main()
         .append("g")
         .attr("transform", "translate(" + ((width/2)+margin.left) + "," + ((height/2)+margin.top) + ")");
     
-    var arc = d3.arc()
+    var arc = d3.svg.arc()
         .outerRadius(radius)
         .innerRadius(radius - 50)
         .cornerRadius(5);
     
-    var pie = d3.pie()
+    var pie = d3.layout.pie()
         .sort(null)
         .startAngle(Math.PI)
         .endAngle(3.0*Math.PI)
@@ -70,7 +70,7 @@ function main()
                d.endAngle = i(t);
              return arc(d);
            }
-        }).on("end", function(d,i) {
+        }).each("end", function(d,i) {
             //Append the month names within the arcs
             if(i == data.length - 1)
             {
