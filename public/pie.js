@@ -87,6 +87,8 @@ function constructChart(n)
     var firstTopic = csv_data[n];
     var filteredData = filter(firstTopic);
 
+    d3.select("#document-number").text("Document " + n).style("color", "white");
+
     //variables to control the graph result
     var margin = {top: 20, right: 20, bottom: 20, left: 20};
     var width = 400 - margin.left - margin.right;
