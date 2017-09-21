@@ -11,4 +11,3 @@ app.use(express.static(publicPath));
 app.listen(3000, function() {
   console.log("App started on http://localhost:3000/");
 });
-

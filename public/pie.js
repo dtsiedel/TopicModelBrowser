@@ -1,4 +1,20 @@
-//helper
+//TODO: fix ugly bits
+//TODO: make a function for repeated code in filter?
+//TODO: don't let colors repeat next to each other
+
+//globals
+var csv_data;
+var threshold = 0.1; //how high must a topic be to be included?
+var colors = ["#3366cc", "#dc3912", "#ff9900", "#109618", "#990099", "#0099c6", "#dd4477", "#66aa00", "#b82e2e", "#316395", "#994499", "#22aa99", "#aaaa11", "#6633cc", "#e67300", "#8b0707", "#651067", "#329262", "#5574a6", "#3b3eac"];
+var gray = "#7d8084";
+
+//driver
+function main()
+{
+    getData();
+}
+
+//inverts color, for use in tooltip. Maybe ugly and bad?
 function invert(rgb) {
   rgb = Array.prototype.join.call(arguments).match(/(-?[0-9\.]+)/g);
   for (var i = 0; i < rgb.length; i++) {
@@ -7,15 +23,58 @@ function invert(rgb) {
   return "rgb(" + rgb[0] + "," + rgb[1] + "," + rgb[2] + ")";
 }
 
-function main()
+//parses our csv hosted on server
+function getData()
 {
-    //need some data to represent
-    var data = [{name: "one", value: 430, color:"#391029", tooltip:"Various MetaData 1"},
-                {name: "two", value: 500, color:"#FEABCE", tooltip:"Various MetaData 2"},
-                {name: "three", value: 250, color:"#123ABC", tooltip:"Various MetaData 3"},
-                {name: "four", value: 400, color:"#ADDBAD", tooltip:"Various MetaData 4"},
-                {name: "five", value: 600, color:"#FADCAB", tooltip:"Various MetaData 5"},
-                {name: "six", value: 350, color:"#AFE421", tooltip:"Various MetaData 6"}];
+    d3.csv("/topic_frame.csv", function(error, response) {
+        csv_data = response;
+        constructChart();
+    });
+}
+
+//filter out topics that are less than thresh or invalid
+function filter(topic_array)
+{
+    var filtered = [];
+    var total = 0; //total should add to one, need this to see total of "other"
+    var count = 1; //start at one since other is 0 
+    for(key in topic_array)
+    {
+        if(key.length === 0)
+            continue
+        if(topic_array[key] < threshold)
+            continue
+        var val = topic_array[key];
+        var newEntry = {};
+        newEntry["index"] = count; //TODO: method to insert these key values?
+        newEntry["topic"] = key;
+        newEntry["value"] = parseFloat(val); 
+        newEntry["color"] = randomColor();
+        filtered.push(newEntry);
+        total += parseFloat(val);
+        count++;
+    }
+    var other = {};
+    other["index"] = 0;
+    other["topic"] = "other";
+    other["value"] = 1 - total;
+    other["color"] = gray;
+    filtered.push(other);
+    console.log(filtered);
+    return filtered;
+}
+
+//get a random color from the colors array
+function randomColor()
+{
+    return colors[Math.floor(Math.random()*colors.length)]; 
+}
+
+//main work of making donut chart
+function constructChart()
+{
+    var firstTopic = csv_data[0];
+    var filteredData = filter(firstTopic);
 
     //variables to control the graph result
     var margin = {top: 20, right: 20, bottom: 20, left: 20};
@@ -24,18 +83,18 @@ function main()
     var radius = Math.min(width, height) / 2;
 
     function arcTween(d) {
-      arc = d3.svg.arc().outerRadius(radius*1.1).innerRadius(radius-50).cornerRadius(5);
-      return arc(d);
+        arc = d3.svg.arc().outerRadius(radius*1.1).innerRadius(radius-50).cornerRadius(5);
+        return arc(d);
     }
     
     var tooltip = d3.select("body")
-    .append("div")
-    .attr("class", "tooltip")
-    .style("position", "absolute")
-    .style("z-index", "10") //put it in front of the arcs
-    .style("border-radius", "10px")
-    .style("visibility", "hidden")
-    .text("Error"); //bad to see this (obviously)
+        .append("div")
+        .attr("class", "tooltip")
+        .style("position", "absolute")
+        .style("z-index", "10") //put it in front of the arcs
+        .style("border-radius", "10px")
+        .style("visibility", "hidden")
+        .text("Error"); //bad to see this (obviously)
     
     // add the canvas to the DOM 
     var chart = d3.select("#pie-demo")
@@ -57,18 +116,17 @@ function main()
         .value(function(d) { return d.value; });
 
     var g = chart.selectAll(".arc")
-        .data(pie(data))
+        .data(pie(filteredData))
         .enter().append("g")
         .attr("class", "arc");
 
 
-
     g.append("path")
-      .on("mouseover", function(){return tooltip.style("visibility", "visible");}) //bind tooltip
+      .on("mouseover", function(){return tooltip.style("visibility", "visible");}) //bind tooltip to when mouse goes over arc
       .on("mousemove", function(){
-            var tip_text = d3.select(this).data()[0]["data"]["tooltip"]; //TODO: this is very ugly
+            var tip_text = d3.select(this).data()[0]["data"]["topic"]; //TODO: this is very ugly
             var inverted_color = invert(d3.select(this).style("fill"));
-            console.log(inverted_color)
+            var inverted_color = "white";
             return tooltip.style("top", (event.pageY-10)+"px").style("left",(event.pageX+10)+"px").style("color", inverted_color).text(tip_text);
        })
       .on("mouseout", function(){return tooltip.style("visibility", "hidden");})
@@ -83,10 +141,10 @@ function main()
            }
         }).each("end", function(d,i) {
             //Append the month names within the arcs
-            if(i == data.length - 1)
+            if(i == filteredData.length - 1)
             {
                 g.selectAll(".arcText")
-                        .data(data)
+                        .data(filteredData)
                    .enter().append("text")
                         .attr("class", "monthText")
                         .attr("x", 7) //Move the text from the start angle of the arc
@@ -95,7 +153,7 @@ function main()
                         .style("font-family", "sans-serif")
                    .append("textPath")
                         .attr("xlink:href",function(d,i){return "#arc_"+i;})
-                        .text(function(d){return "Topic " + d.name;})
+                        .text(function(d){return "Topic " + d.index;})
                         .style("fill", "white");	 
             }
     });
