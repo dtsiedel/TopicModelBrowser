@@ -26,12 +26,20 @@ function invert(rgb) {
   return "rgb(" + rgb[0] + "," + rgb[1] + "," + rgb[2] + ")";
 }
 
+//gives a random index in the range of our documents
+function randomDocument()
+{
+    return Math.floor(Math.random()*csv_data.length); 
+}
+
 //parses our csv hosted on server
 function getData()
 {
     d3.csv("/topic_frame.csv", function(error, response) {
         csv_data = response;
-        constructChart();
+        var target = randomDocument();
+        console.log(target);
+        constructChart(target);
     });
 }
 
@@ -74,9 +82,9 @@ function randomColor()
 }
 
 //main work of making donut chart
-function constructChart()
+function constructChart(n)
 {
-    var firstTopic = csv_data[0];
+    var firstTopic = csv_data[n];
     var filteredData = filter(firstTopic);
 
     //variables to control the graph result
@@ -134,7 +142,7 @@ function constructChart()
        })
       .on("mouseout", function(){return tooltip.style("visibility", "hidden");})
       .style("fill", function(d) { return d.data.color; })
-      .transition().delay(function(d, i) { return i * arc_delay/*500*/; }).duration(arc_delay/*500*/)
+      .transition().delay(function(d, i) { return i * arc_delay; }).duration(arc_delay)
       .attr("id", function(d,i) { return "arc_"+i; })
       .attrTween('d', function(d) {
            var i = d3.interpolate(d.startAngle, d.endAngle-.01); //calculate the in between positions to draw in 
@@ -155,8 +163,8 @@ function constructChart()
                         .attr("letter-spacing", "1px")
                         .style("font-family", "sans-serif")
                    .append("textPath")
-                        .attr("xlink:href",function(d,i){return "#arc_"+i;})
-                        .text(function(d){if(d.index === 0){return "Other";}return "T" + d.index;}) 
+                        .attr("xlink:href",function(d,i){return "#arc_"+i;}) //xlink seems to bind the text to the arc
+                        .text(function(d){if(d.index === 0){return "Other";} return "T" + d.index;}) 
                         .style("fill", "white");	 
             }
     });
