@@ -1,4 +1,4 @@
-//TODO: fix ugly bits
+//TODO: fix ugly bits of code
 //TODO: make a function for repeated code in filter?
 //TODO: don't let colors repeat next to each other
 
@@ -6,9 +6,10 @@
 
 //globals
 var csv_data;
-var threshold = 0.1; //how high must a topic be to be included?
+var threshold = 0.05; //how high must a topic be to be included?
 var colors = ["#3366cc", "#dc3912", "#ff9900", "#109618", "#990099", "#0099c6", "#dd4477", "#66aa00", "#b82e2e", "#316395", "#994499", "#22aa99", "#aaaa11", "#6633cc", "#e67300", "#8b0707", "#651067", "#329262", "#5574a6", "#3b3eac"];
 var gray = "#7d8084";
+var arc_delay = 250;
 
 //driver
 function main()
@@ -125,15 +126,15 @@ function constructChart()
 
     g.append("path")
       .on("mouseover", function(){return tooltip.style("visibility", "visible");}) //bind tooltip to when mouse goes over arc
-      .on("mousemove", function(){
+      .on("mousemove", function(d){
             var tip_text = d3.select(this).data()[0]["data"]["topic"]; //TODO: this is very ugly
             var inverted_color = invert(d3.select(this).style("fill"));
             var inverted_color = "white";
-            return tooltip.style("top", (event.pageY-10)+"px").style("left",(event.pageX+10)+"px").style("color", inverted_color).text(tip_text);
+            return tooltip.style("top", (event.pageY-10)+"px").style("left",(event.pageX+10)+"px").style("color", inverted_color).text(tip_text + " (" + (d.value * 100).toFixed(1) + "%)");
        })
       .on("mouseout", function(){return tooltip.style("visibility", "hidden");})
       .style("fill", function(d) { return d.data.color; })
-      .transition().delay(function(d, i) { return i * 500; }).duration(500)
+      .transition().delay(function(d, i) { return i * arc_delay/*500*/; }).duration(arc_delay/*500*/)
       .attr("id", function(d,i) { return "arc_"+i; })
       .attrTween('d', function(d) {
            var i = d3.interpolate(d.startAngle, d.endAngle-.01); //calculate the in between positions to draw in 
@@ -155,7 +156,7 @@ function constructChart()
                         .style("font-family", "sans-serif")
                    .append("textPath")
                         .attr("xlink:href",function(d,i){return "#arc_"+i;})
-                        .text(function(d){return "T" + d.index + " (" + (d.value * 100).toFixed(1) + "%)";})
+                        .text(function(d){if(d.index === 0){return "Other";}return "T" + d.index;}) 
                         .style("fill", "white");	 
             }
     });
