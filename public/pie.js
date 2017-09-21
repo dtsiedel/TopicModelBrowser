@@ -2,6 +2,8 @@
 //TODO: make a function for repeated code in filter?
 //TODO: don't let colors repeat next to each other
 
+//TODO: the rest of the entire project
+
 //globals
 var csv_data;
 var threshold = 0.1; //how high must a topic be to be included?
@@ -153,7 +155,7 @@ function constructChart()
                         .style("font-family", "sans-serif")
                    .append("textPath")
                         .attr("xlink:href",function(d,i){return "#arc_"+i;})
-                        .text(function(d){return "Topic " + d.index;})
+                        .text(function(d){return "T" + d.index + " (" + (d.value * 100).toFixed(1) + "%)";})
                         .style("fill", "white");	 
             }
     });
