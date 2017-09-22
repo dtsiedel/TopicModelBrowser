@@ -1,6 +1,8 @@
 //TODO: fix ugly bits of code
 //TODO: make a function for repeated code in filter?
 //TODO: don't let colors repeat next to each other
+//TODO: delay and duration proportional to size of arc
+//TODO: fade out of circle seems to be breaking the next one?
 
 //TODO: the rest of the entire project
 
@@ -10,6 +12,11 @@ var threshold = 0.05; //how high must a topic be to be included?
 var colors = ["#3366cc", "#dc3912", "#ff9900", "#109618", "#990099", "#0099c6", "#dd4477", "#66aa00", "#b82e2e", "#316395", "#994499", "#22aa99", "#aaaa11", "#6633cc", "#e67300", "#8b0707", "#651067", "#329262", "#5574a6", "#3b3eac"];
 var gray = "#7d8084";
 var arc_delay = 250;
+var margin;
+var width;
+var height;
+var radius;
+var chart;
 
 //driver
 function main()
@@ -35,6 +42,20 @@ function randomDocument()
 //parses our csv hosted on server
 function getData()
 {
+    //variables to control the graph result
+    margin = {top: 20, right: 20, bottom: 20, left: 20};
+    width = 400 - margin.left - margin.right;
+    height = width - margin.top - margin.bottom;
+    radius = Math.min(width, height) / 2;
+
+    // add the canvas to the DOM 
+    chart = d3.select("#pie-demo")
+        .append('svg')
+        .attr("width", width + margin.left + margin.right)
+        .attr("height", height + margin.top + margin.bottom)
+        .append("g")
+        .attr("transform", "translate(" + ((width/2)+margin.left) + "," + ((height/2)+margin.top) + ")");
+
     d3.csv("/topic_frame.csv", function(error, response) {
         csv_data = response;
         var target = randomDocument();
@@ -88,12 +109,7 @@ function constructChart(n)
     var filteredData = filter(firstTopic);
 
     d3.select("#document-number").text("Document " + n).style("color", "white");
-
-    //variables to control the graph result
-    var margin = {top: 20, right: 20, bottom: 20, left: 20};
-    var width = 400 - margin.left - margin.right;
-    var height = width - margin.top - margin.bottom;
-    var radius = Math.min(width, height) / 2;
+    d3.select("#document-number").on("click", function(){ d3.selectAll(".arc")/*.style("opacity", 1).transition().duration(750).style("opacity", 0)*/.remove(); setTimeout(constructChart(randomDocument()), 50); });
 
     function arcTween(d) {
         arc = d3.svg.arc().outerRadius(radius*1.1).innerRadius(radius-50).cornerRadius(5);
@@ -108,14 +124,6 @@ function constructChart(n)
         .style("border-radius", "10px")
         .style("visibility", "hidden")
         .text("Error"); //bad to see this (obviously)
-    
-    // add the canvas to the DOM 
-    var chart = d3.select("#pie-demo")
-        .append('svg')
-        .attr("width", width + margin.left + margin.right)
-        .attr("height", height + margin.top + margin.bottom)
-        .append("g")
-        .attr("transform", "translate(" + ((width/2)+margin.left) + "," + ((height/2)+margin.top) + ")");
     
     var arc = d3.svg.arc()
         .outerRadius(radius)
@@ -132,7 +140,6 @@ function constructChart(n)
         .data(pie(filteredData))
         .enter().append("g")
         .attr("class", "arc");
-
 
     g.append("path")
       .on("mouseover", function(){return tooltip.style("visibility", "visible");}) //bind tooltip to when mouse goes over arc
