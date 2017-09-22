@@ -1,7 +1,5 @@
 //TODO: fix ugly bits of code
 //TODO: make a function for repeated code in filter?
-//TODO: don't let colors repeat next to each other
-//TODO: delay and duration proportional to size of arc
 
 //TODO: the rest of the entire project
 
@@ -9,6 +7,7 @@
 var csv_data;
 var threshold = 0.05; //how high must a topic be to be included?
 var colors = ["#3366cc", "#dc3912", "#ff9900", "#109618", "#990099", "#0099c6", "#dd4477", "#66aa00", "#b82e2e", "#316395", "#994499", "#22aa99", "#aaaa11", "#6633cc", "#e67300", "#8b0707", "#651067", "#329262", "#5574a6", "#3b3eac"];
+var used_colors = [];
 var gray = "#7d8084";
 var arc_delay = 250;
 var margin;
@@ -107,7 +106,15 @@ function filter(topic_array)
 //get a random color from the colors array
 function randomColor()
 {
-    return colors[Math.floor(Math.random()*colors.length)]; 
+    var color;
+    do
+    {
+        color = colors[Math.floor(Math.random()*colors.length)]; 
+    }
+    while(used_colors.indexOf(color) !== -1) //god I hate javascript
+
+    used_colors.push(color);
+    return color;
 }
 
 //main work of making donut chart
@@ -115,6 +122,7 @@ function constructChart(n)
 {
     var firstTopic = csv_data[n];
     var filteredData = filter(firstTopic);
+    used_colors = []; //reset used colors on each
 
     d3.select("#document-number").text("Document " + n).style("color", "white");
     d3.select("#document-number").on("click", function(){ d3.selectAll(".arc").remove(); setTimeout(constructChart(randomDocument()), 50); });
