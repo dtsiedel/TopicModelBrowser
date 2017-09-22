@@ -1,8 +1,6 @@
 //TODO: fix ugly bits of code
 //TODO: make a function for repeated code in filter?
 
-//TODO: the rest of the entire project
-
 //globals
 var csv_data;
 var threshold = 0.05; //how high must a topic be to be included?
