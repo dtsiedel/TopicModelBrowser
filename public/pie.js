@@ -2,7 +2,6 @@
 //TODO: make a function for repeated code in filter?
 //TODO: don't let colors repeat next to each other
 //TODO: delay and duration proportional to size of arc
-//TODO: fade out of circle seems to be breaking the next one?
 
 //TODO: the rest of the entire project
 
@@ -17,6 +16,7 @@ var width;
 var height;
 var radius;
 var chart;
+var tooltip;
 
 //driver
 function main()
@@ -40,6 +40,7 @@ function randomDocument()
 }
 
 //parses our csv hosted on server
+//also does all of the one-time setup and calls our constructChart function the first time
 function getData()
 {
     //variables to control the graph result
@@ -55,6 +56,15 @@ function getData()
         .attr("height", height + margin.top + margin.bottom)
         .append("g")
         .attr("transform", "translate(" + ((width/2)+margin.left) + "," + ((height/2)+margin.top) + ")");
+
+    tooltip = d3.select("body")
+        .append("div")
+        .attr("class", "tooltip")
+        .style("position", "absolute")
+        .style("z-index", "10") //put it in front of the arcs
+        .style("border-radius", "10px")
+        .style("visibility", "hidden")
+        .text("Error"); //bad to see this (obviously)
 
     d3.csv("/topic_frame.csv", function(error, response) {
         csv_data = response;
@@ -109,21 +119,12 @@ function constructChart(n)
     var filteredData = filter(firstTopic);
 
     d3.select("#document-number").text("Document " + n).style("color", "white");
-    d3.select("#document-number").on("click", function(){ d3.selectAll(".arc")/*.style("opacity", 1).transition().duration(750).style("opacity", 0)*/.remove(); setTimeout(constructChart(randomDocument()), 50); });
+    d3.select("#document-number").on("click", function(){ d3.selectAll(".arc").remove(); setTimeout(constructChart(randomDocument()), 50); });
 
     function arcTween(d) {
         arc = d3.svg.arc().outerRadius(radius*1.1).innerRadius(radius-50).cornerRadius(5);
         return arc(d);
     }
-    
-    var tooltip = d3.select("body")
-        .append("div")
-        .attr("class", "tooltip")
-        .style("position", "absolute")
-        .style("z-index", "10") //put it in front of the arcs
-        .style("border-radius", "10px")
-        .style("visibility", "hidden")
-        .text("Error"); //bad to see this (obviously)
     
     var arc = d3.svg.arc()
         .outerRadius(radius)
