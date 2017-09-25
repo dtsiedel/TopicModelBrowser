@@ -1,6 +1,8 @@
 //TODO: fix ugly bits of code
 //TODO: make a function for repeated code in filter?
 
+//TODO: make number of topic correspond to the column number in the CSV
+
 //globals
 var csv_data;
 var threshold = 0.05; //how high must a topic be to be included?
@@ -75,13 +77,16 @@ function filter(topic_array)
 {
     var filtered = [];
     var total = 0; //total should add to one, need this to see total of "other"
-    var count = 1; //start at one since other is 0 
+    var count = 1; 
     for(key in topic_array)
     {
         if(key.length === 0)
             continue
         if(topic_array[key] < threshold)
+        {
+            count++; //still increment count since we want absolute index in csv, not just in this list
             continue
+        }
         var val = topic_array[key];
         var newEntry = {};
         newEntry["index"] = count; //TODO: method to insert these key values?
@@ -118,8 +123,8 @@ function randomColor()
 //main work of making donut chart
 function constructChart(n)
 {
-    var firstTopic = csv_data[n];
-    var filteredData = filter(firstTopic);
+    var chosenDocument = csv_data[n];
+    var filteredData = filter(chosenDocument);
     used_colors = []; //reset used colors on each
 
     d3.select("#document-number").text("Document " + n).style("color", "white");
