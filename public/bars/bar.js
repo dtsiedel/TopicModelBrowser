@@ -120,24 +120,31 @@ function constructBars(t1, t2)
     var scale = 400;
     var width = 100;
 
+    //TODO: should probably make this a function instead of repeating it twice
     chart.selectAll(".t1")
         .data(filtered_1) 
         .enter().append("rect")
         .attr("width", width)
         .attr("x", 0)
+        .attr("y", current_y)
+        .transition()
+        .duration(500)
         .attr("y", function (d) { var x = current_y; current_y += d.value*scale; return x; })
         .attr("height", function (d) { return d.value*scale; })
-        .style("fill", function (d) { return d.color })
+        .style("fill", function (d) { return d.color });
 
     current_y = 0;
     chart.selectAll(".t2")
         .data(filtered_2)
         .enter().append("rect")
         .attr("width", width)
-        .attr("x", function() { return 200; })
+        .attr("x", 200)
+        .attr("y", current_y)
+        .transition()
+        .duration(500)
         .attr("y", function (d) { var x = current_y; current_y += d.value*scale; return x; })
         .attr("height", function (d) { return d.value*scale; })
-        .style("fill", function (d) { return d.color }) 
+        .style("fill", function (d) { return d.color });
 }
 
 
