@@ -1,8 +1,6 @@
 //TODO: fix ugly bits of code
 //TODO: make a function for repeated code in filter?
 
-//TODO: make number of topic correspond to the column number in the CSV
-
 //globals
 var csv_data;
 var threshold = 0.05; //how high must a topic be to be included?
@@ -49,7 +47,7 @@ function getData()
     radius = Math.min(width, height) / 2;
 
     // add the canvas to the DOM 
-    chart = d3.select("#pie-demo")
+    chart = d3.select("#donut-demo")
         .append('svg')
         .attr("width", width + margin.left + margin.right)
         .attr("height", height + margin.top + margin.bottom)
