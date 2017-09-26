@@ -117,7 +117,7 @@ function constructBars(t1, t2)
     console.log(filtered_2);
 
     var current_y = 0;
-    var scale = 350;
+    var scale = 400;
     var width = 100;
 
     chart.selectAll(".t1")
