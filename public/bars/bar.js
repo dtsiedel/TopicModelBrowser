@@ -1,3 +1,8 @@
+//TODO: animate in
+//TODO: tooltip
+//TODO: same number topics get same color
+//TODO: show related topics with lines
+
 //TODO: export repeated functions and variables to a library .js file
 //ex. (randomDocument, getData, filter, randomColor, threshold (esp. threshold)) 
 
