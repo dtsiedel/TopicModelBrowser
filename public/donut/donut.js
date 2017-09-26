@@ -1,5 +1,4 @@
-//TODO: fix ugly bits of code
-//TODO: make a function for repeated code in filter?
+//see bars for TODOs
 
 //globals
 var csv_data;

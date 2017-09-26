@@ -2,3 +2,8 @@ body {
     background-color: black;
 }
 
+#donut-demo {
+    margin: auto;
+    width: 50%;
+}
+
