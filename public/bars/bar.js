@@ -1,4 +1,3 @@
-//TODO: animate in
 //TODO: tooltip
 //TODO: same number topics get same color
 //TODO: show related topics with lines
@@ -73,7 +72,7 @@ function getData()
 {
     //variables to control the graph result
     margin = {top: 20, right: 20, bottom: 20, left: 20};
-    width = 400 - margin.left - margin.right;
+    width = 600 - margin.left - margin.right;
     height = width - margin.top - margin.bottom;
     radius = Math.min(width, height) / 2;
 
@@ -127,6 +126,7 @@ function constructBars(t1, t2)
         .attr("width", width)
         .attr("x", 0)
         .attr("y", current_y)
+        .attr("height", 0)
         .transition()
         .duration(500)
         .attr("y", function (d) { var x = current_y; current_y += d.value*scale; return x; })
@@ -140,6 +140,7 @@ function constructBars(t1, t2)
         .attr("width", width)
         .attr("x", 200)
         .attr("y", current_y)
+        .attr("height", 0)
         .transition()
         .duration(500)
         .attr("y", function (d) { var x = current_y; current_y += d.value*scale; return x; })
