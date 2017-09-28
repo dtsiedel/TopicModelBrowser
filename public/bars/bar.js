@@ -1,6 +1,11 @@
 //TODO: tooltip
-//TODO: same number topics get same color
+//TODO: same number topics get same color (across all things)
 //TODO: show related topics with lines
+
+//TODO: see notes form Baumer meeting Wed
+//TODO: title in center of donut
+//TODO: start circle at top center
+//TODO: sort sections by percentage
 
 //TODO: export repeated functions and variables to a library .js file
 //ex. (randomDocument, getData, filter, randomColor, threshold (esp. threshold)) 
