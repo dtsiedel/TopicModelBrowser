@@ -152,9 +152,8 @@ function constructChart(n)
       .on("mouseover", function(){return tooltip.style("visibility", "visible");}) //bind tooltip to when mouse goes over arc
       .on("mousemove", function(d){
             var tip_text = d3.select(this).data()[0]["data"]["topic"]; //TODO: this is very ugly
-            var inverted_color = invert(d3.select(this).style("fill"));
-            var inverted_color = "white";
-            return tooltip.style("top", (event.pageY-10)+"px").style("left",(event.pageX+10)+"px").style("color", inverted_color).text(tip_text + " (" + (d.value * 100).toFixed(2) + "%)");
+            var tip_color = "white";
+            return tooltip.style("top", (event.pageY-10)+"px").style("left",(event.pageX+10)+"px").style("color", tip_color).text(tip_text + " (" + (d.value * 100).toFixed(2) + "%)");
        })
       .on("mouseout", function(){return tooltip.style("visibility", "hidden");})
       .style("fill", function(d) { return d.data.color; })

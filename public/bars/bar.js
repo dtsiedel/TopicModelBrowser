@@ -16,6 +16,7 @@ var colors = ["#3366cc", "#dc3912", "#ff9900", "#109618", "#990099", "#0099c6", 
 var used_colors = [];
 var gray = "#7d8084";
 var chart;
+var tooltip;
 
 //filter out topics that are less than thresh or invalid
 function filter(topic_array)
