@@ -139,8 +139,8 @@ function constructChart(n)
     
     var pie = d3.layout.pie()
         .sort(null)
-        .startAngle(Math.PI)
-        .endAngle(3.0*Math.PI)
+        .startAngle(0)
+        .endAngle(2*Math.PI)
         .value(function(d) { return d.value; });
 
     var g = chart.selectAll(".arc")
@@ -183,4 +183,6 @@ function constructChart(n)
                         .style("fill", "white");	 
             }
     });
+
+
 }
