@@ -3,7 +3,6 @@
 //TODO: show related topics with lines
 
 //TODO: title in center of donut
-//TODO: sort sections by percentage
 //TODO: dynamic color generation based on current colors
 
 //TODO: export repeated functions and variables to a library .js file

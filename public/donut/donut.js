@@ -1,6 +1,6 @@
 //see bars for TODOs
 
-//globals
+//globals, currently needs way too many
 var csv_data;
 var threshold = 0.05; //how high must a topic be to be included?
 var colors = ["#3366cc", "#dc3912", "#ff9900", "#109618", "#990099", "#0099c6", "#dd4477", "#66aa00", "#b82e2e", "#316395", "#994499", "#22aa99", "#aaaa11", "#6633cc", "#e67300", "#8b0707", "#651067", "#329262", "#5574a6", "#3b3eac"];
@@ -69,6 +69,12 @@ function getData()
     });
 }
 
+//comparison function to use when sorting our topics
+function compare_value(a,b)
+{
+    return (a.value < b.value) ? 1 : -1;
+}
+
 //filter out topics that are less than thresh or invalid
 function filter(topic_array)
 {
@@ -100,7 +106,7 @@ function filter(topic_array)
     other["value"] = 1 - total;
     other["color"] = gray;
     filtered.push(other);
-    return filtered;
+    return filtered.sort(compare_value);
 }
 
 //get a random color from the colors array
