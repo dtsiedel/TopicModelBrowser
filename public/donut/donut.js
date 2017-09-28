@@ -172,7 +172,7 @@ function constructChart(n)
              return arc(d);
            }
         }).each("end", function(d,i) {
-            //Append the month names within the arcs
+            //Append the month names within the arcs after all have loaded
             if(i == filteredData.length - 1)
             {
                 g.selectAll(".arcText")

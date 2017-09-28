@@ -5,12 +5,14 @@
 
 //TODO: (DONUT)
 //TODO: title in center of donut
+//TODO: tooltip off screen issue
+//TODO: make tooltip a full info box instead of just text
 
 //TODO: (GENERAL)
 //TODO: same number topics get same color (across all things)
 //TODO: dynamic color generation based on current colors (could have any number of topics)
 //TODO: export repeated functions and variables to another .js file
-//ex. (randomDocument, getData, filter, randomColor, threshold (esp. threshold)) 
+//ex. (randomDocument, getData, filter, randomColor, threshold (esp. threshold since it's fixed)) 
 
 var csv_data;
 var threshold = 0.05;
@@ -139,7 +141,26 @@ function constructBars(t1, t2)
         .duration(500)
         .attr("y", function (d) { var x = current_y; current_y += d.value*scale; return x; })
         .attr("height", function (d) { return d.value*scale; })
-        .style("fill", function (d) { return d.color });
+        .attr("id", function(d,i) { return "bar_1_"+i; })
+        .style("fill", function (d) { return d.color })
+        .each("end", function(d,i) {
+                var current = d3.select(this);
+                var x = current.attr("x");
+                var y = current.attr("y");
+                console.log(x + " " + y);
+                current.selectAll(".barText")
+                        .data(filtered_1)
+                   .enter().append("text")
+                        .attr("class", "barText")
+                        .attr("x", x) //Move the text from the start angle of the arc
+                        .attr("y", y) //Move the text down
+                        .attr("letter-spacing", "1px")
+                        .style("font-family", "sans-serif")
+                   .append("textPath")
+                        //.attr("xlink:href",function(d,i){return "#bar_1_"+i;}) 
+                        .text(function(d){if(d.index === 0){return "Other";} return "T" + d.index;})
+                        .style("fill", "white");
+        });
 
     current_y = 0;
     chart.selectAll(".t2")
