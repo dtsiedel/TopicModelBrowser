@@ -1,11 +1,15 @@
+//TODO (BARS)
+//TODO: topic name on bars 
 //TODO: tooltip
-//TODO: same number topics get same color (across all things)
 //TODO: show related topics with lines
 
+//TODO: (DONUT)
 //TODO: title in center of donut
-//TODO: dynamic color generation based on current colors
 
-//TODO: export repeated functions and variables to a library .js file
+//TODO: (GENERAL)
+//TODO: same number topics get same color (across all things)
+//TODO: dynamic color generation based on current colors (could have any number of topics)
+//TODO: export repeated functions and variables to another .js file
 //ex. (randomDocument, getData, filter, randomColor, threshold (esp. threshold)) 
 
 var csv_data;
