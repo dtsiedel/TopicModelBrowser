@@ -10,8 +10,9 @@
 
 //TODO: (GENERAL)
 //TODO: split getData() so that we can consolidate repeated bits to library.js
-//TODO: make same color for a topic between different views
-//TODO: dynamic color generation based on current colors (could have any number of topics)
+//TODO: make same color for a topic between different views (see below)
+//TODO: dynamic color generation based on current colors, or even spacing 
+//      |-> once this is done, move color_map to library.js and we should have shared topic colors across all views
 
 var csv_data;
 //var threshold = 0.05;
