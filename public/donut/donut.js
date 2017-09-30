@@ -4,7 +4,7 @@
 var csv_data;
 var threshold = 0.05; //how high must a topic be to be included?
 var colors = ["#3366cc", "#dc3912", "#ff9900", "#109618", "#990099", "#0099c6", "#dd4477", "#66aa00", "#b82e2e", "#316395", "#994499", "#22aa99", "#aaaa11", "#6633cc", "#e67300", "#8b0707", "#651067", "#329262", "#5574a6", "#3b3eac"];
-var used_colors = [];
+var color_map = {};
 var gray = "#7d8084";
 var arc_delay = 250;
 var margin;
@@ -95,7 +95,7 @@ function filter(topic_array)
         newEntry["index"] = count; //TODO: method to insert these key values?
         newEntry["topic"] = key;
         newEntry["value"] = parseFloat(val); 
-        newEntry["color"] = randomColor();
+        newEntry["color"] = randomColor(count);
         filtered.push(newEntry);
         total += parseFloat(val);
         count++;
@@ -110,16 +110,21 @@ function filter(topic_array)
 }
 
 //get a random color from the colors array
-function randomColor()
+function randomColor(n)
 {
+    if(n in color_map)
+    {
+        return color_map[n];   
+    }
+
     var color;
     do
     {
         color = colors[Math.floor(Math.random()*colors.length)]; 
     }
-    while(used_colors.indexOf(color) !== -1) //god I hate javascript
+    while(Object.values(color_map).indexOf(color) > -1) //god I hate javascript
 
-    used_colors.push(color);
+    color_map[n] = color;
     return color;
 }
 
@@ -128,7 +133,7 @@ function constructChart(n)
 {
     var chosenDocument = csv_data[n];
     var filteredData = filter(chosenDocument);
-    used_colors = []; //reset used colors on each
+    color_map = {}; //for now. Eventually we have enough colors for each topic and it is fixed across all views for one topic
 
     d3.select("#document-number").text("Document " + n).style("color", "white");
     d3.select("#document-number").on("click", function(){ d3.selectAll(".arc").remove(); setTimeout(constructChart(randomDocument()), 50); });

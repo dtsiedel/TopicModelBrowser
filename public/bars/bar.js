@@ -9,15 +9,15 @@
 //TODO: make tooltip a full info box instead of just text
 
 //TODO: (GENERAL)
-//TODO: same number topics get same color (across all things)
+//TODO: make same color for a topic between different views
 //TODO: dynamic color generation based on current colors (could have any number of topics)
 //TODO: export repeated functions and variables to another .js file
-//ex. (randomDocument, getData, filter, randomColor, threshold (esp. threshold since it's fixed)) 
+//ex. (randomDocument, getData, filter, randomColor, threshold (esp. threshold since it's fixed),color_map) 
 
 var csv_data;
 var threshold = 0.05;
 var colors = ["#3366cc", "#dc3912", "#ff9900", "#109618", "#990099", "#0099c6", "#dd4477", "#66aa00", "#b82e2e", "#316395", "#994499", "#22aa99", "#aaaa11", "#6633cc", "#e67300", "#8b0707", "#651067", "#329262", "#5574a6", "#3b3eac"];
-var used_colors = [];
+var color_map = {}; //which topic is associated with which color 
 var gray = "#7d8084";
 var chart;
 var tooltip;
@@ -42,7 +42,7 @@ function filter(topic_array)
         newEntry["index"] = count; //TODO: method to insert these key values?
         newEntry["topic"] = key;
         newEntry["value"] = parseFloat(val);
-        newEntry["color"] = randomColor();
+        newEntry["color"] = randomColor(count);
         filtered.push(newEntry);
         total += parseFloat(val);
         count++;
@@ -57,16 +57,21 @@ function filter(topic_array)
 }
 
 //get a random color from the colors array
-function randomColor()
+function randomColor(n)
 {
+    if(n in color_map)
+    {
+        return color_map[n];   
+    }
+ 
     var color;
     do
     {
         color = colors[Math.floor(Math.random()*colors.length)];
     }
-    while(used_colors.indexOf(color) !== -1) //god I hate javascript
+    while(Object.values(color_map).indexOf(color) > -1) //god I hate javascript
 
-    used_colors.push(color);
+    color_map[n] = color;
     return color;
 }
 
@@ -124,6 +129,8 @@ function constructBars(t1, t2)
     var filtered_2 = filter(csv_data[t2]);
     console.log(filtered_1);
     console.log(filtered_2);
+    
+    color_map = {}; //temporary until we have enough colors for all topics
 
     var current_y = 0;
     var scale = 400;
@@ -147,7 +154,7 @@ function constructBars(t1, t2)
                 var current = d3.select(this);
                 var x = current.attr("x");
                 var y = current.attr("y");
-                console.log(x + " " + y);
+                //console.log(x + " " + y);
                 current.selectAll(".barText")
                         .data(filtered_1)
                    .enter().append("text")
