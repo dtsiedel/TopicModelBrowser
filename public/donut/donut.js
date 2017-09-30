@@ -2,7 +2,6 @@
 
 //globals, currently needs way too many
 var csv_data;
-var threshold = 0.05; //how high must a topic be to be included?
 var colors = ["#3366cc", "#dc3912", "#ff9900", "#109618", "#990099", "#0099c6", "#dd4477", "#66aa00", "#b82e2e", "#316395", "#994499", "#22aa99", "#aaaa11", "#6633cc", "#e67300", "#8b0707", "#651067", "#329262", "#5574a6", "#3b3eac"];
 var color_map = {};
 var gray = "#7d8084";
@@ -18,21 +17,6 @@ var tooltip;
 function main()
 {
     getData();
-}
-
-//inverts color, for use in tooltip. Maybe ugly and bad?
-function invert(rgb) {
-  rgb = Array.prototype.join.call(arguments).match(/(-?[0-9\.]+)/g);
-  for (var i = 0; i < rgb.length; i++) {
-    rgb[i] = (i === 3 ? 1 : 255) - rgb[i];
-  }
-  return "rgb(" + rgb[0] + "," + rgb[1] + "," + rgb[2] + ")";
-}
-
-//gives a random index in the range of our documents
-function randomDocument()
-{
-    return Math.floor(Math.random()*csv_data.length); 
 }
 
 //parses our csv hosted on server
@@ -73,59 +57,6 @@ function getData()
 function compare_value(a,b)
 {
     return (a.value < b.value) ? 1 : -1;
-}
-
-//filter out topics that are less than thresh or invalid
-function filter(topic_array)
-{
-    var filtered = [];
-    var total = 0; //total should add to one, need this to see total of "other"
-    var count = 1; 
-    for(key in topic_array)
-    {
-        if(key.length === 0)
-            continue
-        if(topic_array[key] < threshold)
-        {
-            count++; //still increment count since we want absolute index in csv, not just in this list
-            continue
-        }
-        var val = topic_array[key];
-        var newEntry = {};
-        newEntry["index"] = count; //TODO: method to insert these key values?
-        newEntry["topic"] = key;
-        newEntry["value"] = parseFloat(val); 
-        newEntry["color"] = randomColor(count);
-        filtered.push(newEntry);
-        total += parseFloat(val);
-        count++;
-    }
-    var other = {};
-    other["index"] = 0;
-    other["topic"] = "other";
-    other["value"] = 1 - total;
-    other["color"] = gray;
-    filtered.push(other);
-    return filtered.sort(compare_value);
-}
-
-//get a random color from the colors array
-function randomColor(n)
-{
-    if(n in color_map)
-    {
-        return color_map[n];   
-    }
-
-    var color;
-    do
-    {
-        color = colors[Math.floor(Math.random()*colors.length)]; 
-    }
-    while(Object.values(color_map).indexOf(color) > -1) //god I hate javascript
-
-    color_map[n] = color;
-    return color;
 }
 
 //main work of making donut chart
@@ -197,3 +128,8 @@ function constructChart(n)
 
 
 }
+
+//call main on load
+document.addEventListener("DOMContentLoaded", function(e) {
+    main();
+});

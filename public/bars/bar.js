@@ -9,80 +9,21 @@
 //TODO: make tooltip a full info box instead of just text
 
 //TODO: (GENERAL)
+//TODO: split getData() so that we can consolidate repeated bits to library.js
 //TODO: make same color for a topic between different views
 //TODO: dynamic color generation based on current colors (could have any number of topics)
-//TODO: export repeated functions and variables to another .js file
-//ex. (randomDocument, getData, filter, randomColor, threshold (esp. threshold since it's fixed),color_map) 
 
 var csv_data;
-var threshold = 0.05;
+//var threshold = 0.05;
 var colors = ["#3366cc", "#dc3912", "#ff9900", "#109618", "#990099", "#0099c6", "#dd4477", "#66aa00", "#b82e2e", "#316395", "#994499", "#22aa99", "#aaaa11", "#6633cc", "#e67300", "#8b0707", "#651067", "#329262", "#5574a6", "#3b3eac"];
 var color_map = {}; //which topic is associated with which color 
 var gray = "#7d8084";
 var chart;
 var tooltip;
 
-//filter out topics that are less than thresh or invalid
-function filter(topic_array)
-{
-    var filtered = [];
-    var total = 0; //total should add to one, need this to see total of "other"
-    var count = 1;
-    for(key in topic_array)
-    {
-        if(key.length === 0)
-            continue
-        if(topic_array[key] < threshold)
-        {
-            count++; //still increment count since we want absolute index in csv, not just in this list
-            continue
-        }
-        var val = topic_array[key];
-        var newEntry = {};
-        newEntry["index"] = count; //TODO: method to insert these key values?
-        newEntry["topic"] = key;
-        newEntry["value"] = parseFloat(val);
-        newEntry["color"] = randomColor(count);
-        filtered.push(newEntry);
-        total += parseFloat(val);
-        count++;
-    }
-    var other = {};
-    other["index"] = 0;
-    other["topic"] = "other";
-    other["value"] = 1 - total;
-    other["color"] = gray;
-    filtered.push(other);
-    return filtered;
-}
-
-//get a random color from the colors array
-function randomColor(n)
-{
-    if(n in color_map)
-    {
-        return color_map[n];   
-    }
- 
-    var color;
-    do
-    {
-        color = colors[Math.floor(Math.random()*colors.length)];
-    }
-    while(Object.values(color_map).indexOf(color) > -1) //god I hate javascript
-
-    color_map[n] = color;
-    return color;
-}
-
-//gives a random index in the range of our documents
-function randomDocument()
-{   
-    return Math.floor(Math.random()*csv_data.length);
-}
-
 //parses our csv hosted on server
 //also does all of the one-time setup and calls our constructChart function the first time
+//needs to be split later so that we can not duplicate code
 function getData()
 {
     //variables to control the graph result
@@ -184,5 +125,7 @@ function constructBars(t1, t2)
         .style("fill", function (d) { return d.color });
 }
 
-
-
+//call main
+document.addEventListener("DOMContentLoaded", function(e) {
+    main();
+});
