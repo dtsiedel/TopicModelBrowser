@@ -4,6 +4,7 @@
 //TODO: show related topics with lines
 
 //TODO: (DONUT)
+//TODO: legend of topics (as per Chuah suggestion)
 //TODO: title in center of donut
 //TODO: tooltip off screen issue
 //TODO: make tooltip a full info box instead of just text
