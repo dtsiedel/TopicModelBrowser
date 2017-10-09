@@ -5,9 +5,8 @@
 
 //TODO: (DONUT)
 //TODO: legend of topics (as per Chuah suggestion)
-//TODO: title in center of donut
 //TODO: tooltip off screen issue
-//TODO: make tooltip a full info box instead of just text
+//TODO: make tooltip a full info box instead of just text (rel ^)
 
 //TODO: (GENERAL)
 //TODO: split getData() so that we can consolidate repeated bits to library.js

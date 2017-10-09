@@ -66,8 +66,8 @@ function constructChart(n)
     var filteredData = filter(chosenDocument);
     color_map = {}; //for now. Eventually we have enough colors for each topic and it is fixed across all views for one topic
 
-    d3.select("#document-number").text("Document " + n).style("color", "white");
-    d3.select("#document-number").on("click", function(){ d3.selectAll(".arc").remove(); setTimeout(constructChart(randomDocument()), 50); });
+    //d3.select("#document-number").text("Document " + n).style("color", "white");
+    //d3.select("#document-number").on("click", function(){ d3.selectAll(".arc").remove(); setTimeout(constructChart(randomDocument()), 50); });
 
     function arcTween(d) {
         arc = d3.svg.arc().outerRadius(radius*1.1).innerRadius(radius-50).cornerRadius(5);
@@ -123,6 +123,15 @@ function constructChart(n)
                         .attr("xlink:href",function(d,i){return "#arc_"+i;}) //xlink seems to bind the text to the arc
                         .text(function(d){if(d.index === 0){return "Other";} return "T" + d.index;}) 
                         .style("fill", "white");	 
+                    
+                    chart.append("text")
+                        .attr("text-anchor", "middle")
+                        .text("Document " + n)
+                        .style("fill", "white")
+                        .on("click", function(){ 
+                            d3.selectAll(".arc").remove(); 
+                            d3.select(this).remove(); 
+                            setTimeout(constructChart(randomDocument()), 50); });
             }
     });
 
