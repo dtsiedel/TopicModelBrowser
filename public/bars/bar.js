@@ -8,14 +8,9 @@
 
 //TODO: (GENERAL)
 //TODO: split getData() so that we can consolidate repeated bits to library.js
-//TODO: make same color for a topic between different views (see below)
-//TODO: dynamic color generation based on current colors, or even spacing 
-//      |-> once this is done, move color_map to library.js and we should have shared topic colors across all views
+//TODO: check on shared topic colors between views (should be easier with labels on bars)
 
 var csv_data;
-//var threshold = 0.05;
-var colors = ["#3366cc", "#dc3912", "#ff9900", "#109618", "#990099", "#0099c6", "#dd4477", "#66aa00", "#b82e2e", "#316395", "#994499", "#22aa99", "#aaaa11", "#6633cc", "#e67300", "#8b0707", "#651067", "#329262", "#5574a6", "#3b3eac"];
-var color_map = {}; //which topic is associated with which color 
 var gray = "#7d8084";
 var chart;
 var tooltip;
@@ -70,8 +65,6 @@ function constructBars(t1, t2)
     console.log(filtered_1);
     console.log(filtered_2);
     
-    color_map = {}; //temporary until we have enough colors for all topics
-
     var current_y = 0;
     var scale = 400;
     var width = 100;

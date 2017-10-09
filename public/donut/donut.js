@@ -1,9 +1,6 @@
 //see bars for TODOs
 
-//globals, currently needs way too many
 var csv_data;
-var colors = ["#3366cc", "#dc3912", "#ff9900", "#109618", "#990099", "#0099c6", "#dd4477", "#66aa00", "#b82e2e", "#316395", "#994499", "#22aa99", "#aaaa11", "#6633cc", "#e67300", "#8b0707", "#651067", "#329262", "#5574a6", "#3b3eac"];
-var color_map = {};
 var gray = "#7d8084";
 var arc_delay = 250;
 var margin;
@@ -68,7 +65,6 @@ function constructChart(n)
 {
     var chosenDocument = csv_data[n];
     var filteredData = filter(chosenDocument);
-    color_map = {}; //for now. Eventually we have enough colors for each topic and it is fixed across all views for one topic
 
     function arcTween(d) {
         arc = d3.svg.arc().outerRadius(radius*1.1).innerRadius(radius-50).cornerRadius(5);
@@ -94,8 +90,9 @@ function constructChart(n)
     g.append("path")
       .on("mouseover", function(){return tooltip.style("visibility", "visible");}) //bind tooltip to when mouse goes over arc
       .on("mousemove", function(d){
-            var tip_text = d3.select(this).data()[0]["data"]["topic"]; 
-            return tooltip.style("top", (event.pageY-10)+"px").style("left",(event.pageX+10)+"px").html(generate_tooltip_html(n, tip_text, d.value)).style("background-color", d.data.color).style("color", "white");})
+            var topic_text = d3.select(this).data()[0]["data"]["topic"]; 
+            var index = d3.select(this).data()[0]["data"]["index"];
+            return tooltip.style("top", (event.pageY-10)+"px").style("left",(event.pageX+10)+"px").html(generate_tooltip_html(index, topic_text, d.value)).style("background-color", d.data.color).style("color", "white");})
       .on("mouseout", function(){return tooltip.style("visibility", "hidden");})
       .style("fill", function(d) { return d.data.color; })
       .transition().duration(750)
