@@ -41,9 +41,13 @@ function getData()
         .append("div")
         .attr("class", "tooltip")
         .style("position", "absolute")
+        .style("width", "200px")
+        .style("background-color", "white")
+        .style("padding-left", "5px")
         .style("z-index", "10") //put it in front of the arcs
         .style("border-radius", "10px")
         .style("visibility", "hidden")
+        .style("border", "1px solid white")
         .text("Error"); //bad to see this (obviously)
 
     d3.csv("/topic_frame.csv", function(error, response) {
@@ -65,9 +69,6 @@ function constructChart(n)
     var chosenDocument = csv_data[n];
     var filteredData = filter(chosenDocument);
     color_map = {}; //for now. Eventually we have enough colors for each topic and it is fixed across all views for one topic
-
-    //d3.select("#document-number").text("Document " + n).style("color", "white");
-    //d3.select("#document-number").on("click", function(){ d3.selectAll(".arc").remove(); setTimeout(constructChart(randomDocument()), 50); });
 
     function arcTween(d) {
         arc = d3.svg.arc().outerRadius(radius*1.1).innerRadius(radius-50).cornerRadius(5);
@@ -93,10 +94,8 @@ function constructChart(n)
     g.append("path")
       .on("mouseover", function(){return tooltip.style("visibility", "visible");}) //bind tooltip to when mouse goes over arc
       .on("mousemove", function(d){
-            var tip_text = d3.select(this).data()[0]["data"]["topic"]; //TODO: this is very ugly
-            var tip_color = "white";
-            return tooltip.style("top", (event.pageY-10)+"px").style("left",(event.pageX+10)+"px").style("color", tip_color).text(tip_text + " (" + (d.value * 100).toFixed(2) + "%)");
-       })
+            var tip_text = d3.select(this).data()[0]["data"]["topic"]; 
+            return tooltip.style("top", (event.pageY-10)+"px").style("left",(event.pageX+10)+"px").html(generate_tooltip_html(n, tip_text, d.value)).style("background-color", d.data.color).style("color", "white");})
       .on("mouseout", function(){return tooltip.style("visibility", "hidden");})
       .style("fill", function(d) { return d.data.color; })
       .transition().duration(750)
@@ -136,6 +135,21 @@ function constructChart(n)
     });
 
 
+}
+
+//does all the text formatting for the tooltip
+function generate_tooltip_html(topic_number, topic_name, percentage)
+{
+    topic_words = topic_name.split("_");
+    text = "<div>";
+    text += "T" + topic_number + "(" + (percentage*100).toFixed(2) + "%)" + "<br>Sample Words:<br>";
+    for(var i = 0; i < topic_words.length; i++)
+    {
+        text += topic_words[i];
+        text += "<br>"
+    }
+    text += "</div>";
+    return text;
 }
 
 //call main on load
