@@ -114,3 +114,44 @@ function randomColor(n)
     color_map[n] = color;
     return color;
 }
+
+//make text + ellipses no longer than n
+function clip(text, n)
+{
+    if(text.length > n)
+    {
+        return text.slice(0,n-4) + "...";
+    }
+    return text
+}
+
+//put a legend onto chart
+function addLegend(chart, data, legendRectSize, legendSpacing)
+{
+    var offset = 6; //need to shift text down a little
+
+    var legend = chart.selectAll('.legend')
+      .data(data)
+      .enter()
+      .append('g')
+      .attr('class', 'legend')
+      .attr('transform', function(d, i) {
+        var height = legendRectSize + legendSpacing;
+        var offset =  height * 10 / 2;
+        var horz = -2 * legendRectSize + 1.5*radius;
+        var vert = i * height - offset;
+        return 'translate(' + horz + ',' + vert + ')';
+      });
+
+    legend.append('rect')
+        .attr('width', legendRectSize)
+        .attr('height', legendRectSize)
+        .style('fill', function(d){return d.color})
+        .style('stroke', "gray");
+
+    legend.append('text')
+        .attr('x', legendRectSize + legendSpacing)
+        .attr('y', legendRectSize - legendSpacing + offset)
+        .style("fill", "white")
+        .text(function(d) { return clip(d.topic,70); });
+}

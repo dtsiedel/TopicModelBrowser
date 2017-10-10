@@ -22,9 +22,9 @@ function getData()
 {
     //variables to control the graph result
     margin = {top: 20, right: 20, bottom: 20, left: 20};
-    width = 400 - margin.left - margin.right;
-    height = width - margin.top - margin.bottom;
-    radius = Math.min(width, height) / 2;
+    width = 1000 - margin.left - margin.right;
+    height = width - margin.top - margin.bottom - 500;
+    radius = Math.min(width, height) / 2.5;
 
     // add the canvas to the DOM 
     chart = d3.select("#donut-demo")
@@ -32,7 +32,7 @@ function getData()
         .attr("width", width + margin.left + margin.right)
         .attr("height", height + margin.top + margin.bottom)
         .append("g")
-        .attr("transform", "translate(" + ((width/2)+margin.left) + "," + ((height/2)+margin.top) + ")");
+        .attr("transform", "translate(" + ((width/4)) + "," + ((height/2)+margin.top) + ")");
 
     tooltip = d3.select("body")
         .append("div")
@@ -60,6 +60,7 @@ function compare_value(a,b)
     return (a.value < b.value) ? 1 : -1;
 }
 
+
 //main work of making donut chart
 function constructChart(n)
 {
@@ -86,6 +87,8 @@ function constructChart(n)
         .data(pie(filteredData))
         .enter().append("g")
         .attr("class", "arc");
+
+    chart.selectAll('.legend').remove();
 
     g.append("path")
       .on("mouseover", function(){return tooltip.style("visibility", "visible");}) //bind tooltip to when mouse goes over arc
@@ -128,9 +131,11 @@ function constructChart(n)
                             d3.selectAll(".arc").remove(); 
                             d3.select(this).remove(); 
                             setTimeout(constructChart(randomDocument()), 50); });
+                    
+                    addLegend(chart, filteredData, 18, 12);
+        
             }
     });
-
 
 }
 

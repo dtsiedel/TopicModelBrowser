@@ -4,7 +4,6 @@
 //TODO: show related topics with lines
 
 //TODO: (DONUT)
-//TODO: legend of topics (as per Chuah suggestion)
 
 //TODO: (GENERAL)
 //TODO: split getData() so that we can consolidate repeated bits to library.js
