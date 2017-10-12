@@ -11,6 +11,7 @@
 //TODO: repeated code with donut
 //TODO: the ribbons 
 //TODO: add other things like onhover tooltip, legend
+//TODO: figure out color sharing  
 
 //TODO: (GENERAL)
 //TODO: split getData() so that we can consolidate repeated bits to library.js

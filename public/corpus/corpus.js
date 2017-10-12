@@ -111,7 +111,7 @@ function constructCorpus(csv)
 
     var arc = d3.svg.arc()
         .outerRadius(radius)
-        .innerRadius(radius - 50)
+        .innerRadius(radius - 30)
         .cornerRadius(5);
 
     var pie = d3.layout.pie()
@@ -127,7 +127,7 @@ function constructCorpus(csv)
         
 
     g.append("path")
-      .style("fill", function(d) { return randomColor(d.value);/*return d.data.color;*/ })
+      .style("fill", function(d) { return randomColor(d.data.topic); })
       .transition().duration(750)
       .attr("id", function(d,i) { return "arc_"+i; })
       .attrTween('d', function(d) {
