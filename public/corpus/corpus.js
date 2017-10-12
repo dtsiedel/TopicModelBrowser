@@ -1,4 +1,5 @@
 var csv_data;
+var filteredData;
 var chart;
 
 //parses our csv hosted on server
@@ -27,10 +28,37 @@ function getData()
     });
 }
 
+//get relevant data from CSV
+//result is a dictionary containing each of the topics as keys. The value of each 
+//of these topics is the list of all of the document numbers that are > threshold in being "about" that topic
+function processData(csv)
+{
+    result = {};
+    for(var i=0;i<csv.length;i++)
+    {
+        var current = csv[i];
+        for(key in current)
+        {
+            if(key.length !== 0 && current[key] > threshold)
+            {
+                if(!(key in result))
+                {
+                    result[key] = [current[""]]; //for some reason they come in with the key for doc id as ""
+                }
+                else
+                {
+                    result[key].push(current[""]);
+                }
+            }
+        }
+    } 
+    return result;
+}
 
 function constructCorpus(csv)
 {
-    console.log(csv);
+    filteredData = processData(csv)
+    console.log(filteredData);
 }
 
 
