@@ -1,1 +1,3 @@
 node_modules/
+public/all_topics.csv
+public/topic_words.csv

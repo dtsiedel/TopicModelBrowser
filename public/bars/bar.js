@@ -1,23 +1,21 @@
-//TODO (BARS)
+//TODO: (BARS)
 //TODO: topic name on bars 
 //TODO: tooltip
 //TODO: show related topics with lines
 
 //TODO: (DONUT)
+//TODO: color fix (see general)
+
+//TODO: (CORPUS)
+//TODO: all of it
 
 //TODO: (GENERAL)
 //TODO: split getData() so that we can consolidate repeated bits to library.js
-//TODO: check on shared topic colors between views (should be easier with labels on bars)
-
-//TODO: (NEXT)
-//get rest of data from R to CSV (and save state at end to use later)
-//next available color instead of random colors will make shared colors across views
-//from each document pull up "related" and have a view/compare option for each
-//|->or have multiple select on corpus screen
-//have size of word in tooltip related to proportion
-//single topic view pulls beginning of documents and highlights words if they have them
-//start on full corpus view
-
+//TODO: next available color instead of random colors will make shared colors across views (aka make it part of filter)
+//TODO: from each document pull up "related" and have a view/compare option for each to get to comparison view
+//TODO: |->or have multiple select on corpus screen, we haven't decided
+//TODO: have size of word in tooltip related to proportion
+//TODO: single topic view pulls beginning of documents and highlights words if they have them
 
 var csv_data;
 var gray = "#7d8084";
