@@ -18,7 +18,6 @@
 //TODO: single topic view pulls beginning of documents and highlights words if they have them
 
 var csv_data;
-var gray = "#7d8084";
 var chart;
 var tooltip;
 
