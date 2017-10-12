@@ -1,6 +1,12 @@
 var csv_data;
 var filteredData;
 var chart;
+var arcPercentages = [];
+var total_t_d_links = 0; //need this to compute proportions of topic relevance
+var margin;
+var width;
+var height;
+var radius;
 
 //parses our csv hosted on server
 //also does all of the one-time setup and calls our constructChart function the first time
@@ -20,7 +26,8 @@ function getData()
         .attr("height", height + margin.top + margin.bottom)
         .append("g")
         .attr("stroke", gray)
-        .attr("stroke-width", "0.5");
+        .attr("stroke-width", "0.5")
+        .attr("transform", "translate(" + ((width/2)) + "," + ((height/2)+margin.top) + ")"); 
 
     d3.csv("/topic_frame.csv", function(error, response) {
         csv_data = response;
@@ -49,24 +56,94 @@ function processData(csv)
                 {
                     result[key].push(current[""]);
                 }
+                total_t_d_links++;
             }
         }
     } 
-    return result;
+
+    var reformat = []
+    for(key in result)
+    {
+        var temp = {};
+        temp[key] = result[key];
+        reformat.push(temp);
+    }
+    
+    return reformat;
 }
 
+//what proportion of the total T_D links are attributed to this topic?
+//used to calculate the percentage of the circle that should be taken up
+//by this topic
+function arcPercentage(topic_name)
+{
+    for(key in filteredData)
+    {
+        var current = filteredData[key];
+        if(topic_name in current)
+        {
+            return current[topic_name].length / total_t_d_links;
+        } 
+    }
+    return 0;
+}
+
+//do all the steps needed to build the corpus view from the csv data
 function constructCorpus(csv)
 {
     filteredData = processData(csv)
     console.log(filteredData);
+
+    for(var i=0; i<filteredData.length;i++)//in filteredData)
+    {
+        //var topic_name = filteredData[i].keys(); //are you kidding me javascript?
+        var topic_name = Object.keys(filteredData[i])[0];
+        var temp = {};
+        temp["topic"] = topic_name;
+        temp["value"] = arcPercentage(topic_name);
+        arcPercentages.push(temp);
+    }
+
+    function arcTween(d) {
+        arc = d3.svg.arc().outerRadius(radius*1.1).innerRadius(radius-50).cornerRadius(5);
+        return arc(d);
+    }
+
+    var arc = d3.svg.arc()
+        .outerRadius(radius)
+        .innerRadius(radius - 50)
+        .cornerRadius(5);
+
+    var pie = d3.layout.pie()
+        .sort(null)
+        .startAngle(0)
+        .endAngle(2*Math.PI)
+        .value(function(d) { return d.value; });
+
+    var g = chart.selectAll(".arc")
+        .data(pie(arcPercentages))
+        .enter().append("g")
+        .attr("class", "arc");
+        
+
+    g.append("path")
+      .style("fill", function(d) { return randomColor(d.value);/*return d.data.color;*/ })
+      .transition().duration(750)
+      .attr("id", function(d,i) { return "arc_"+i; })
+      .attrTween('d', function(d) {
+           var i = d3.interpolate(d.startAngle, d.endAngle-.01); //calculate the in between positions to draw in 
+           return function(t) {
+               d.endAngle = i(t);
+             return arc(d);
+    }});
+
 }
 
-
+//wrapper to be called when page loads
 function main()
 {
     getData();
 }
-
 
 //call main
 document.addEventListener("DOMContentLoaded", function(e) {

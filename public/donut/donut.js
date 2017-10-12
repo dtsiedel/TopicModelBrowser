@@ -66,6 +66,8 @@ function constructChart(n)
 {
     var chosenDocument = csv_data[n];
     var filteredData = filter(chosenDocument);
+    
+    console.log(filteredData);
 
     function arcTween(d) {
         arc = d3.svg.arc().outerRadius(radius*1.1).innerRadius(radius-50).cornerRadius(5);

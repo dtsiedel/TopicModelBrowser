@@ -7,7 +7,10 @@
 //TODO: color fix (see general)
 
 //TODO: (CORPUS)
-//TODO: all of it
+//TODO: improve representation (some way too small)
+//TODO: repeated code with donut
+//TODO: the ribbons 
+//TODO: add other things like onhover tooltip, legend
 
 //TODO: (GENERAL)
 //TODO: split getData() so that we can consolidate repeated bits to library.js
