@@ -15,10 +15,10 @@
 
 //TODO: (GENERAL)
 //TODO: split getData() so that we can consolidate repeated bits to library.js
-//TODO: next available color instead of random colors will make shared colors across views (aka make it part of filter)
 //TODO: from each document pull up "related" and have a view/compare option for each to get to comparison view
 //TODO: |->or have multiple select on corpus screen, we haven't decided
 //TODO: have size of word in tooltip related to proportion
+//TODO: need to nail down color match between topics, should have a single function in library that assigns a number to topic, and then you always index that number into the color map to get the color. Right now same topic has different numbers between the views (but each number always has the same color).
 
 //TODO: (SINGLE TOPIC)
 //TODO: make it (lol)

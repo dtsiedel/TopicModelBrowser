@@ -98,22 +98,25 @@ function getData()
     });
 }
 
+//assign a color to topic n, or pull the color for n if it is already assigned
 function randomColor(n)
 {
-    if(n in color_map)
-    {
-        return color_map[n];   
-    }
- 
-    var color;
-    do
-    {
-        color = colors[Math.floor(Math.random()*colors.length)];
-    }
-    while(Object.values(color_map).indexOf(color) > -1) //god I hate javascript
-
-    color_map[n] = color;
-    return color;
+//    if(n in color_map)
+//    {
+//        return color_map[n];   
+//    }
+// 
+//    var color;
+//    do
+//    {
+//        color = colors[Math.floor(Math.random()*colors.length)];
+//    }
+//    while(Object.values(color_map).indexOf(color) > -1) //god I hate javascript
+//
+//
+//    color_map[n] = color;
+//    return color;
+    return colors[n];
 }
 
 //make text + ellipses no longer than n

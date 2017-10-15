@@ -1,7 +1,7 @@
 var csv_data;
 var filteredData;
 var chart;
-var arcPercentages = [];
+var topicData = [];
 var total_t_d_links = 0; //need this to compute proportions of topic relevance
 var margin;
 var width;
@@ -109,16 +109,15 @@ function constructCorpus(csv)
     filteredData = processData(csv)
     console.log(filteredData);
 
-    for(var i=0; i<filteredData.length;i++)//in filteredData)
+    for(var i=0; i<filteredData.length;i++)
     {
-        //var topic_name = filteredData[i].keys(); //are you kidding me javascript?
         var topic_name = Object.keys(filteredData[i])[0];
         var temp = {};
         temp["topic"] = topic_name;
         temp["value"] = arcPercentage(topic_name);
         temp["index"] = i;
         temp["color"] = randomColor(i);
-        arcPercentages.push(temp);
+        topicData.push(temp);
     }
 
     function arcTween(d) {
@@ -138,7 +137,7 @@ function constructCorpus(csv)
         .value(function(d) { return d.value; });
 
     var g = chart.selectAll(".arc")
-        .data(pie(arcPercentages))
+        .data(pie(topicData))
         .enter().append("g")
         .attr("class", "arc");
         
@@ -146,7 +145,6 @@ function constructCorpus(csv)
     g.append("path")
       .on("mouseover", function(){return tooltip.style("visibility", "visible");}) //bind tooltip to when mouse goes over arc
       .on("mousemove", function(d){
-            console.log(d3.select(this).data()[0]["data"]);
             var topic_text = d3.select(this).data()[0]["data"]["topic"]; 
             var index = d3.select(this).data()[0]["data"]["index"];
             return tooltip.style("top", (event.pageY-10)+"px").style("left",(event.pageX+10)+"px").html(generate_tooltip_html(index, topic_text, d.value)).style("background-color", d.data.color).style("color", "white");})
