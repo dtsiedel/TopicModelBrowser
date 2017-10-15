@@ -7,6 +7,7 @@ var margin;
 var width;
 var height;
 var radius;
+var tooltip;
 
 //parses our csv hosted on server
 //also does all of the one-time setup and calls our constructChart function the first time
@@ -29,6 +30,20 @@ function getData()
         .attr("stroke-width", "0.5")
         .attr("transform", "translate(" + ((width/2)) + "," + ((height/2)+margin.top) + ")"); 
 
+    tooltip = d3.select("body")
+        .append("div")
+        .attr("class", "tooltip")
+        .style("position", "absolute")
+        .style("width", "200px")
+        .style("background-color", "white")
+        .style("padding-left", "5px")
+        .style("z-index", "10") //put it in front of the arcs
+        .style("border-radius", "10px")
+        .style("visibility", "hidden")
+        .style("border", "1px solid white")
+        .text("Error"); //bad to see this (obviously)
+
+ 
     d3.csv("/topic_frame.csv", function(error, response) {
         csv_data = response;
         constructCorpus(csv_data);
@@ -101,6 +116,8 @@ function constructCorpus(csv)
         var temp = {};
         temp["topic"] = topic_name;
         temp["value"] = arcPercentage(topic_name);
+        temp["index"] = i;
+        temp["color"] = randomColor(i);
         arcPercentages.push(temp);
     }
 
@@ -127,7 +144,14 @@ function constructCorpus(csv)
         
 
     g.append("path")
-      .style("fill", function(d) { return randomColor(d.data.topic); })
+      .on("mouseover", function(){return tooltip.style("visibility", "visible");}) //bind tooltip to when mouse goes over arc
+      .on("mousemove", function(d){
+            console.log(d3.select(this).data()[0]["data"]);
+            var topic_text = d3.select(this).data()[0]["data"]["topic"]; 
+            var index = d3.select(this).data()[0]["data"]["index"];
+            return tooltip.style("top", (event.pageY-10)+"px").style("left",(event.pageX+10)+"px").html(generate_tooltip_html(index, topic_text, d.value)).style("background-color", d.data.color).style("color", "white");})
+      .on("mouseout", function(){return tooltip.style("visibility", "hidden");})
+      .style("fill", function(d) { return d.data.color; })
       .transition().duration(750)
       .attr("id", function(d,i) { return "arc_"+i; })
       .attrTween('d', function(d) {
@@ -136,7 +160,6 @@ function constructCorpus(csv)
                d.endAngle = i(t);
              return arc(d);
     }});
-
 }
 
 //wrapper to be called when page loads

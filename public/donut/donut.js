@@ -141,20 +141,6 @@ function constructChart(n)
 
 }
 
-//does all the text formatting for the tooltip
-function generate_tooltip_html(topic_number, topic_name, percentage)
-{
-    topic_words = topic_name.split("_");
-    text = "<div>";
-    text += "T" + topic_number + " (" + (percentage*100).toFixed(2) + "%)" + "<br>Sample Words:<br>";
-    for(var i = 0; i < topic_words.length; i++)
-    {
-        text += topic_words[i];
-        text += "<br>"
-    }
-    text += "</div>";
-    return text;
-}
 
 //call main on load
 document.addEventListener("DOMContentLoaded", function(e) {

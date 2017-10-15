@@ -10,8 +10,8 @@
 //TODO: improve representation (some way too small)
 //TODO: repeated code with donut
 //TODO: the ribbons 
-//TODO: add other things like onhover tooltip, legend
-//TODO: figure out color sharing  
+//TODO: figure out legend (maybe just have it scrollable?)
+//TODO: color fix (see general) 
 
 //TODO: (GENERAL)
 //TODO: split getData() so that we can consolidate repeated bits to library.js
@@ -19,7 +19,11 @@
 //TODO: from each document pull up "related" and have a view/compare option for each to get to comparison view
 //TODO: |->or have multiple select on corpus screen, we haven't decided
 //TODO: have size of word in tooltip related to proportion
+
+//TODO: (SINGLE TOPIC)
+//TODO: make it (lol)
 //TODO: single topic view pulls beginning of documents and highlights words if they have them
+//TODO: |->if the first n characters contains no key words, slide window doen
 
 var csv_data;
 var chart;
