@@ -1,6 +1,5 @@
 //see bars for TODOs
 
-var csv_data;
 var gray = "#7d8084";
 var arc_delay = 250;
 var margin;
@@ -13,6 +12,7 @@ var tooltip;
 //driver
 function main()
 {
+    getTopicIndices();
     getData();
 }
 

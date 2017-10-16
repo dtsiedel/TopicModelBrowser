@@ -18,6 +18,8 @@ var colors = ["#1CE6FF", "#FF34FF", "#FF4A46", "#008941", "#006FA6", "#A30059",
         "#BF5650", "#E83000", "#66796D", "#DA007C", "#FF1A59", "#8ADBB4", "#1E0200", "#5B4E51",
         "#C895C5", "#320033", "#FF6832", "#66E1D3", "#CFCDAC", "#D0AC94", "#7ED379", "#012C58"];
 var color_map = {};
+var csv_data = [];
+var topic_indices = {}; 
 var gray = "#d3d3d3";
 
 document.addEventListener("DOMContentLoaded", function(e) {
@@ -47,10 +49,10 @@ function filter(topic_array)
         }
         var val = topic_array[key];
         var newEntry = {};
-        newEntry["index"] = count; //TODO: method to insert these key values?
+        newEntry["index"] = topic_indices[key];
         newEntry["topic"] = key;
         newEntry["value"] = parseFloat(val);
-        newEntry["color"] = randomColor(count);
+        newEntry["color"] = getColor(count);
         filtered.push(newEntry);
         total += parseFloat(val);
         count++;
@@ -64,58 +66,9 @@ function filter(topic_array)
     return filtered;
 }
 
-function getData()
-{
-    //variables to control the graph result
-    margin = {top: 20, right: 20, bottom: 20, left: 20};
-    width = 600 - margin.left - margin.right;
-    height = width - margin.top - margin.bottom;
-    radius = Math.min(width, height) / 2;
-
-    // add the canvas to the DOM 
-    chart = d3.select("#bar-demo")
-        .append('svg')
-        .attr("width", width + margin.left + margin.right)
-        .attr("height", height + margin.top + margin.bottom)
-        .append("g")
-        .attr("stroke", gray)
-        .attr("stroke-width", "0.5");
-
-    tooltip = d3.select("body")
-        .append("div")
-        .attr("class", "tooltip")
-        .style("position", "absolute")
-        .style("z-index", "10") //put it in front of the arcs
-        .style("border-radius", "10px")
-        .style("visibility", "hidden")
-        .text("Error"); //bad to see this (obviously)
-
-    d3.csv("/topic_frame.csv", function(error, response) {
-        csv_data = response;
-        var t1 = randomDocument();
-        var t2 = randomDocument();
-        constructBars(t1, t2);
-    });
-}
-
 //assign a color to topic n, or pull the color for n if it is already assigned
-function randomColor(n)
+function getColor(n)
 {
-//    if(n in color_map)
-//    {
-//        return color_map[n];   
-//    }
-// 
-//    var color;
-//    do
-//    {
-//        color = colors[Math.floor(Math.random()*colors.length)];
-//    }
-//    while(Object.values(color_map).indexOf(color) > -1) //god I hate javascript
-//
-//
-//    color_map[n] = color;
-//    return color;
     return colors[n];
 }
 
@@ -173,4 +126,29 @@ function generate_tooltip_html(topic_number, topic_name, percentage)
     }
     text += "</div>";
     return text;
+}
+
+//initialize mapping of topic names to index
+function getTopicIndices()
+{
+    //TODO: redundancy with processData in corpus view
+    d3.csv("/topic_frame.csv", function(error, response) {
+        csv_data = response;
+        var count = 1;
+        for(var i=0;i<csv_data.length;i++)
+        {
+            var current = csv_data[i];
+            for(key in current)
+            {
+                if(key.length !== 0)
+                {
+                    if(!(key in topic_indices))
+                    {
+                        topic_indices[key] = count;
+                        count++;
+                    }
+                }
+            }
+        } 
+    });
 }

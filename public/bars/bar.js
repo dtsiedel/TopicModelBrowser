@@ -4,28 +4,25 @@
 //TODO: show related topics with lines
 
 //TODO: (DONUT)
-//TODO: color fix (see general)
 
 //TODO: (CORPUS)
 //TODO: improve representation (some way too small)
 //TODO: repeated code with donut
 //TODO: the ribbons 
 //TODO: figure out legend (maybe just have it scrollable?)
-//TODO: color fix (see general) 
 
 //TODO: (GENERAL)
-//TODO: split getData() so that we can consolidate repeated bits to library.js
+//TODO: split getData() so that we can consolidate repeated bits to library.js - easiest way would be to make it take a parameter for the function that it calls at the end
 //TODO: from each document pull up "related" and have a view/compare option for each to get to comparison view
 //TODO: |->or have multiple select on corpus screen, we haven't decided
-//TODO: have size of word in tooltip related to proportion
-//TODO: need to nail down color match between topics, should have a single function in library that assigns a number to topic, and then you always index that number into the color map to get the color. Right now same topic has different numbers between the views (but each number always has the same color).
+//TODO: make getTopicIndices() only called once (do this after we've merged views). Cache results of fetching csv data
+//TODO: lot of general cleanup for repeated code, bad naming, etc.
 
 //TODO: (SINGLE TOPIC)
 //TODO: make it (lol)
 //TODO: single topic view pulls beginning of documents and highlights words if they have them
 //TODO: |->if the first n characters contains no key words, slide window doen
 
-var csv_data;
 var chart;
 var tooltip;
 
@@ -68,6 +65,7 @@ function getData()
 
 function main()
 {
+    getTopicIndices();
     getData();
 }
 

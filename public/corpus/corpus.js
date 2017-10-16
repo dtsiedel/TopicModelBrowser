@@ -115,8 +115,8 @@ function constructCorpus(csv)
         var temp = {};
         temp["topic"] = topic_name;
         temp["value"] = arcPercentage(topic_name);
-        temp["index"] = i;
-        temp["color"] = randomColor(i);
+        temp["index"] = topic_indices[topic_name];
+        temp["color"] = getColor(topic_indices[topic_name]);
         topicData.push(temp);
     }
 
@@ -163,6 +163,7 @@ function constructCorpus(csv)
 //wrapper to be called when page loads
 function main()
 {
+    getTopicIndices(); //eventually calling it just once will make it available to all views
     getData();
 }
 
