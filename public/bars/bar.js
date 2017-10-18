@@ -6,9 +6,8 @@
 //TODO: (DONUT)
 
 //TODO: (CORPUS)
-//TODO: improve representation (some way too small)
 //TODO: repeated code with donut
-//TODO: the ribbons 
+//TODO: add the ribbons 
 //TODO: figure out legend (maybe just have it scrollable?)
 
 //TODO: (GENERAL)

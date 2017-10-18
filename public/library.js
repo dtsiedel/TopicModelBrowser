@@ -129,7 +129,7 @@ function generate_tooltip_html(topic_number, topic_name, percentage)
 }
 
 //initialize mapping of topic names to index
-function getTopicIndices()
+function getTopicIndices(func)
 {
     //TODO: redundancy with processData in corpus view
     d3.csv("/topic_frame.csv", function(error, response) {
@@ -150,5 +150,6 @@ function getTopicIndices()
                 }
             }
         } 
+        func();
     });
 }

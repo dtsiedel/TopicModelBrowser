@@ -12,8 +12,8 @@ var tooltip;
 //driver
 function main()
 {
-    getTopicIndices();
-    getData();
+    getTopicIndices(getData);
+    //getData();
 }
 
 //parses our csv hosted on server
@@ -97,6 +97,7 @@ function constructChart(n)
       .on("mousemove", function(d){
             var topic_text = d3.select(this).data()[0]["data"]["topic"]; 
             var index = d3.select(this).data()[0]["data"]["index"];
+            console.log(topic_text + " " + index);
             return tooltip.style("top", (event.pageY-10)+"px").style("left",(event.pageX+10)+"px").html(generate_tooltip_html(index, topic_text, d.value)).style("background-color", d.data.color).style("color", "white");})
       .on("mouseout", function(){return tooltip.style("visibility", "hidden");})
       .style("fill", function(d) { return d.data.color; })

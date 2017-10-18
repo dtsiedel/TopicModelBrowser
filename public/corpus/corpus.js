@@ -163,8 +163,7 @@ function constructCorpus(csv)
 //wrapper to be called when page loads
 function main()
 {
-    getTopicIndices(); //eventually calling it just once will make it available to all views
-    getData();
+    getTopicIndices(getData); //eventually calling it just once will make it available to all views
 }
 
 //call main
