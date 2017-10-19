@@ -64,8 +64,7 @@ function getData()
 
 function main()
 {
-    getTopicIndices();
-    getData();
+    getTopicIndices([getData]);
 }
 
 //direct comparison of two documents by their topic makeup

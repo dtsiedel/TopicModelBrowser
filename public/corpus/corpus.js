@@ -1,5 +1,4 @@
 var csv_data;
-var filteredData;
 var chart;
 var topicData = [];
 var total_t_d_links = 0; //need this to compute proportions of topic relevance
@@ -83,6 +82,8 @@ function processData(csv)
         temp[key] = result[key];
         reformat.push(temp);
     }
+
+    generateRibbonData(reformat);
     
     return reformat;
 }
@@ -106,8 +107,7 @@ function arcPercentage(topic_name)
 //do all the steps needed to build the corpus view from the csv data
 function constructCorpus(csv)
 {
-    filteredData = processData(csv)
-    console.log(filteredData);
+    filteredData = processData(csv);
 
     for(var i=0; i<filteredData.length;i++)
     {
@@ -163,7 +163,7 @@ function constructCorpus(csv)
 //wrapper to be called when page loads
 function main()
 {
-    getTopicIndices(getData); //eventually calling it just once will make it available to all views
+    getTopicIndices([getData]); //eventually calling it just once will make it available to all views
 }
 
 //call main

@@ -18,9 +18,11 @@ var colors = ["#1CE6FF", "#FF34FF", "#FF4A46", "#008941", "#006FA6", "#A30059",
         "#BF5650", "#E83000", "#66796D", "#DA007C", "#FF1A59", "#8ADBB4", "#1E0200", "#5B4E51",
         "#C895C5", "#320033", "#FF6832", "#66E1D3", "#CFCDAC", "#D0AC94", "#7ED379", "#012C58"];
 var color_map = {};
+var filteredData;
 var csv_data = [];
 var topic_indices = {}; 
 var gray = "#d3d3d3";
+var ribbonData = {};
 
 document.addEventListener("DOMContentLoaded", function(e) {
     console.log("loaded libary");
@@ -129,9 +131,9 @@ function generate_tooltip_html(topic_number, topic_name, percentage)
 }
 
 //initialize mapping of topic names to index
+//by just assigning them in a row
 function getTopicIndices(func)
 {
-    //TODO: redundancy with processData in corpus view
     d3.csv("/topic_frame.csv", function(error, response) {
         csv_data = response;
         var count = 1;
@@ -150,6 +152,65 @@ function getTopicIndices(func)
                 }
             }
         } 
-        func();
+        for(var i = 0; i < func.length; i++)
+        {
+            func[i]();
+        }
     });
+}
+    
+//why do I have to write array intersection code myself in 2017?
+function intersect(l1, l2)
+{
+    var result = [];
+    for(var i = 0; i < l1.length; i++)
+    {
+        for(var j = 0; j < l2.length; j++)
+        {
+            if(l1[i] === l2[j])
+            {
+                result.push(l1[i]);
+            }
+        }
+    }
+    return result;
+}
+
+//need a canonical name for the link between two documents
+//this sorts their indices then concatenates them
+function link_name(topic_1, topic_2)
+{
+    topic_1 = topic_indices[topic_1];
+    topic_2 = topic_indices[topic_2];
+
+    
+    if(topic_1 < topic_2)
+        return "" + topic_1 + "-" + topic_2;
+    return "" + topic_2 + "-" + topic_1;
+}
+
+
+//generate the list of topic-pair documents for ribbons
+//based on the list of dicts of topic:relevant documents
+function generateRibbonData(data)
+{
+    for(var i = 0; i < data.length; i++)
+    {
+        for(var j = i+1; j < data.length; j++)
+        {
+            if(i!==j) //don't need all the links to yourself
+            {
+                var t1 = data[i];
+                var t2 = data[j];
+                var l1 = t1[Object.keys(t1)[0]];
+                var l2 = t2[Object.keys(t2)[0]];
+                var name1 = Object.keys(t1)[0];
+                var name2 = Object.keys(t2)[0];
+                var shared = intersect(l1, l2); 
+                var name = link_name(name1, name2);
+                ribbonData[name] = shared;
+            }
+        }
+    }
+    console.log(ribbonData);
 }

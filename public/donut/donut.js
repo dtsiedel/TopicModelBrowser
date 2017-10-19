@@ -12,8 +12,7 @@ var tooltip;
 //driver
 function main()
 {
-    getTopicIndices(getData);
-    //getData();
+    getTopicIndices([getData]);
 }
 
 //parses our csv hosted on server
