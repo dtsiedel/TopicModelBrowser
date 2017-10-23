@@ -9,6 +9,7 @@
   "author": "Drew Siedel",
   "license": "ISC",
   "dependencies": {
+    "csv-parse": "^2.0.0",
     "express": "^4.15.5",
     "html": "^1.0.0"
   }

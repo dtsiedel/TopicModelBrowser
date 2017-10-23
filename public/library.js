@@ -219,7 +219,7 @@ function generateRibbonData(data)
                 var t = data[i];
                 var l = t[Object.keys(t)[0]];
                 ribbonCounts[i][i] = l.length;
-                //ribbonData[i][i] = l; //probably don't need to know that a topic shares everything with itself
+                ribbonData[i][i] = l; //probably don't need to know that a topic shares everything with itself, but need this for later
             }
             else
             {
@@ -239,4 +239,55 @@ function generateRibbonData(data)
     }
     console.log(ribbonData);
     console.log(ribbonCounts);
+}
+
+
+
+
+
+//was used to generate the output for ribbon_counts.csv
+//just did it in the console because you can't write to files
+//on the client side
+function stringifyRibbonCounts(array)
+{
+    var result = "";
+    for(var i = 0; i < array.length; i++)
+    {
+        var current = array[i];
+        for(var j = 0; j < current.length; j++)
+        {
+            result += current[j] + ","
+        }
+        result = result.substring(0, result.length - 1);
+        result += "\n";
+    }
+    return result;
+}
+
+//was used to generate the output for ribbon_documents.txt
+//use it the same way as the previous function stringifyRibbonCounts
+//has to be different because this one is a 2d array where each elements is an array of numbers
+function stringifyRibbonDocuments(array)
+{
+    var result = ""; 
+    for(var i = 0; i < array.length; i++)
+    {
+        var current = array[i];
+        for(var j = 0; j < current.length; j++)
+        {
+            var list = current[j];
+            var temp = "";
+            for(var z = 0; z < list.length; z++)
+            {
+                temp += list[z];
+                temp += ",";
+            }
+            temp = temp.substring(0, temp.length - 1); 
+            temp += "|";
+            result += temp;
+        }
+        result = result.substring(0, result.length - 1);
+        result += "\n";
+    }
+    return result;
 }

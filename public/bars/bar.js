@@ -1,28 +1,3 @@
-//TODO: (BARS)
-//TODO: topic name on bars 
-//TODO: tooltip
-//TODO: show related topics with lines
-
-//TODO: (DONUT)
-
-//TODO: (CORPUS)
-//TODO: run offline for ribbon data
-//TODO: repeated code with donut
-//TODO: add the ribbons 
-//TODO: figure out legend (maybe just have it scrollable?)
-
-//TODO: (GENERAL)
-//TODO: split getData() so that we can consolidate repeated bits to library.js - easiest way would be to make it take a parameter for the function that it calls at the end
-//TODO: from each document pull up "related" and have a view/compare option for each to get to comparison view
-//TODO: |->or have multiple select on corpus screen, we haven't decided
-//TODO: make getTopicIndices() only called once (do this after we've merged views). Cache results of fetching csv data
-//TODO: lot of general cleanup for repeated code, bad naming, etc.
-
-//TODO: (SINGLE TOPIC)
-//TODO: make it (lol)
-//TODO: single topic view pulls beginning of documents and highlights words if they have them
-//TODO: |->if the first n characters contains no key words, slide window doen
-
 var chart;
 var tooltip;
 
