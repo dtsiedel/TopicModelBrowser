@@ -6,6 +6,8 @@
 //TODO: (DONUT)
 
 //TODO: (CORPUS)
+//TODO: run offline for ribbon data
+//TODO: duplicated data in ribbon arrays (accessor arrays can fix)
 //TODO: repeated code with donut
 //TODO: add the ribbons 
 //TODO: figure out legend (maybe just have it scrollable?)

@@ -22,7 +22,8 @@ var filteredData;
 var csv_data = [];
 var topic_indices = {}; 
 var gray = "#d3d3d3";
-var ribbonData = {};
+var ribbonData;
+var ribbonCounts;
 
 document.addEventListener("DOMContentLoaded", function(e) {
     console.log("loaded libary");
@@ -189,16 +190,38 @@ function link_name(topic_1, topic_2)
     return "" + topic_2 + "-" + topic_1;
 }
 
+//what the hell javascript
+function Array2D(x, y)
+{
+    var array2D = new Array(x);
+
+    for(var i = 0; i < array2D.length; i++)
+    {
+        array2D[i] = new Array(y);
+    }
+
+    return array2D;
+}
 
 //generate the list of topic-pair documents for ribbons
 //based on the list of dicts of topic:relevant documents
 function generateRibbonData(data)
 {
+    ribbonCounts = Array2D(data.length, data.length);
+    ribbonData = Array2D(data.length, data.length);
+
     for(var i = 0; i < data.length; i++)
     {
-        for(var j = i+1; j < data.length; j++)
+        for(var j = i; j < data.length; j++)
         {
-            if(i!==j) //don't need all the links to yourself
+            if(i === j) //all are shared in the diagonal matrix
+            {
+                var t = data[i];
+                var l = t[Object.keys(t)[0]];
+                ribbonCounts[i][i] = l.length;
+                //ribbonData[i][i] = l; //probably don't need to know that a topic shares everything with itself
+            }
+            else
             {
                 var t1 = data[i];
                 var t2 = data[j];
@@ -207,10 +230,13 @@ function generateRibbonData(data)
                 var name1 = Object.keys(t1)[0];
                 var name2 = Object.keys(t2)[0];
                 var shared = intersect(l1, l2); 
-                var name = link_name(name1, name2);
-                ribbonData[name] = shared;
+                ribbonData[i][j] = shared;
+                ribbonData[j][i] = shared;
+                ribbonCounts[i][j] = shared.length;  
+                ribbonCounts[j][i] = shared.length;
             }
         }
     }
     console.log(ribbonData);
+    console.log(ribbonCounts);
 }
