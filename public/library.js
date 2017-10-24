@@ -22,8 +22,8 @@ var filteredData;
 var csv_data = [];
 var topic_indices = {}; 
 var gray = "#d3d3d3";
-var ribbonData;
-var ribbonCounts;
+var ribbon_data;
+var ribbon_counts;
 
 document.addEventListener("DOMContentLoaded", function(e) {
     console.log("loaded libary");
@@ -254,13 +254,13 @@ function getRibbonCounts(func)
     //in callback: should just be able to get it with d3.csv
     d3.text("/ribbon_counts.csv", function(error, response) {
         ribbon_counts = response; 
-        lines = ribbon_counts.split("\n");
+        var lines = ribbon_counts.split("\n");
         lines.splice(-1,1); //remove last (extra) one. js is dumb
 
         ribbon_counts = [];
         for(var i = 0; i < lines.length; i++)
         {
-            numbers = lines[i].split(",");
+            var numbers = lines[i].split(",");
             numbers.splice(1,-1);
             ribbon_counts.push(numbers);
         }
@@ -272,15 +272,27 @@ function getRibbonCounts(func)
 //same as getRibbonCounts but a little tougher
 function getRibbonData(func)
 {
-    //fetch txt file
     //split on \n to get 50 arrays 
     //for each, split on | to get 50 arrays each
     //each of those can be split on , to get the elements inside
     //make one big 50x50 array where the contents of each element is gained by the comma split 
     d3.text("/ribbon_data.txt", function(error, response) {
+        ribbon_data = response;
+        var lines = ribbon_data.split("\n");
+        lines.splice(-2,2); //two stragglers on this split, remove them
 
+        ribbon_data = [];
+        for(var i = 0; i < lines.length; i++)
+        {
+            var arrays = lines[i].split("|"); //divider for each array in a line
+            ribbon_data.push([]);
 
-
+            for(var j = 0; j < arrays.length; j++)
+            {
+                var numbers = arrays[j].split(",");
+                ribbon_data[i][j] = numbers;
+            }
+        }
 
         func();
     });
