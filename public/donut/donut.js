@@ -1,5 +1,3 @@
-//see bars for TODOs
-
 var gray = "#7d8084";
 var arc_delay = 250;
 var margin;
@@ -12,7 +10,7 @@ var tooltip;
 //driver
 function main()
 {
-    getTopicIndices([getData]);
+    getTopicIndices(getData);
 }
 
 //parses our csv hosted on server
@@ -66,8 +64,6 @@ function constructChart(n)
     var chosenDocument = csv_data[n];
     var filteredData = filter(chosenDocument);
     
-    console.log(filteredData);
-
     function arcTween(d) {
         arc = d3.svg.arc().outerRadius(radius*1.1).innerRadius(radius-50).cornerRadius(5);
         return arc(d);
@@ -96,7 +92,6 @@ function constructChart(n)
       .on("mousemove", function(d){
             var topic_text = d3.select(this).data()[0]["data"]["topic"]; 
             var index = d3.select(this).data()[0]["data"]["index"];
-            console.log(topic_text + " " + index);
             return tooltip.style("top", (event.pageY-10)+"px").style("left",(event.pageX+10)+"px").html(generate_tooltip_html(index, topic_text, d.value)).style("background-color", d.data.color).style("color", "white");})
       .on("mouseout", function(){return tooltip.style("visibility", "hidden");})
       .style("fill", function(d) { return d.data.color; })

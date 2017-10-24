@@ -83,7 +83,7 @@ function processData(csv)
         reformat.push(temp);
     }
 
-    generateRibbonData(reformat);
+    //generateRibbonData(reformat);
     
     return reformat;
 }
@@ -163,7 +163,7 @@ function constructCorpus(csv)
 //wrapper to be called when page loads
 function main()
 {
-    getTopicIndices([getData]); //eventually calling it just once will make it available to all views
+    getTopicIndices(getData); //eventually calling it just once will make it available to all views
 }
 
 //call main

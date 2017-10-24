@@ -153,10 +153,15 @@ function getTopicIndices(func)
                 }
             }
         } 
-        for(var i = 0; i < func.length; i++)
+  
+        //callback hell
+        getRibbonCounts(function()
         {
-            func[i]();
-        }
+            getRibbonData(function()
+            {
+                func();
+            });
+        });
     });
 }
     
@@ -237,10 +242,50 @@ function generateRibbonData(data)
             }
         }
     }
-    console.log(ribbonData);
-    console.log(ribbonCounts);
+    //console.log(ribbonData);
+    //console.log(ribbonCounts);
 }
 
+//fill our ribbonCounts array by pulling the cached version on the
+//server instead of computing it ourselves with the heavy methods above
+function getRibbonCounts(func)
+{
+    //fetch csv
+    //in callback: should just be able to get it with d3.csv
+    d3.text("/ribbon_counts.csv", function(error, response) {
+        ribbon_counts = response; 
+        lines = ribbon_counts.split("\n");
+        lines.splice(-1,1); //remove last (extra) one. js is dumb
+
+        ribbon_counts = [];
+        for(var i = 0; i < lines.length; i++)
+        {
+            numbers = lines[i].split(",");
+            numbers.splice(1,-1);
+            ribbon_counts.push(numbers);
+        }
+
+        func();
+    });
+}
+
+//same as getRibbonCounts but a little tougher
+function getRibbonData(func)
+{
+    //fetch txt file
+    //split on \n to get 50 arrays 
+    //for each, split on | to get 50 arrays each
+    //each of those can be split on , to get the elements inside
+    //make one big 50x50 array where the contents of each element is gained by the comma split 
+    d3.text("/ribbon_data.txt", function(error, response) {
+
+
+
+
+        func();
+    });
+
+}
 
 
 
@@ -267,7 +312,7 @@ function stringifyRibbonCounts(array)
 //was used to generate the output for ribbon_documents.txt
 //use it the same way as the previous function stringifyRibbonCounts
 //has to be different because this one is a 2d array where each elements is an array of numbers
-function stringifyRibbonDocuments(array)
+function stringifyRibbonData(array)
 {
     var result = ""; 
     for(var i = 0; i < array.length; i++)
@@ -291,3 +336,5 @@ function stringifyRibbonDocuments(array)
     }
     return result;
 }
+
+
