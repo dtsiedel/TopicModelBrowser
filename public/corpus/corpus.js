@@ -9,7 +9,7 @@ var radius;
 var tooltip;
 
 //parses our csv hosted on server
-//also does all of the one-time setup and calls our constructChart function the first time
+//also does all of the one-time setup and calls our constructCorpus function the first time
 //needs to be split later so that we can not duplicate code
 function getData()
 {
@@ -20,28 +20,14 @@ function getData()
     radius = Math.min(width, height) / 2;
 
     // add the canvas to the DOM 
-    chart = d3.select("#corpus-demo")
-        .append('svg')
-        .attr("width", width + margin.left + margin.right)
-        .attr("height", height + margin.top + margin.bottom)
-        .append("g")
-        .attr("stroke", gray)
-        .attr("stroke-width", "0.5")
-        .attr("transform", "translate(" + ((width/2)) + "," + ((height/2)+margin.top) + ")"); 
-
-    tooltip = d3.select("body")
-        .append("div")
-        .attr("class", "tooltip")
-        .style("position", "absolute")
-        .style("width", "200px")
-        .style("background-color", "white")
-        .style("padding-left", "5px")
-        .style("z-index", "10") //put it in front of the arcs
-        .style("border-radius", "10px")
-        .style("visibility", "hidden")
-        .style("border", "1px solid white")
-        .text("Error"); //bad to see this (obviously)
-
+//    chart = d3.select("#corpus-demo")
+//        .append('svg')
+//        .attr("width", width + margin.left + margin.right)
+//        .attr("height", height + margin.top + margin.bottom)
+//        .append("g")
+//        .attr("stroke", gray)
+//        .attr("stroke-width", "0.5")
+//        .attr("transform", "translate(" + ((width/2)) + "," + ((height/2)+margin.top) + ")"); 
  
     d3.csv("/topic_frame.csv", function(error, response) {
         csv_data = response;
@@ -83,7 +69,7 @@ function processData(csv)
         reformat.push(temp);
     }
 
-    //generateRibbonData(reformat);
+    //generateRibbonData(reformat); //this is now done offline
     
     return reformat;
 }
@@ -105,6 +91,7 @@ function arcPercentage(topic_name)
 }
 
 //do all the steps needed to build the corpus view from the csv data
+/*
 function constructCorpus(csv)
 {
     filteredData = processData(csv);
@@ -158,6 +145,115 @@ function constructCorpus(csv)
                d.endAngle = i(t);
              return arc(d);
     }});
+}
+*/
+
+
+//TEMP function
+//this processing should eventually be done for the offline version and saved on the server
+//instead of doing it dynamically
+//unless it's better to do it now so that we can vary the threshold?
+function process(matrix)
+{
+    for(var i = 0; i < matrix.length; i++)
+    {
+        var current = matrix[i];
+        for(var j = 0; j < current.length; j++)
+        {
+            if((i === j) || (current[j] <= corpus_threshold))
+            {
+                current[j] = 0;
+            }
+        }
+    } 
+}
+
+//build the arcs and ribbons
+function constructCorpus(csv)
+{
+    var matrix = ribbon_counts; 
+    process(matrix); 
+        
+    console.log(matrix);
+
+    var width = 720,
+        height = 720,
+        outerRadius = Math.min(width, height) / 2 - 10,
+        innerRadius = outerRadius - 24;
+     
+    var formatPercent = d3.format(".1%");
+     
+    var arc = d3.svg.arc()
+        .innerRadius(innerRadius)
+        .outerRadius(outerRadius);
+     
+    var layout = d3.layout.chord()
+        .padding(.04)
+        .sortSubgroups(d3.descending)
+        .sortChords(d3.ascending);
+     
+    var path = d3.svg.chord()
+        .radius(innerRadius);
+     
+    var svg = d3.select("body").append("svg")
+        .attr("width", width)
+        .attr("height", height)
+        .append("g")
+        .attr("id", "circle")
+        .attr("transform", "translate(" + width / 2 + "," + height / 2 + ")");
+         
+    svg.append("circle")
+        .attr("r", outerRadius);
+     
+    // Compute the chord layout.
+    layout.matrix(matrix);
+     
+    // Add a group per neighborhood.
+    var group = svg.selectAll(".group")
+        .data(layout.groups)
+        .enter().append("g")
+        .attr("class", "group")
+        .on("mouseover", mouseover);
+     
+    // Add the group arc.
+    var groupPath = group.append("path")
+        .attr("id", function(d, i) { return "group" + i; })
+        .attr("d", arc)
+        .style("fill", function(d, i) { return gray; /*return cities[i].color; */});
+     
+    // Add a text label.
+    var groupText = group.append("text")
+        .attr("x", 6)
+        .attr("dy", 15);
+     
+    groupText.append("textPath")
+        .attr("xlink:href", function(d, i) { return "#group" + i; })
+        .text(function(d, i) { return "test"; /*return cities[i].name; */});
+     
+    // Add the chords.
+    var chord = svg.selectAll(".chord")
+        .data(layout.chords)
+        .enter().append("path")
+        .attr("class", "chord")
+        .style("fill", function(d) { return gray; /*return cities[d.source.index].color;*/ })
+        .attr("d", path);
+         
+    // Add an elaborate mouseover title for each chord.
+     chord.append("title").text(function(d) {
+//         return cities[d.source.index].name
+//         + " → " + cities[d.target.index].name
+//         + ": " + formatPercent(d.source.value)
+//         + "\n" + cities[d.target.index].name
+//         + " → " + cities[d.source.index].name
+//         + ": " + formatPercent(d.target.value);
+        return "test";
+     });
+     
+    function mouseover(d, i) {
+        chord.classed("fade", function(p) {
+            return p.source.index != i && p.target.index != i;
+        });
+    }
 }
 
 //wrapper to be called when page loads

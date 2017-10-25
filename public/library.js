@@ -1,6 +1,7 @@
 //Includes functions used by multiple views, to avoid duplication
 
 var threshold = 0.05; //how high must a topic be to be included?
+var corpus_threshold = 100; //how many documents must be shared for the link to be in the corpus view?
 var colors = ["#1CE6FF", "#FF34FF", "#FF4A46", "#008941", "#006FA6", "#A30059",
         "#FFDBE5", "#7A4900", "#0000A6", "#63FFAC", "#B79762", "#004D43", "#8FB0FF", "#997D87",
         "#5A0007", "#809693", "#1B4400", "#4FC601", "#3B5DFF", "#4A3B53", "#FF2F80",
@@ -154,7 +155,7 @@ function getTopicIndices(func)
             }
         } 
   
-        //callback hell
+        //callback hell incoming
         getRibbonCounts(function()
         {
             getRibbonData(function()
@@ -210,6 +211,7 @@ function Array2D(x, y)
 
 //generate the list of topic-pair documents for ribbons
 //based on the list of dicts of topic:relevant documents
+//TODO: really should try to have the [i,i] element be the documents that are only about one topic
 function generateRibbonData(data)
 {
     ribbonCounts = Array2D(data.length, data.length);

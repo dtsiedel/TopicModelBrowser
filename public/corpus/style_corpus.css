@@ -1,3 +1,22 @@
 body {
     background-color: black;
 }
+
+
+#circle circle {
+    fill: none;
+    pointer-events: all;
+}
+ 
+.group path {
+    fill-opacity: .5;
+}
+ 
+path.chord {
+    stroke: #fff/*#000*/;
+    stroke-width: /*.25*/.20px;
+}
+ 
+#circle:hover path.fade {
+    display: none;
+}

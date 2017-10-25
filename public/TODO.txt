@@ -6,11 +6,13 @@
 (DONUT)
 
 (CORPUS)
--repeated code with donut
 -add the ribbons 
+-remove temp threshold function in corpus by doing it in preprocess step, and also make the self links be the documents that are only about that topic 
+-repeated code with donut
 -figure out legend (maybe just have it scrollable?)
 
 (GENERAL)
+-modify the R topic model to get out the metadata we need (urls) so that we can get our document's text/metadata/link
 -split getData() so that we can consolidate repeated bits to library.js - easiest way would be to make it take a parameter for the function that it calls at the end
 -from each document pull up "related" and have a view/compare option for each to get to comparison view
 |->or have multiple select on corpus screen, we haven't decided
