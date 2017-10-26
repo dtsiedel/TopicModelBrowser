@@ -180,7 +180,25 @@ function constructCorpus(csv)
 {
     var matrix = ribbon_counts; 
     process(matrix); 
-        
+    
+    //looks like the layout doesn't like how many entries we have
+    //try the following with size = 10 vs size = 50
+    //maybe try turning padding way down and trying to find a way to make the width greater that way?
+    var test = [];
+    var size = 10;
+    for(var i = 0; i < size; i++)
+    {
+        var current = []
+        for(var j = 0; j < size; j++)
+        {
+            current[j] = j % 2;
+        }
+        test.push(current);
+    }
+    console.log(test);
+    matrix = test; 
+    //
+ 
     var width = 600,
         height = 600,
         outerRadius = Math.min(width, height) / 2 - 10,
