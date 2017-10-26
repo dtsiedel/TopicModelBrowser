@@ -178,13 +178,13 @@ function constructCorpus(csv)
         .data(layout.chords)
         .enter().append("path")
         .attr("class", "chord")
-        .style("stroke", "white") //will need to be appropriate color eventually
+        .style("stroke", "white") 
         .style("fill", function(d) { return getColor(d.target.index % n_topics); })
         .attr("d", path);
          
     // Add an elaborate mouseover title for each chord.
      chord.append("title").text(function(d) {
-        return "test";
+        return d.source.index + "->" + d.target.index;
      });
      
     function mouseover(d, i) {
