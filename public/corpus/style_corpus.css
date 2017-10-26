@@ -9,12 +9,12 @@ body {
 }
  
 .group path {
-    fill-opacity: .5;
+    fill-opacity: .25;
 }
  
 path.chord {
-    stroke: #fff/*#000*/;
-    stroke-width: /*.25*/.20px;
+    /*stroke: #4286f4/*#fff*/;*/
+    stroke-width: .20px;
 }
  
 #circle:hover path.fade {

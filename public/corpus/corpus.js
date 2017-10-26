@@ -168,16 +168,21 @@ function process(matrix)
     } 
 }
 
-//build the arcs and ribbons
+//TODO for ribbons:
+//figure out dynamic spacing of circle (padding)
+//get widths corresponding to width of arc
+//sort out a good threshold to be informative
+//appropriate colors based on topic
+//documents available from a ribbon
+
+//make the corpus view, incuding arcs and ribbons
 function constructCorpus(csv)
 {
     var matrix = ribbon_counts; 
     process(matrix); 
         
-    console.log(matrix);
-
-    var width = 720,
-        height = 720,
+    var width = 600,
+        height = 600,
         outerRadius = Math.min(width, height) / 2 - 10,
         innerRadius = outerRadius - 24;
      
@@ -188,7 +193,7 @@ function constructCorpus(csv)
         .outerRadius(outerRadius);
      
     var layout = d3.layout.chord()
-        .padding(.04)
+        .padding(.125)
         .sortSubgroups(d3.descending)
         .sortChords(d3.ascending);
      
@@ -219,6 +224,7 @@ function constructCorpus(csv)
     var groupPath = group.append("path")
         .attr("id", function(d, i) { return "group" + i; })
         .attr("d", arc)
+        .style("stroke", "red")
         .style("fill", function(d, i) { return gray; /*return cities[i].color; */});
      
     // Add a text label.
@@ -235,17 +241,12 @@ function constructCorpus(csv)
         .data(layout.chords)
         .enter().append("path")
         .attr("class", "chord")
+        .style("stroke", getColor(3)) //will need to be appropriate color eventually
         .style("fill", function(d) { return gray; /*return cities[d.source.index].color;*/ })
         .attr("d", path);
          
     // Add an elaborate mouseover title for each chord.
      chord.append("title").text(function(d) {
-//         return cities[d.source.index].name
-//         + " → " + cities[d.target.index].name
-//         + ": " + formatPercent(d.source.value)
-//         + "\n" + cities[d.target.index].name
-//         + " → " + cities[d.source.index].name
-//         + ": " + formatPercent(d.target.value);
         return "test";
      });
      

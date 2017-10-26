@@ -6,7 +6,7 @@
 (DONUT)
 
 (CORPUS)
--add the ribbons 
+-see TODOs on making ribbons work
 -remove temp threshold function in corpus by doing it in preprocess step, and also make the self links be the documents that are only about that topic 
 -repeated code with donut
 -figure out legend (maybe just have it scrollable?)
