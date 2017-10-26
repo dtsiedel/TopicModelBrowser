@@ -155,6 +155,11 @@ function constructCorpus(csv)
 //unless it's better to do it now so that we can vary the threshold?
 function process(matrix)
 {
+    var maxRow = matrix.map(function(row){ return Math.max.apply(Math, row); });
+    var max = Math.max.apply(null, maxRow);
+    
+    console.log(max);
+
     for(var i = 0; i < matrix.length; i++)
     {
         var current = matrix[i];
@@ -164,6 +169,7 @@ function process(matrix)
             {
                 current[j] = 0;
             }
+            current[j] /= (max/5);
         }
     } 
 }
@@ -184,8 +190,9 @@ function constructCorpus(csv)
     //looks like the layout doesn't like how many entries we have
     //try the following with size = 10 vs size = 50
     //maybe try turning padding way down and trying to find a way to make the width greater that way?
+    /*
     var test = [];
-    var size = 10;
+    var size = 50;
     for(var i = 0; i < size; i++)
     {
         var current = []
@@ -197,8 +204,9 @@ function constructCorpus(csv)
     }
     console.log(test);
     matrix = test; 
+    */
     //
- 
+    
     var width = 600,
         height = 600,
         outerRadius = Math.min(width, height) / 2 - 10,
@@ -211,7 +219,7 @@ function constructCorpus(csv)
         .outerRadius(outerRadius);
      
     var layout = d3.layout.chord()
-        .padding(.125)
+        //.padding(.125)
         .sortSubgroups(d3.descending)
         .sortChords(d3.ascending);
      
