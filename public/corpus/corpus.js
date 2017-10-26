@@ -90,68 +90,6 @@ function arcPercentage(topic_name)
     return 0;
 }
 
-//do all the steps needed to build the corpus view from the csv data
-/*
-function constructCorpus(csv)
-{
-    filteredData = processData(csv);
-
-    for(var i=0; i<filteredData.length;i++)
-    {
-        var topic_name = Object.keys(filteredData[i])[0];
-        var temp = {};
-        temp["topic"] = topic_name;
-        temp["value"] = arcPercentage(topic_name);
-        temp["index"] = topic_indices[topic_name];
-        temp["color"] = getColor(topic_indices[topic_name]);
-        topicData.push(temp);
-    }
-
-    function arcTween(d) {
-        arc = d3.svg.arc().outerRadius(radius*1.1).innerRadius(radius-50).cornerRadius(5);
-        return arc(d);
-    }
-
-    var arc = d3.svg.arc()
-        .outerRadius(radius)
-        .innerRadius(radius - 30)
-        .cornerRadius(5);
-
-    var pie = d3.layout.pie()
-        .sort(null)
-        .startAngle(0)
-        .endAngle(2*Math.PI)
-        .value(function(d) { return d.value; });
-
-    var g = chart.selectAll(".arc")
-        .data(pie(topicData))
-        .enter().append("g")
-        .attr("class", "arc");
-        
-
-    g.append("path")
-      .on("mouseover", function(){return tooltip.style("visibility", "visible");}) //bind tooltip to when mouse goes over arc
-      .on("mousemove", function(d){
-            var topic_text = d3.select(this).data()[0]["data"]["topic"]; 
-            var index = d3.select(this).data()[0]["data"]["index"];
-            return tooltip.style("top", (event.pageY-10)+"px").style("left",(event.pageX+10)+"px").html(generate_tooltip_html(index, topic_text, d.value)).style("background-color", d.data.color).style("color", "white");})
-      .on("mouseout", function(){return tooltip.style("visibility", "hidden");})
-      .style("fill", function(d) { return d.data.color; })
-      .transition().duration(750)
-      .attr("id", function(d,i) { return "arc_"+i; })
-      .attrTween('d', function(d) {
-           var i = d3.interpolate(d.startAngle, d.endAngle-.01); //calculate the in between positions to draw in 
-           return function(t) {
-               d.endAngle = i(t);
-             return arc(d);
-    }});
-}
-*/
-
-
-//TEMP function
-//this processing should eventually be done for the offline version and saved on the server
-//instead of doing it dynamically
 //unless it's better to do it now so that we can vary the threshold?
 function process(matrix)
 {
