@@ -158,8 +158,6 @@ function process(matrix)
     var maxRow = matrix.map(function(row){ return Math.max.apply(Math, row); });
     var max = Math.max.apply(null, maxRow);
     
-    console.log(max);
-
     for(var i = 0; i < matrix.length; i++)
     {
         var current = matrix[i];
@@ -169,43 +167,17 @@ function process(matrix)
             {
                 current[j] = 0;
             }
-            current[j] /= (max/5);
+            current[j] /= (max/5); //scale so it renders appropriately
         }
     } 
 }
-
-//TODO for ribbons:
-//figure out dynamic spacing of circle (padding)
-//get widths corresponding to width of arc
-//sort out a good threshold to be informative
-//appropriate colors based on topic
-//documents available from a ribbon
 
 //make the corpus view, incuding arcs and ribbons
 function constructCorpus(csv)
 {
     var matrix = ribbon_counts; 
+    var n_topics = matrix.length;
     process(matrix); 
-    
-    //looks like the layout doesn't like how many entries we have
-    //try the following with size = 10 vs size = 50
-    //maybe try turning padding way down and trying to find a way to make the width greater that way?
-    /*
-    var test = [];
-    var size = 50;
-    for(var i = 0; i < size; i++)
-    {
-        var current = []
-        for(var j = 0; j < size; j++)
-        {
-            current[j] = j % 2;
-        }
-        test.push(current);
-    }
-    console.log(test);
-    matrix = test; 
-    */
-    //
     
     var width = 600,
         height = 600,
@@ -219,7 +191,6 @@ function constructCorpus(csv)
         .outerRadius(outerRadius);
      
     var layout = d3.layout.chord()
-        //.padding(.125)
         .sortSubgroups(d3.descending)
         .sortChords(d3.ascending);
      
@@ -244,14 +215,16 @@ function constructCorpus(csv)
         .data(layout.groups)
         .enter().append("g")
         .attr("class", "group")
+        .style("fill", "white")
         .on("mouseover", mouseover);
      
     // Add the group arc.
     var groupPath = group.append("path")
         .attr("id", function(d, i) { return "group" + i; })
         .attr("d", arc)
-        .style("stroke", "red")
-        .style("fill", function(d, i) { return gray; /*return cities[i].color; */});
+        .style("stroke", gray)
+        .style("stroke-width", .05)
+        .style("fill", function(d) { return getColor(d.index % n_topics); });
      
     // Add a text label.
     var groupText = group.append("text")
@@ -260,15 +233,15 @@ function constructCorpus(csv)
      
     groupText.append("textPath")
         .attr("xlink:href", function(d, i) { return "#group" + i; })
-        .text(function(d, i) { return "test"; /*return cities[i].name; */});
+        .text(function(d, i) { return ""; });
      
     // Add the chords.
     var chord = svg.selectAll(".chord")
         .data(layout.chords)
         .enter().append("path")
         .attr("class", "chord")
-        .style("stroke", getColor(3)) //will need to be appropriate color eventually
-        .style("fill", function(d) { return gray; /*return cities[d.source.index].color;*/ })
+        .style("stroke", "white") //will need to be appropriate color eventually
+        .style("fill", function(d) { return getColor(d.target.index % n_topics); })
         .attr("d", path);
          
     // Add an elaborate mouseover title for each chord.

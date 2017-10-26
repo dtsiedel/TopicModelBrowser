@@ -9,11 +9,10 @@ body {
 }
  
 .group path {
-    fill-opacity: .25;
+    /*fill-opacity: .25;*/
 }
  
 path.chord {
-    /*stroke: #4286f4/*#fff*/;*/
     stroke-width: .20px;
 }
  

@@ -6,10 +6,11 @@
 (DONUT)
 
 (CORPUS)
--see TODOs on making ribbons work
+-figure out legend (maybe just have it scrollable?)
+-work on adding features and legibility
+-add doncuments on each ribbon
 -remove temp threshold function in corpus by doing it in preprocess step, and also make the self links be the documents that are only about that topic 
 -repeated code with donut
--figure out legend (maybe just have it scrollable?)
 
 (GENERAL)
 -modify the R topic model to get out the metadata we need (urls) so that we can get our document's text/metadata/link
