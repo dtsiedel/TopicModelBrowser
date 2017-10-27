@@ -190,7 +190,8 @@ function constructCorpus(csv)
         .attr("d", path);
          
     function chordselected(d) {
-        info.text(ribbon_data[d.source.index][d.target.index].join(",").substring(0,10000));
+        var text = generate_document_info(d.source.index, d.target.index);
+        info.html(text);
     }
  
     function mouseover(d, i) {
@@ -198,6 +199,23 @@ function constructCorpus(csv)
             return p.source.index != i && p.target.index != i;
         });
     }
+}
+
+function generate_document_info(source, target)
+{
+    var result = "Topic ";
+    result += source + " and Topic ";
+    result += target + " Shared Documents:<br><br>";
+    var docs = ribbon_data[source][target]; 
+    for(var i = 0; i < docs.length; i++)
+    {
+        if(i > chord_threshold)
+        {
+            break;
+        }
+        result += "Document " + docs[i] + "<br>"; 
+    }
+    return result;
 }
 
 //wrapper to be called when page loads
