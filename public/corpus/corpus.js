@@ -141,6 +141,12 @@ function constructCorpus(csv)
         .append("g")
         .attr("id", "circle")
         .attr("transform", "translate(" + width / 2 + "," + height / 2 + ")");
+
+    var info = d3.select("body").append("div")
+        .attr("class", "info-box")
+        .attr("width", "500px")
+        .attr("height", "500px")
+        .text("Click a chord to see the documents joining those two documents!");
          
     svg.append("circle")
         .attr("r", outerRadius);
@@ -180,13 +186,13 @@ function constructCorpus(csv)
         .attr("class", "chord")
         .style("stroke", "white") 
         .style("fill", function(d) { return getColor(d.target.index % n_topics); })
+        .on("click", chordselected)
         .attr("d", path);
          
-    // Add an elaborate mouseover title for each chord.
-     chord.append("title").text(function(d) {
-        return d.source.index + "->" + d.target.index;
-     });
-     
+    function chordselected(d) {
+        info.text(ribbon_data[d.source.index][d.target.index].join(",").substring(0,10000));
+    }
+ 
     function mouseover(d, i) {
         chord.classed("fade", function(p) {
             return p.source.index != i && p.target.index != i;

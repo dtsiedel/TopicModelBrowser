@@ -19,3 +19,12 @@ path.chord {
 #circle:hover path.fade {
     display: none;
 }
+
+.info-box {
+    float: right;
+    width: 400px;
+    height: 500px;
+    color: white;
+    word-wrap: break-word;
+    overflow: scroll;
+}
