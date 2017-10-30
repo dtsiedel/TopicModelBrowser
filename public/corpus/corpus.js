@@ -38,15 +38,16 @@ function processData(csv)
         var current = csv[i];
         for(key in current)
         {
+            var t_num = topic_indices[key];
             if(key.length !== 0 && current[key] > threshold)
             {
-                if(!(key in result))
+                if(!(t_num in result))
                 {
-                    result[key] = [current[""]]; //for some reason they come in with the key for doc id as ""
+                    result[t_num] = [current[""]]; //for some reason they come in with the key for doc id as ""
                 }
                 else
                 {
-                    result[key].push(current[""]);
+                    result[t_num].push(current[""]);
                 }
                 total_t_d_links++;
             }
@@ -61,7 +62,7 @@ function processData(csv)
         reformat.push(temp);
     }
 
-    //generateRibbonData(reformat); //this is now done offline
+    generateRibbonData(reformat); 
     
     return reformat;
 }
@@ -105,6 +106,8 @@ function process(matrix)
 //make the corpus view, incuding arcs and ribbons
 function constructCorpus(csv)
 {
+    //var processed = processData(csv);   //don't do this anymore, since it is done offline
+ 
     var matrix = ribbon_counts; 
     var n_topics = matrix.length;
     process(matrix); 
@@ -151,7 +154,7 @@ function constructCorpus(csv)
         .data(layout.groups)
         .enter().append("g")
         .attr("class", "group")
-        .style("fill", "white")
+        .style("fill",  "white")
         .on("mouseover", mouseover);
      
     // Add the group arc.

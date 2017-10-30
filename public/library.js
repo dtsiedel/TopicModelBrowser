@@ -211,7 +211,6 @@ function generateRibbonData(data)
     {
         for(var j = i; j < data.length; j++)
         {
-            console.log(i);
             if(i === j) //all are shared in the diagonal matrix
             {
                 var t = data[i];
@@ -245,7 +244,7 @@ function getRibbonCounts(func)
 {
     //fetch csv
     //in callback: should just be able to get it with d3.csv
-    d3.text("/ribbon_counts.csv", function(error, response) {
+    d3.text("/test_ribbon_counts.csv", function(error, response) {
         ribbon_counts = response; 
         var lines = ribbon_counts.split("\n");
         lines.splice(-1,1); //remove last (extra) one. js is dumb
@@ -269,7 +268,7 @@ function getRibbonData(func)
     //for each, split on | to get 50 arrays each
     //each of those can be split on , to get the elements inside
     //make one big 50x50 array where the contents of each element is gained by the comma split 
-    d3.text("/ribbon_data.txt", function(error, response) {
+    d3.text("/test_ribbon_data.txt", function(error, response) {
         ribbon_data = response;
         var lines = ribbon_data.split("\n");
         lines.splice(-2,2); //two stragglers on this split, remove them

@@ -6,7 +6,6 @@
 (DONUT)
 
 (CORPUS)
--RIBBON DATA NOT MATCHING UP WITH DOCUMENT (!?!?) check
 -make ribbons color gradient (reversed colors)
 -figure out legend (maybe just have it scrollable?)
 -make the self links be the documents that are only about that topic (calculate in preprocess)
