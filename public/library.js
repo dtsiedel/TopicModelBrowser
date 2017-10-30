@@ -1,7 +1,7 @@
 //Includes functions used by multiple views, to avoid duplication
 
 var threshold = 0.05; //how high must a topic be to be included?
-var corpus_threshold = 500; //how many documents must be shared for the link to be in the corpus view?
+var corpus_threshold = 750; //how many documents must be shared for the link to be in the corpus view?
 var chord_threshold = 500; //how many related docs should be shown in info box per chord?
 var colors = ["#1CE6FF", "#FF34FF", "#FF4A46", "#008941", "#006FA6", "#A30059",
         "#FFDBE5", "#7A4900", "#0000A6", "#63FFAC", "#B79762", "#004D43", "#8FB0FF", "#997D87",
@@ -63,7 +63,7 @@ function filter(topic_array)
         count++;
     }
     var other = {};
-    other["index"] = 0;
+    other["index"] = '~';
     other["topic"] = "other";
     other["value"] = 1 - total;
     other["color"] = gray;
@@ -85,12 +85,6 @@ function clip(text, n)
         return text.slice(0,n-4) + "...";
     }
     return text
-}
-
-//handles annoying offset in csv_data array
-function getNthDocument(n)
-{
-    return csv_data[n-1];
 }
 
 //put a legend onto chart
@@ -146,7 +140,8 @@ function getTopicIndices(func)
 {
     d3.csv("/topic_frame.csv", function(error, response) {
         csv_data = response;
-        var count = 1;
+        csv_data = rectify_csv_data(csv_data);
+        var count = 0;
         for(var i=0;i<csv_data.length;i++)
         {
             var current = csv_data[i];
@@ -162,7 +157,7 @@ function getTopicIndices(func)
                 }
             }
         } 
-  
+ 
         //callback hell incoming
         getRibbonCounts(function()
         {
@@ -191,19 +186,6 @@ function intersect(l1, l2)
     return result;
 }
 
-//need a canonical name for the link between two documents
-//this sorts their indices then concatenates them
-function link_name(topic_1, topic_2)
-{
-    topic_1 = topic_indices[topic_1];
-    topic_2 = topic_indices[topic_2];
-
-    
-    if(topic_1 < topic_2)
-        return "" + topic_1 + "-" + topic_2;
-    return "" + topic_2 + "-" + topic_1;
-}
-
 //what the hell javascript
 function Array2D(x, y)
 {
@@ -229,6 +211,7 @@ function generateRibbonData(data)
     {
         for(var j = i; j < data.length; j++)
         {
+            console.log(i);
             if(i === j) //all are shared in the diagonal matrix
             {
                 var t = data[i];
@@ -252,8 +235,8 @@ function generateRibbonData(data)
             }
         }
     }
-    //console.log(ribbonData);
-    //console.log(ribbonCounts);
+    console.log(ribbonData);
+    console.log(ribbonCounts);
 }
 
 //fill our ribbonCounts array by pulling the cached version on the
@@ -311,7 +294,6 @@ function getRibbonData(func)
 
 
 
-
 //was used to generate the output for ribbon_counts.csv
 //just did it in the console because you can't write to files
 //on the client side
@@ -357,6 +339,16 @@ function stringifyRibbonData(array)
         result += "\n";
     }
     return result;
+}
+
+//stupid 1 indexing when coming from csv
+function rectify_csv_data(csv_data)
+{
+    for(var i = 0; i < csv_data.length; i++)
+    {
+        csv_data[i][""] = csv_data[i][""] - 1;
+    }
+    return csv_data;
 }
 
 

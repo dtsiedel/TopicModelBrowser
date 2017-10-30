@@ -46,6 +46,7 @@ function getData()
 
     d3.csv("/topic_frame.csv", function(error, response) {
         csv_data = response;
+        csv_data = rectify_csv_data(csv_data);
         
         var url_string = window.location.href; //fetch document we want to show
         var url = new URL(url_string);
@@ -68,7 +69,7 @@ function compare_value(a,b)
 //main work of making donut chart
 function constructChart(n)
 {
-    var chosenDocument = getNthDocument(n);
+    var chosenDocument = csv_data[n];
     var filteredData = filter(chosenDocument);
 
     function arcTween(d) {
@@ -124,7 +125,7 @@ function constructChart(n)
                         .style("font-family", "sans-serif")
                    .append("textPath")
                         .attr("xlink:href",function(d,i){return "#arc_"+i;}) //xlink seems to bind the text to the arc
-                        .text(function(d){if(d.index === 0){return "Other";} return "T" + d.index;}) 
+                        .text(function(d){if(d.index === '~'){return "Other";} return "T" + d.index;}) 
                         .style("fill", "white");	 
                     
                     chart.append("text")

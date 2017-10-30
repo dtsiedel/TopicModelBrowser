@@ -1,4 +1,4 @@
-var csv_data;
+//var csv_data;
 var chart;
 var topicData = [];
 var total_t_d_links = 0; //need this to compute proportions of topic relevance
@@ -21,6 +21,8 @@ function getData()
  
     d3.csv("/topic_frame.csv", function(error, response) {
         csv_data = response;
+        csv_data = rectify_csv_data(csv_data);
+        
         constructCorpus(csv_data);
     });
 }
@@ -80,7 +82,7 @@ function arcPercentage(topic_name)
     return 0;
 }
 
-//unless it's better to do it now so that we can vary the threshold?
+//go through the matrix and process the values, and apply threshold
 function process(matrix)
 {
     var maxRow = matrix.map(function(row){ return Math.max.apply(Math, row); });
@@ -106,7 +108,7 @@ function constructCorpus(csv)
     var matrix = ribbon_counts; 
     var n_topics = matrix.length;
     process(matrix); 
-    
+
     var width = 600,
         height = 600,
         outerRadius = Math.min(width, height) / 2 - 10,
