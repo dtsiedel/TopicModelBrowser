@@ -43,6 +43,7 @@ function filter(topic_array)
     var filtered = [];
     var total = 0; //total should add to one, need this to see total of "other"
     var count = 1;
+    console.log(topic_array);
     for(key in topic_array)
     {
         if(key.length === 0)
@@ -57,7 +58,7 @@ function filter(topic_array)
         newEntry["index"] = topic_indices[key];
         newEntry["topic"] = key;
         newEntry["value"] = parseFloat(val);
-        newEntry["color"] = getColor(count);
+        newEntry["color"] = getColor(topic_indices[key]);
         filtered.push(newEntry);
         total += parseFloat(val);
         count++;
@@ -71,7 +72,7 @@ function filter(topic_array)
     return filtered;
 }
 
-//assign a color to topic n, or pull the color for n if it is already assigned
+//probably not necessary anymore
 function getColor(n)
 {
     return colors[n];

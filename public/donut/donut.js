@@ -102,7 +102,7 @@ function constructChart(n)
             var index = d3.select(this).data()[0]["data"]["index"];
             return tooltip.style("top", (event.pageY-10)+"px").style("left",(event.pageX+10)+"px").html(generate_tooltip_html(index, topic_text, d.value)).style("background-color", d.data.color).style("color", "white");})
       .on("mouseout", function(){return tooltip.style("visibility", "hidden");})
-      .style("fill", function(d) { return d.data.color; })
+      .style("fill", function(d,i) { return d.data.color; })
       .transition().duration(750)
       .attr("id", function(d,i) { return "arc_"+i; })
       .attrTween('d', function(d) {
