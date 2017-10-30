@@ -87,6 +87,12 @@ function clip(text, n)
     return text
 }
 
+//handles annoying offset in csv_data array
+function getNthDocument(n)
+{
+    return csv_data[n-1];
+}
+
 //put a legend onto chart
 function addLegend(chart, data, legendRectSize, legendSpacing)
 {
@@ -109,7 +115,8 @@ function addLegend(chart, data, legendRectSize, legendSpacing)
         .attr('width', legendRectSize)
         .attr('height', legendRectSize)
         .style('fill', function(d){return d.color})
-        .style('stroke', "gray");
+        .style('stroke', "gray")
+        .on("click", function(d,i) {window.location = "/topic?topic=" + d.index; });
 
     legend.append('text')
         .attr('x', legendRectSize + legendSpacing)

@@ -46,8 +46,15 @@ function getData()
 
     d3.csv("/topic_frame.csv", function(error, response) {
         csv_data = response;
-        var target = randomDocument();
-        constructChart(target);
+        
+        var url_string = window.location.href; //fetch document we want to show
+        var url = new URL(url_string);
+        var doc = url.searchParams.get("doc");
+    
+        if(doc === null)
+            constructChart(randomDocument());
+        else
+            constructChart(doc);
     });
 }
 
@@ -61,9 +68,9 @@ function compare_value(a,b)
 //main work of making donut chart
 function constructChart(n)
 {
-    var chosenDocument = csv_data[n];
+    var chosenDocument = getNthDocument(n);
     var filteredData = filter(chosenDocument);
-    
+
     function arcTween(d) {
         arc = d3.svg.arc().outerRadius(radius*1.1).innerRadius(radius-50).cornerRadius(5);
         return arc(d);

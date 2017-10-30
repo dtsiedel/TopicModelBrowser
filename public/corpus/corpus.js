@@ -18,16 +18,6 @@ function getData()
     width = 600 - margin.left - margin.right;
     height = width - margin.top - margin.bottom;
     radius = Math.min(width, height) / 2;
-
-    // add the canvas to the DOM 
-//    chart = d3.select("#corpus-demo")
-//        .append('svg')
-//        .attr("width", width + margin.left + margin.right)
-//        .attr("height", height + margin.top + margin.bottom)
-//        .append("g")
-//        .attr("stroke", gray)
-//        .attr("stroke-width", "0.5")
-//        .attr("transform", "translate(" + ((width/2)) + "," + ((height/2)+margin.top) + ")"); 
  
     d3.csv("/topic_frame.csv", function(error, response) {
         csv_data = response;
@@ -213,7 +203,7 @@ function generate_document_info(source, target)
         {
             break;
         }
-        result += "Document " + docs[i] + "<br>"; 
+        result += "<a href=\"/donut?doc=" + docs[i] + "\">Document " + docs[i] + "</a><br>"; 
     }
     return result;
 }
