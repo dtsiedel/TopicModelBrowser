@@ -137,6 +137,9 @@ function constructCorpus(csv)
         .attr("id", "circle")
         .attr("transform", "translate(" + width / 2 + "," + height / 2 + ")");
 
+    var defs = svg.append('defs');
+
+
     var info = d3.select("body").append("div")
         .attr("class", "info-box")
         .attr("width", "500px")
@@ -163,6 +166,7 @@ function constructCorpus(csv)
         .attr("d", arc)
         .style("stroke", gray)
         .style("stroke-width", .05)
+        .on("click", function(d,i) {document.title="Topic " + i;})
         .style("fill", function(d) { return getColor(d.index % n_topics); });
      
     // Add a text label.
@@ -178,11 +182,32 @@ function constructCorpus(csv)
     var chord = svg.selectAll(".chord")
         .data(layout.chords)
         .enter().append("path")
+        .each(function(d,i) {
+            var linearGradient = defs.append("linearGradient")
+                .attr("id", "linear-gradient" + d.source.index + "-" + d.target.index); 
+
+            linearGradient
+                .attr("gradientUnits", "userSpaceOnUse")
+                .attr("x1", function() {return innerRadius*Math.cos((d.source.endAngle-d.source.startAngle)/2+d.source.startAngle-Math.PI/2);})
+                .attr("y1", function() {return innerRadius*Math.sin((d.source.endAngle-d.source.startAngle)/2+d.source.startAngle-Math.PI/2);})
+                .attr("x2", function() {return innerRadius*Math.cos((d.target.endAngle-d.target.startAngle)/2+d.target.startAngle-Math.PI/2);})
+                .attr("y2", function() {return innerRadius*Math.sin((d.target.endAngle-d.target.startAngle)/2+d.target.startAngle-Math.PI/2);});
+
+            linearGradient.append("stop") 
+                .attr("offset", "0%")   
+                .attr("stop-color", getColor(d.target.index)); 
+
+            linearGradient.append("stop") 
+                .attr("offset", "100%")   
+                .attr("stop-color", getColor(d.source.index)); 
+        
+            console.log(linearGradient);
+        })
         .attr("class", "chord")
         .style("stroke", "white") 
-        .style("fill", function(d) { return getColor(d.target.index % n_topics); })
+        .style("fill", function(d) { return "url(#linear-gradient" + d.source.index + "-" + d.target.index + ")";})
         .on("click", chordselected)
-        .attr("d", path);
+        .attr("d", path)
          
     function chordselected(d) {
         var text = generate_document_info(d.source.index, d.target.index);
