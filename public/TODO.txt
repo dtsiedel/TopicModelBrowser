@@ -9,13 +9,11 @@
 -figure out different scaling for widths of ribbons 
 -figure out legend (maybe just have it scrollable?)
 -make the self links be the documents that are only about that topic (calculate in preprocess)
--repeated code with donut
 
 (GENERAL)
--modify the R topic model to get out the metadata we need (urls) so that we can get our document's text/metadata/link
+-change name from Binary Topic to Correlated Topics (etc.)
 -split getData() so that we can consolidate repeated bits to library.js - easiest way would be to make it take a parameter for the function that it calls at the end
 -make getTopicIndices() only called once (do this after we've merged views). Cache results of fetching csv data when appropriate
--change name from Binary Topic to Correlated Topics (etc.)
 
 (SINGLE TOPIC)
 -Alex is doing it
