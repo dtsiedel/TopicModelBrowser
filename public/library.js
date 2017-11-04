@@ -43,7 +43,6 @@ function filter(topic_array)
     var filtered = [];
     var total = 0; //total should add to one, need this to see total of "other"
     var count = 1;
-    console.log(topic_array);
     for(key in topic_array)
     {
         if(key.length === 0)
@@ -117,7 +116,14 @@ function addLegend(chart, data, legendRectSize, legendSpacing)
         .attr('x', legendRectSize + legendSpacing)
         .attr('y', legendRectSize - legendSpacing + offset)
         .style("fill", "white")
-        .text(function(d) { return clip(d.topic,70); });
+        .text(function(d) { return clip(commas(d.topic),70); });
+}
+
+
+//replace all instances of _ with , for topic display
+function commas(text)
+{
+    return text.replace(/_/g, ", "); 
 }
 
 //does all the text formatting for the tooltip
