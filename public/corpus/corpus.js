@@ -1,4 +1,3 @@
-//var csv_data;
 var chart;
 var topicData = [];
 var total_t_d_links = 0; //need this to compute proportions of topic relevance
@@ -13,6 +12,9 @@ var tooltip;
 //needs to be split later so that we can not duplicate code
 function getData()
 {
+    //example of using the document_text object to fetch the title of the last document in our corpus
+    //get_document_full_texts(function(){console.log(document_text[38007]["title"]);});
+
     //variables to control the graph result
     margin = {top: 20, right: 20, bottom: 20, left: 20};
     width = 600 - margin.left - margin.right;
@@ -200,23 +202,21 @@ function constructCorpus(csv)
             linearGradient.append("stop") 
                 .attr("offset", "100%")   
                 .attr("stop-color", getColor(d.source.index)); 
-        
-            console.log(linearGradient);
         })
         .attr("class", "chord")
         .style("stroke", "white") 
         .style("fill", function(d) { return "url(#linear-gradient" + d.source.index + "-" + d.target.index + ")";})
         .on("click", chordselected)
-        .attr("d", path)
+        .attr("d", path);
          
     function chordselected(d) {
         var text = generate_document_info(d.source.index, d.target.index);
         info.html(text);
     }
- 
+
     function mouseover(d, i) {
         chord.classed("fade", function(p) {
-            return p.source.index != i && p.target.index != i;
+            return p.source.index !== i && p.target.index !== i;
         });
     }
 }

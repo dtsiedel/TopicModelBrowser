@@ -26,6 +26,7 @@ var topic_indices = {};
 var gray = "#d3d3d3";
 var ribbon_data;
 var ribbon_counts;
+var document_text = {};
 
 document.addEventListener("DOMContentLoaded", function(e) {
     console.log("loaded libary");
@@ -366,3 +367,32 @@ function rectify_csv_data(csv_data)
 }
 
 
+//once executed, document_text should be a dictionary with the following layout:
+//{document_number: {date:*date*, text:*text*, url:*url*, title:*title*}
+//so to get the title of the document with id 3 you would use document_text[3]["title"]
+function get_document_full_texts(callback)
+{
+    d3.json("/filtered_merged_file.json", function(error, response)
+    {
+        var temp = response;
+        var count = 0;
+        
+        for(var i = 0; i < temp.length; i++)
+        {
+            var current = temp[i];
+            for(var j = 0; j < current.length; j++)
+            {
+                var this_doc = current[j]; 
+                var data = {};
+                data.date = this_doc["date"];
+                data.text = this_doc["body"];
+                data.url = this_doc["link"];
+                data.title = this_doc["title"];
+                document_text[count] = data;
+                count++;
+            }
+        }
+
+        callback();
+    });
+}
