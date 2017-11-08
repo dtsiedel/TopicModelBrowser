@@ -369,14 +369,14 @@ function rectify_csv_data(csv_data)
 function generate_document_tooltip(id)
 {
     var data = document_text[id];
-    var result = "";
-    result += "<div>";
+    var result = "<div>";
     result += "<a href='";
     result += data["url"]
-    result += "'>\"" + data["title"] + "\"</a>"; 
+    result += "'>\"" + data["title"] + "\"</a></br>"; 
+    result += clip(data["text"], 250);
+
     result += "</div>";
 
-    console.log(result);
     return result;
 }
 
