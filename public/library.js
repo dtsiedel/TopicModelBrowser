@@ -217,7 +217,6 @@ function Array2D(x, y)
 
 //generate the list of topic-pair documents for ribbons
 //based on the list of dicts of topic:relevant documents
-//TODO: really should try to have the [i,i] element be the documents that are only about one topic
 function generateRibbonData(data)
 {
     ribbonCounts = Array2D(data.length, data.length);
@@ -366,6 +365,20 @@ function rectify_csv_data(csv_data)
     return csv_data;
 }
 
+//create the html element that the tooltip resides in
+function generate_document_tooltip(id)
+{
+    var data = document_text[id];
+    var result = "";
+    result += "<div>";
+    result += "<a href='";
+    result += data["url"]
+    result += "'>\"" + data["title"] + "\"</a>"; 
+    result += "</div>";
+
+    console.log(result);
+    return result;
+}
 
 //once executed, document_text should be a dictionary with the following layout:
 //{document_number: {date:*date*, text:*text*, url:*url*, title:*title*}

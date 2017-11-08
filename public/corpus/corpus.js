@@ -12,9 +12,6 @@ var tooltip;
 //needs to be split later so that we can not duplicate code
 function getData()
 {
-    //example of using the document_text object to fetch the title of the last document in our corpus
-    //get_document_full_texts(function(){console.log(document_text[38007]["title"]);});
-
     //variables to control the graph result
     margin = {top: 20, right: 20, bottom: 20, left: 20};
     width = 600 - margin.left - margin.right;

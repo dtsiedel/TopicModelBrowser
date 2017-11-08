@@ -51,11 +51,15 @@ function getData()
         var url_string = window.location.href; //fetch document we want to show
         var url = new URL(url_string);
         var doc = url.searchParams.get("doc");
-    
-        if(doc === null)
-            constructChart(randomDocument());
-        else
-            constructChart(doc);
+
+
+        get_document_full_texts(function()
+        {    
+            if(doc === null)
+                constructChart(randomDocument());
+            else
+                constructChart(doc);
+        });
     });
 }
 
@@ -132,6 +136,10 @@ function constructChart(n)
                         .attr("text-anchor", "middle")
                         .text("Document " + n)
                         .style("fill", "white")
+                        .on("mouseover", function(){return tooltip.style("visibility", "visible");}) 
+                        .on("mousemove", function(d){
+                                return tooltip.style("top", (event.pageY+20)+"px").style("left",(event.pageX+10)+"px").html(generate_document_tooltip(n)).style("background-color", gray).style("color", "white");})
+                        .on("mouseout", function(){return tooltip.style("visibility", "hidden");})
                         .on("click", function(){ 
                             d3.selectAll(".arc").remove(); 
                             d3.select(this).remove(); 
