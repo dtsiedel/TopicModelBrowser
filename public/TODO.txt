@@ -4,9 +4,11 @@
 -show related topics with lines
 
 (DONUT)
--add data from document_text to the document view
+-Replace all Document N with our title indicator
+|->One option: Display name for a blog is "hostname...last part of URL"
 
 (CORPUS)
+-Replace all Document N with our title indicator
 -figure out ribbon scaling and thresholds (thresh should be function of input size and how connected things are)
 -figure out legend visuals
 -make the self links be the documents that are only about that topic (calculate in preprocess)
