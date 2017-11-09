@@ -1,8 +1,6 @@
 (BARS)
--tooltip
 -show related topics with lines
--document names at top
--outlink to topics/documents
+-document names at top (and link to document)
 
 (DONUT)
 

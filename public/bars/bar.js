@@ -52,10 +52,6 @@ function getData()
     });
 }
 
-function main()
-{
-    getTopicIndices(getData);
-}
 
 //direct comparison of two documents by their topic makeup
 function constructBars(d1, t2)
@@ -65,54 +61,95 @@ function constructBars(d1, t2)
     console.log(filtered_1);
     console.log(filtered_2);
     
-    var current_y = 0;
-    var base_x = 0;
+//    var current_y = 0;
+//    var base_x = 0;
+//    var scale = 400;
+//    var width = 100;
+//
+//    //TODO: should probably make this a function instead of repeating it twice
+//    chart.selectAll(".d1")
+//        .data(filtered_1) 
+//        .enter().append("rect")
+//        .attr("width", width)
+//        .attr("x", 0)
+//        .attr("y", current_y)
+//        .attr("height", 0)
+//        .transition()
+//        .duration(500)
+//        .attr("y", function (d) { var x = current_y; current_y += d.value*scale; return x; })
+//        .attr("height", function (d) { return d.value*scale; })
+//        .attr("id", function(d,i) { return "bar_1_"+i; })
+//        .style("fill", function (d) { return d.color })
+//        .each("end", function(d,i) {
+//            var current = d3.select(this);
+//            chart.append("text")
+//                .attr("class", "bar_text")
+//                .attr("x", function() { return parseFloat(current[0][0].attributes[1].value) + 5;}) //what the hell
+//                .attr("y", function() { return parseFloat(current[0][0].attributes[2].value) + 13;})
+//                .text(function(){if(d.index === '~'){return "Other";}else{return "T" + d.index;}})
+//                .style("fill", "white")
+//        });
+//
+//
+//    current_y = 0;
+//    base_x = 200;
+//    chart.selectAll(".t2")
+//        .data(filtered_2)
+//        .enter().append("rect")
+//        .attr("width", width)
+//        .attr("x", base_x)
+//        .attr("y", current_y)
+//        .attr("height", 0)
+//        .transition()
+//        .duration(500)
+//        .attr("y", function (d) { var x = current_y; current_y += d.value*scale; return x; })
+//        .attr("height", function (d) { return d.value*scale; })
+//        .style("fill", function (d) { return d.color });
+
+        generateBar(0, 0, 0, [filtered_1, filtered_2]);
+        //generateBar(2, 200, 0, filtered_2);
+}
+
+//generate a single bar
+function generateBar(num, x, y, data)
+{
     var scale = 400;
     var width = 100;
 
-    //TODO: should probably make this a function instead of repeating it twice
-    chart.selectAll(".d1")
-        .data(filtered_1) 
+    chart.selectAll(".d" + num)
+        .data(data[num]) 
         .enter().append("rect")
         .attr("width", width)
-        .attr("x", 0)
-        .attr("y", current_y)
+        .attr("x", x)
+        .attr("y", y)
         .attr("height", 0)
+        .on("click", function(d) { window.location = "/topic?t="+d.index; })
         .transition()
         .duration(500)
-        .attr("y", function (d) { var x = current_y; current_y += d.value*scale; return x; })
+        .attr("y", function (d) { var x = y; y += d.value*scale; return x; })
         .attr("height", function (d) { return d.value*scale; })
-        .attr("id", function(d,i) { return "bar_1_"+i; })
+        .attr("id", function(d,i) { return "bar_" + num + "_"+i; })
         .style("fill", function (d) { return d.color })
         .each("end", function(d,i) {
             var current = d3.select(this);
             chart.append("text")
                 .attr("class", "bar_text")
+                .attr("font-weight", "bold")
                 .attr("x", function() { return parseFloat(current[0][0].attributes[1].value) + 5;}) //what the hell
                 .attr("y", function() { return parseFloat(current[0][0].attributes[2].value) + 13;})
                 .text(function(){if(d.index === '~'){return "Other";}else{return "T" + d.index;}})
-                .style("fill", "white")
+                .style("fill", function(){if(d.index=== "~"){return "black";} return "white";})
         });
-
-
-    current_y = 0;
-    base_x = 200;
-    chart.selectAll(".t2")
-        .data(filtered_2)
-        .enter().append("rect")
-        .attr("width", width)
-        .attr("x", base_x)
-        .attr("y", current_y)
-        .attr("height", 0)
-        .transition()
-        .duration(500)
-        .attr("y", function (d) { var x = current_y; current_y += d.value*scale; return x; })
-        .attr("height", function (d) { return d.value*scale; })
-        .style("fill", function (d) { return d.color });
+    
+    if(num !== data.length - 1)
+    {
+        generateBar(num+1, x+200, 0, data);
+    }
 }
 
-function typeOf(obj) {
-  return {}.toString.call(obj).split(' ')[1].slice(0, -1).toLowerCase();
+function main()
+{
+    getTopicIndices(getData);
 }
 
 //call main

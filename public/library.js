@@ -111,7 +111,7 @@ function addLegend(chart, data, legendRectSize, legendSpacing)
         .attr('height', legendRectSize)
         .style('fill', function(d){return d.color})
         .style('stroke', "gray")
-        .on("click", function(d,i) {window.location = "/topic?topic=" + d.index; });
+        .on("click", function(d,i) {window.location = "/topic?t=" + d.index; });
 
     legend.append('text')
         .attr('x', legendRectSize + legendSpacing)

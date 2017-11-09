@@ -95,7 +95,8 @@ function constructChart(n)
     var g = chart.selectAll(".arc")
         .data(pie(filteredData))
         .enter().append("g")
-        .attr("class", "arc");
+        .attr("class", "arc")
+        .on("click", function(d) { window.location.href = "/topic?t="+d.data.index });
 
     chart.selectAll('.legend').remove();
 
