@@ -1,5 +1,6 @@
 var chart;
 var tooltip;
+var done;
 
 //parses our csv hosted on server
 //also does all of the one-time setup and calls our constructChart function the first time
@@ -61,57 +62,14 @@ function constructBars(d1, t2)
     console.log(filtered_1);
     console.log(filtered_2);
     
-//    var current_y = 0;
-//    var base_x = 0;
-//    var scale = 400;
-//    var width = 100;
-//
-//    //TODO: should probably make this a function instead of repeating it twice
-//    chart.selectAll(".d1")
-//        .data(filtered_1) 
-//        .enter().append("rect")
-//        .attr("width", width)
-//        .attr("x", 0)
-//        .attr("y", current_y)
-//        .attr("height", 0)
-//        .transition()
-//        .duration(500)
-//        .attr("y", function (d) { var x = current_y; current_y += d.value*scale; return x; })
-//        .attr("height", function (d) { return d.value*scale; })
-//        .attr("id", function(d,i) { return "bar_1_"+i; })
-//        .style("fill", function (d) { return d.color })
-//        .each("end", function(d,i) {
-//            var current = d3.select(this);
-//            chart.append("text")
-//                .attr("class", "bar_text")
-//                .attr("x", function() { return parseFloat(current[0][0].attributes[1].value) + 5;}) //what the hell
-//                .attr("y", function() { return parseFloat(current[0][0].attributes[2].value) + 13;})
-//                .text(function(){if(d.index === '~'){return "Other";}else{return "T" + d.index;}})
-//                .style("fill", "white")
-//        });
-//
-//
-//    current_y = 0;
-//    base_x = 200;
-//    chart.selectAll(".t2")
-//        .data(filtered_2)
-//        .enter().append("rect")
-//        .attr("width", width)
-//        .attr("x", base_x)
-//        .attr("y", current_y)
-//        .attr("height", 0)
-//        .transition()
-//        .duration(500)
-//        .attr("y", function (d) { var x = current_y; current_y += d.value*scale; return x; })
-//        .attr("height", function (d) { return d.value*scale; })
-//        .style("fill", function (d) { return d.color });
 
-        generateBar(0, 0, 0, [filtered_1, filtered_2]);
-        //generateBar(2, 200, 0, filtered_2);
+    done = false;
+    generateBar(0, 0, 0, [filtered_1, filtered_2], addLines);   
+    
 }
 
 //generate a single bar
-function generateBar(num, x, y, data)
+function generateBar(num, x, y, data, callback)
 {
     var scale = 400;
     var width = 100;
@@ -135,16 +93,80 @@ function generateBar(num, x, y, data)
             chart.append("text")
                 .attr("class", "bar_text")
                 .attr("font-weight", "bold")
-                .attr("x", function() { return parseFloat(current[0][0].attributes[1].value) + 5;}) //what the hell
-                .attr("y", function() { return parseFloat(current[0][0].attributes[2].value) + 13;})
+                .attr("x", function() { return fetchX(current) + 5;}) 
+                .attr("y", function() { return fetchY(current) + 13;})
                 .text(function(){if(d.index === '~'){return "Other";}else{return "T" + d.index;}})
                 .style("fill", function(){if(d.index=== "~"){return "black";} return "white";})
+            if(num !== data.length - 1)
+            {
+                generateBar(num+1, x+200, 0, data, callback);
+            }
+            else
+            {
+                if(!done)
+                {
+                    done = true;
+                    addLines(data);
+                }
+            }
         });
     
-    if(num !== data.length - 1)
+}
+
+//add lines between matching topics in bars listed in docList
+//only supports two for now
+function addLines(docList)
+{
+    var d1 = docList[0];
+    var d2 = docList[1];
+    matches = [];
+
+    for(var i = 0; i < d1.length; i++)
     {
-        generateBar(num+1, x+200, 0, data);
+        var index = d1[i].index;
+        var where = checkContains(index, d2);
+        if(where !== -1)
+        {
+            matches.push([i, where]);
+        }
     }
+    for(var i = 0; i < matches.length; i++)
+    {
+        var t1 = d3.select("#bar_0_"+matches[i][0]); 
+        var t2 = d3.select("#bar_1_"+matches[i][1]); 
+        drawLine(fetchX(t1), fetchY(t1), fetchX(t2), fetchY(t2));
+    }
+}
+
+//actually add the svg line to the bars
+function drawLine(x1, y1, x2, y2)
+{
+    chart.append("line").style("stroke", "white").attr("x1", x1).attr("y1", y1).attr("x2", x2).attr("y2", y2);
+}
+
+//this is the worst thing. Curse you Brendan Eich
+function fetchX(svrgect)
+{
+    return parseFloat(svrgect[0][0].attributes[1].value);
+}
+
+//also the worst thing
+function fetchY(svrgect)
+{
+    return parseFloat(svrgect[0][0].attributes[2].value);
+}
+
+//check if list contains an entry with index *index*
+function checkContains(index, list)
+{
+    for(var i = 0; i < list.length; i++)
+    {
+        if(list[i].index === index)
+        {
+            return i;
+        }
+    }
+    return -1;
 }
 
 function main()

@@ -1,5 +1,5 @@
 (BARS)
--show related topics with lines
+-change styling of matching lines
 -document names at top (and link to document)
 
 (DONUT)
