@@ -66,6 +66,7 @@ function constructBars(d1, t2)
     console.log(filtered_2);
     
     var current_y = 0;
+    var base_x = 0;
     var scale = 400;
     var width = 100;
 
@@ -84,29 +85,23 @@ function constructBars(d1, t2)
         .attr("id", function(d,i) { return "bar_1_"+i; })
         .style("fill", function (d) { return d.color })
         .each("end", function(d,i) {
-                var current = d3.select(this);
-                var x = current.attr("x");
-                var y = current.attr("y");
-                current.selectAll(".barText")
-                        .data(filtered_1)
-                   .enter().append("text")
-                        .attr("class", "barText")
-                        .attr("x", x) //Move the text from the start angle of the arc
-                        .attr("y", y) //Move the text down
-                        .attr("letter-spacing", "1px")
-                        .style("font-family", "sans-serif")
-                   .append("textPath")
-                        //.attr("xlink:href",function(d,i){return "#bar_1_"+i;}) 
-                        .text(function(d){if(d.index === '~'){return "Other";} return "T" + d.index;})
-                        .style("fill", "white");
+            var current = d3.select(this);
+            chart.append("text")
+                .attr("class", "bar_text")
+                .attr("x", function() { return parseFloat(current[0][0].attributes[1].value) + 5;}) //what the hell
+                .attr("y", function() { return parseFloat(current[0][0].attributes[2].value) + 13;})
+                .text(function(){if(d.index === '~'){return "Other";}else{return "T" + d.index;}})
+                .style("fill", "white")
         });
 
+
     current_y = 0;
+    base_x = 200;
     chart.selectAll(".t2")
         .data(filtered_2)
         .enter().append("rect")
         .attr("width", width)
-        .attr("x", 200)
+        .attr("x", base_x)
         .attr("y", current_y)
         .attr("height", 0)
         .transition()
@@ -114,6 +109,10 @@ function constructBars(d1, t2)
         .attr("y", function (d) { var x = current_y; current_y += d.value*scale; return x; })
         .attr("height", function (d) { return d.value*scale; })
         .style("fill", function (d) { return d.color });
+}
+
+function typeOf(obj) {
+  return {}.toString.call(obj).split(' ')[1].slice(0, -1).toLowerCase();
 }
 
 //call main
