@@ -94,7 +94,7 @@ function generateBar(num, x, y, data, callback)
                 .attr("class", "bar_text")
                 .attr("font-weight", "bold")
                 .attr("x", function() { return fetchX(current) + 5;}) 
-                .attr("y", function() { return fetchY(current) + 13;})
+                .attr("y", function() { return fetchY(current) + 14;})
                 .text(function(){if(d.index === '~'){return "Other";}else{return "T" + d.index;}})
                 .style("fill", function(){if(d.index=== "~"){return "black";} return "white";})
             if(num !== data.length - 1)
@@ -134,26 +134,67 @@ function addLines(docList)
     {
         var t1 = d3.select("#bar_0_"+matches[i][0]); 
         var t2 = d3.select("#bar_1_"+matches[i][1]); 
-        drawLine(fetchX(t1), fetchY(t1), fetchX(t2), fetchY(t2));
+        drawLine(fetchX(t1), fetchY(t1), fetchHeight(t1), fetchX(t2), fetchY(t2), fetchHeight(t2), fetchColor(t2));
     }
 }
 
 //actually add the svg line to the bars
-function drawLine(x1, y1, x2, y2)
+function drawLine(x1, y1, height1, x2, y2, height2, color)
 {
-    chart.append("line").style("stroke", "white").attr("x1", x1).attr("y1", y1).attr("x2", x2).attr("y2", y2);
+    var line = d3.svg.line()
+        .x(function(d) { return d.x; })
+        .y(function(d) { return d.y; })
+        .interpolate("basis");
+
+    x1 += 50;
+    x2 += 50;
+    y1 += height1 / 2;
+    y2 += height2 / 2;
+    color = color.slice(6, -1);
+
+    console.log(color);
+
+    var midX = ((x1 + x2) / 2) + randomOffset(100);
+    var midY = ((y1 + y2) / 2) + randomOffset(75);
+
+    var points = [{"x": x1, "y": y1}, {"x": midX, "y": midY}, {"x": x2, "y":y2}];
+
+    chart.append("path")
+        .style("fill", "none")
+        .style("stroke", color)
+        .style("stroke-width", "4")
+        .attr("d", function() { return line(points) });
+}
+
+//essentially randint in range (-max,max)
+function randomOffset(max)
+{
+    var num = Math.floor(Math.random()*max+1); 
+    num *= Math.floor(Math.random()*2) > 1 ? 1 : -1; 
+    return num;
 }
 
 //this is the worst thing. Curse you Brendan Eich
-function fetchX(svrgect)
+function fetchX(svgrect)
 {
-    return parseFloat(svrgect[0][0].attributes[1].value);
+    return parseFloat(svgrect[0][0].attributes[1].value);
 }
 
 //also the worst thing
-function fetchY(svrgect)
+function fetchY(svgrect)
 {
-    return parseFloat(svrgect[0][0].attributes[2].value);
+    return parseFloat(svgrect[0][0].attributes[2].value);
+}
+
+//wait actually this is worse
+function fetchHeight(svgrect)
+{
+    return parseFloat(svgrect[0][0].height.baseVal.value);
+}
+
+function fetchColor(svgrect)
+{
+    return svgrect[0][0].attributes[5].value;
 }
 
 //check if list contains an entry with index *index*
