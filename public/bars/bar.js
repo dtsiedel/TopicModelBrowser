@@ -32,9 +32,23 @@ function getData()
 
     d3.csv("/topic_frame.csv", function(error, response) {
         csv_data = response;
-        var t1 = randomDocument();
-        var t2 = randomDocument();
-        constructBars(t1, t2);
+
+        var url = window.location.href;
+        url = new URL(url);
+    
+        var d1 = url.searchParams.get("d1");
+        var d2 = url.searchParams.get("d2");
+
+        if((d1 === null) || (d2 == null))
+        {
+            var d1 = randomDocument();
+            var d2 = randomDocument();
+        }
+
+        console.log(d1);
+        console.log(d2);
+
+        constructBars(d1, d2);
     });
 }
 
@@ -44,9 +58,9 @@ function main()
 }
 
 //direct comparison of two documents by their topic makeup
-function constructBars(t1, t2)
+function constructBars(d1, t2)
 {
-    var filtered_1 = filter(csv_data[t1]);
+    var filtered_1 = filter(csv_data[d1]);
     var filtered_2 = filter(csv_data[t2]);
     console.log(filtered_1);
     console.log(filtered_2);
@@ -56,7 +70,7 @@ function constructBars(t1, t2)
     var width = 100;
 
     //TODO: should probably make this a function instead of repeating it twice
-    chart.selectAll(".t1")
+    chart.selectAll(".d1")
         .data(filtered_1) 
         .enter().append("rect")
         .attr("width", width)
@@ -73,7 +87,6 @@ function constructBars(t1, t2)
                 var current = d3.select(this);
                 var x = current.attr("x");
                 var y = current.attr("y");
-                //console.log(x + " " + y);
                 current.selectAll(".barText")
                         .data(filtered_1)
                    .enter().append("text")
@@ -84,7 +97,7 @@ function constructBars(t1, t2)
                         .style("font-family", "sans-serif")
                    .append("textPath")
                         //.attr("xlink:href",function(d,i){return "#bar_1_"+i;}) 
-                        .text(function(d){if(d.index === 0){return "Other";} return "T" + d.index;})
+                        .text(function(d){if(d.index === '~'){return "Other";} return "T" + d.index;})
                         .style("fill", "white");
         });
 
