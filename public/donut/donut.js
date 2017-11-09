@@ -134,19 +134,18 @@ function constructChart(n)
                     
                     chart.append("text")
                         .attr("text-anchor", "middle")
-                        .text("Document " + n)
+                        .text(conditional_clip(document_text[n]["title"], 30))
                         .style("fill", "white")
                         .on("mouseover", function(){return tooltip.style("visibility", "visible");}) 
                         .on("mousemove", function(d){
                                 return tooltip.style("top", (event.pageY+20)+"px").style("left",(event.pageX+10)+"px").html(generate_document_tooltip(n)).style("background-color", gray).style("color", "white");})
                         .on("mouseout", function(){return tooltip.style("visibility", "hidden");})
                         .on("click", function(){ 
-                            d3.selectAll(".arc").remove(); 
-                            d3.select(this).remove(); 
-                            setTimeout(constructChart(randomDocument()), 50); });
+                            var url = document_text[n]["url"];
+                            window.open(url, "_blank");
+                        });
                     
                     addLegend(chart, filteredData, 18, 12);
-        
             }
     });
 

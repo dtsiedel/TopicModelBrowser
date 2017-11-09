@@ -4,8 +4,6 @@
 -show related topics with lines
 
 (DONUT)
--Replace all Document N with our title indicator
-|->One option: Display name for a blog is "hostname...last part of URL"
 
 (CORPUS)
 -Replace all Document N with our title indicator

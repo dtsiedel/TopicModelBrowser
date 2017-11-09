@@ -370,15 +370,44 @@ function generate_document_tooltip(id)
 {
     var data = document_text[id];
     var result = "<div>";
-    result += "<a href='";
-    result += data["url"]
-    result += "'>\"" + data["title"] + "\"</a></br>"; 
-    result += clip(data["text"], 250);
+    result += "Excerpt: </br>";
+    result += clip(data["text"], 350);
 
     result += "</div>";
 
     return result;
 }
+
+//clip for use when you need to fit a certain amount of space
+//since we are not using a fixed width font
+function conditional_clip(string, n)
+{
+    var cost = 0;
+    string = string.trim();
+    result = "";
+    for(var i = 0; i < string.length; i++)
+    {
+        var current = string.charAt(i);
+        result += current;
+        if(current == current.toUpperCase() && current != " ") //I HATE Javascript sometimes
+        {
+            cost += 1.5;
+        } 
+        else
+        {
+            cost++;
+        }
+        if(cost > n)
+        {
+            result = result.slice(0, -3);
+            result += "...";
+            return result;
+        }
+    }
+    return result;
+}
+
+
 
 //once executed, document_text should be a dictionary with the following layout:
 //{document_number: {date:*date*, text:*text*, url:*url*, title:*title*}
