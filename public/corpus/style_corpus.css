@@ -29,3 +29,6 @@ path.chord {
     overflow: scroll;
 }
 
+#header {
+    height: 80px;
+}
