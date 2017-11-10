@@ -87,7 +87,15 @@ function generateBar(num, x, y, data, indexList, callback)
         .on("click", function(d) { window.location = "/topic?t="+d.index; })
         .on("mouseover", function(){return tooltip.style("visibility", "visible");}) //bind tooltip to when mouse goes over arc
         .on("mousemove", function(d){
-            var topic_text = reverse_topic_indices[d.index];
+            var topic_text;
+            if(d.index === "~") 
+            {
+                topic_text = "Other";
+            }
+            else
+            {
+                topic_text = reverse_topic_indices[d.index];
+            }
             var index = d.index;
             return tooltip.style("top", (event.pageY-10)+"px").style("left",(event.pageX+10)+"px").html(generate_tooltip_html(index, topic_text, d.value)).style("background-color", d.color).style("color", "white");})
         .on("mouseout", function(){return tooltip.style("visibility", "hidden");})

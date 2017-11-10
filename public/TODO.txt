@@ -1,6 +1,4 @@
 (BARS)
--topic tooltips
--link document title to document page
 
 (DONUT)
 
