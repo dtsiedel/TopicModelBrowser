@@ -382,6 +382,10 @@ function generate_document_tooltip(id)
 //since we are not using a fixed width font
 function conditional_clip(string, n)
 {
+    if(string.length === 0)
+    {
+        return "Untitled";
+    }
     var cost = 0;
     string = string.trim();
     result = "";

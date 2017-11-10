@@ -1,5 +1,6 @@
 (BARS)
--document names at top (and link to document)
+-topic tooltips
+-link document title to document page
 
 (DONUT)
 

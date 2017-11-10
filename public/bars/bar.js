@@ -3,14 +3,14 @@ var tooltip;
 var done;
 
 //parses our csv hosted on server
-//also does all of the one-time setup and calls our constructChart function the first time
+//also does all of the one-time setup and calls our constructBars function the first time
 //needs to be split later so that we can not duplicate code
 function getData()
 {
     //variables to control the graph result
     margin = {top: 20, right: 20, bottom: 20, left: 20};
     width = 600 - margin.left - margin.right;
-    height = width - margin.top - margin.bottom;
+    height = width - margin.top - margin.bottom + 140;
     radius = Math.min(width, height) / 2;
 
     // add the canvas to the DOM 
@@ -31,48 +31,48 @@ function getData()
         .style("visibility", "hidden")
         .text("Error"); //bad to see this (obviously)
 
-    d3.csv("/topic_frame.csv", function(error, response) {
-        csv_data = response;
+    get_document_full_texts(function()
+    {
+        d3.csv("/topic_frame.csv", function(error, response) {
+            csv_data = response;
 
-        var url = window.location.href;
-        url = new URL(url);
-    
-        var d1 = url.searchParams.get("d1");
-        var d2 = url.searchParams.get("d2");
+            var url = window.location.href;
+            url = new URL(url);
+        
+            var d1 = url.searchParams.get("d1");
+            var d2 = url.searchParams.get("d2");
 
-        if((d1 === null) || (d2 == null))
-        {
-            var d1 = randomDocument();
-            var d2 = randomDocument();
-        }
+            if((d1 === null) || (d2 == null))
+            {
+                var d1 = randomDocument();
+                var d2 = randomDocument();
+            }
 
-        console.log(d1);
-        console.log(d2);
+            console.log(d1);
+            console.log(d2);
 
-        constructBars(d1, d2);
+            constructBars(d1, d2);
+        });
     });
 }
 
 
 //direct comparison of two documents by their topic makeup
-function constructBars(d1, t2)
+function constructBars(d1, d2)
 {
     var filtered_1 = filter(csv_data[d1]);
-    var filtered_2 = filter(csv_data[t2]);
-    console.log(filtered_1);
-    console.log(filtered_2);
+    var filtered_2 = filter(csv_data[d2]);
     
-
     done = false;
-    generateBar(0, 0, 0, [filtered_1, filtered_2], addLines);   
-    
+    generateBar(0, 40, 100, [filtered_1,filtered_2], [d1,d2], addLines);   
 }
 
 //generate a single bar
-function generateBar(num, x, y, data, callback)
+function generateBar(num, x, y, data, indexList, callback)
 {
     var scale = 400;
     var width = 100;
+    var given_y = y;
 
     chart.selectAll(".d" + num)
         .data(data[num]) 
@@ -86,7 +86,7 @@ function generateBar(num, x, y, data, callback)
         .duration(500)
         .attr("y", function (d) { var x = y; y += d.value*scale; return x; })
         .attr("height", function (d) { return d.value*scale; })
-        .attr("id", function(d,i) { return "bar_" + num + "_"+i; })
+        .attr("id", function(d,i) { return "bar_" + num + "_" +i;})
         .style("fill", function (d) { return d.color })
         .each("end", function(d,i) {
             var current = d3.select(this);
@@ -97,25 +97,32 @@ function generateBar(num, x, y, data, callback)
                 .attr("y", function() { return fetchY(current) + 14;})
                 .text(function(){if(d.index === '~'){return "Other";}else{return "T" + d.index;}})
                 .style("fill", function(){if(d.index=== "~"){return "black";} return "white";})
+
+            chart.append("text")
+                .attr("class", "document_text")
+                .attr("x", x-10)
+                .attr("y", 20)
+                .text(conditional_clip(document_text[indexList[num]]["title"], 30))
+                .style("fill", "white");
+
             if(num !== data.length - 1)
             {
-                generateBar(num+1, x+200, 0, data, callback);
+                generateBar(num+1, x+250, given_y, data, indexList, callback);
             }
             else
             {
                 if(!done)
                 {
                     done = true;
-                    addLines(data);
+                    addLines(data, indexList);
                 }
             }
         });
-    
 }
 
 //add lines between matching topics in bars listed in docList
 //only supports two for now
-function addLines(docList)
+function addLines(docList, indexList)
 {
     var d1 = docList[0];
     var d2 = docList[1];
@@ -151,8 +158,6 @@ function drawLine(x1, y1, height1, x2, y2, height2, color)
     y1 += height1 / 2;
     y2 += height2 / 2;
     color = color.slice(6, -1);
-
-    console.log(color);
 
     var midX = ((x1 + x2) / 2) + randomOffset(100);
     var midY = ((y1 + y2) / 2) + randomOffset(75);
