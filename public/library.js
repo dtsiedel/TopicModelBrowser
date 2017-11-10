@@ -23,6 +23,7 @@ var color_map = {};
 var filteredData;
 var csv_data = [];
 var topic_indices = {}; 
+var reverse_topic_indices = {};
 var gray = "#d3d3d3";
 var ribbon_data;
 var ribbon_counts;
@@ -168,6 +169,7 @@ function getTopicIndices(func)
                     if(!(key in topic_indices))
                     {
                         topic_indices[key] = count;
+                        reverse_topic_indices[count] = key;
                         count++;
                     }
                 }
