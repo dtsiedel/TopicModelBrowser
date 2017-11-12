@@ -14,7 +14,7 @@ function main()
 }
 
 //parses our csv hosted on server
-//also does all of the one-time setup and calls our constructChart function the first time
+//also does all of the one-time setup and calls our constructDonut function the first time
 function getData()
 {
     //variables to control the graph result
@@ -35,7 +35,7 @@ function getData()
         .append("div")
         .attr("class", "tooltip")
         .style("position", "absolute")
-        .style("width", "200px")
+        .style("width", "225px")
         .style("background-color", "white")
         .style("padding-left", "5px")
         .style("z-index", "10") //put it in front of the arcs
@@ -56,9 +56,9 @@ function getData()
         get_document_full_texts(function()
         {    
             if(doc === null)
-                constructChart(randomDocument());
+                constructDonut(randomDocument());
             else
-                constructChart(doc);
+                constructDonut(doc);
         });
     });
 }
@@ -71,7 +71,7 @@ function compare_value(a,b)
 
 
 //main work of making donut chart
-function constructChart(n)
+function constructDonut(n)
 {
     var chosenDocument = csv_data[n];
     var filteredData = filter(chosenDocument);
@@ -149,6 +149,13 @@ function constructChart(n)
                     addLegend(chart, filteredData, 18, 12);
             }
     });
+
+    chart.append("text")
+        .attr("x", -90)
+        .attr("y", -200)
+        .style("font-size", "35px")
+        .style("fill", "white")
+        .text("Document " + n);
 
 }
 

@@ -24,6 +24,7 @@ var filteredData;
 var csv_data = [];
 var topic_data = [];
 var topic_indices = {}; 
+var topic_words = {};
 var reverse_topic_indices = {};
 var gray = "#d3d3d3";
 var ribbon_data;
@@ -378,6 +379,7 @@ function generate_document_tooltip(id)
 {
     var data = document_text[id];
     var result = "<div>";
+    result += conditional_clip(data["title"], 30) + "<br/>";
     result += "Excerpt: </br>";
     result += clip(data["text"], 350);
 
@@ -444,6 +446,21 @@ function get_document_full_texts(callback)
                 document_text[count] = data;
                 count++;
             }
+        }
+
+        callback();
+    });
+}
+
+//once executed, topic_words will be populated with the format {*topic_num*:[*list of words*]}
+function get_topic_words(callback)
+{
+    d3.csv("/topic_words.csv", function(error, response)
+    {
+        var temp = response;
+        for(var i = 0; i < response.length; i++)
+        {
+            //topic_words[i] = 
         }
 
         callback();

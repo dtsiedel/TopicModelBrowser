@@ -28,15 +28,20 @@ function getData()
         {
             getRibbonData(function()
             {
-                if(t1 === null)
+                get_topic_words(function()
                 {
-                    t1 = randomTopic();
-                }
-                if(t2 === null)
-                {
-                    t2 = randomTopic();
-                }
-                constructSpectrum(t1, t2);
+                    if(t1 === null)
+                    {
+                        t1 = randomTopic();
+                    }
+                    if(t2 === null)
+                    {
+                        t2 = randomTopic();
+                    }
+                    console.log(t1);
+                    console.log(t2);
+                    constructSpectrum(t1, t2);
+                });
             });
         });
     });
@@ -45,8 +50,10 @@ function getData()
 //make the corpus view, incuding arcs and ribbons
 function constructSpectrum(t1, t2)
 {
-    var overlap = ribbon_data[t1][t2];
-    console.log(overlap);
+    var words1 = topic_words[t1];
+    var words2 = topic_words[t2];
+    console.log(words1);
+    console.log(words1);
 }
 
 function generate_document_info(source, target)
