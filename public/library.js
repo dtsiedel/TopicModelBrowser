@@ -120,6 +120,13 @@ function addLegend(chart, data, legendRectSize, legendSpacing)
         .attr('height', legendRectSize)
         .style('fill', function(d){return d.color})
         .style('stroke', "gray")
+        .on("mouseover", function(){return tooltip.style("visibility", "visible");}) //bind tooltip to when mouse goes over arc
+        .on("mousemove", function(d){
+            console.log(d);
+            var topic_text = d.topic;
+            var index = d.index
+            return tooltip.style("top", (event.pageY-10)+"px").style("left",(event.pageX+10)+"px").html(generate_tooltip_html(index, topic_text, d.value)).style("background-color", d.color).style("color", "white");})
+        .on("mouseout", function(){return tooltip.style("visibility", "hidden");})
         .on("click", function(d,i) {window.location = "/topic?t=" + d.index; });
 
     legend.append('text')
