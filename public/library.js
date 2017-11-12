@@ -43,7 +43,7 @@ function randomDocument()
 //gives a random index in the range of our topics
 function randomTopic()
 {   
-    return Math.floor(Math.random()*topic_data.length);
+    return Math.floor(Math.random()*ribbon_data.length);
 }
 
 //filter out topics that are less than thresh or invalid

@@ -24,17 +24,20 @@ function getData()
         var t1 = url.searchParams.get("t1");
         var t2 = url.searchParams.get("t2");
         
-        if(t1 === null)
-        {
-            t1 === randomTopic();
-        }
-        if(t2 === null)
-        {
-            t2 === randomTopic();
-        }
         get_document_full_texts(function()
         {
-            constructSpectrum(t1, t2);
+            getRibbonData(function()
+            {
+                if(t1 === null)
+                {
+                    t1 = randomTopic();
+                }
+                if(t2 === null)
+                {
+                    t2 = randomTopic();
+                }
+                constructSpectrum(t1, t2);
+            });
         });
     });
 }
@@ -42,13 +45,8 @@ function getData()
 //make the corpus view, incuding arcs and ribbons
 function constructSpectrum(t1, t2)
 {
-    //var processed = processData(csv);   //don't do this anymore, since it is done offline
- 
-    var matrix = ribbon_data; 
-    var n_topics = matrix.length;
-
-    console.log(matrix);
-    console.log(n_topics);
+    var overlap = ribbon_data[t1][t2];
+    console.log(overlap);
 }
 
 function generate_document_info(source, target)
