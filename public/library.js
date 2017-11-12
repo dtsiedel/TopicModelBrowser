@@ -22,6 +22,7 @@ var colors = ["#1CE6FF", "#FF34FF", "#FF4A46", "#008941", "#006FA6", "#A30059",
 var color_map = {};
 var filteredData;
 var csv_data = [];
+var topic_data = [];
 var topic_indices = {}; 
 var reverse_topic_indices = {};
 var gray = "#d3d3d3";
@@ -37,6 +38,12 @@ document.addEventListener("DOMContentLoaded", function(e) {
 function randomDocument()
 {   
     return Math.floor(Math.random()*csv_data.length);
+}
+
+//gives a random index in the range of our topics
+function randomTopic()
+{   
+    return Math.floor(Math.random()*topic_data.length);
 }
 
 //filter out topics that are less than thresh or invalid
@@ -176,7 +183,6 @@ function getTopicIndices(func)
             }
         } 
  
-        //callback hell incoming
         getRibbonCounts(function()
         {
             getRibbonData(function()
@@ -187,7 +193,7 @@ function getTopicIndices(func)
     });
 }
     
-//why do I have to write array intersection code myself in 2017?
+//why do I have to write array intersection code myself in $currentYear?
 function intersect(l1, l2)
 {
     var result = [];
@@ -288,7 +294,7 @@ function getRibbonData(func)
     d3.text("/ribbon_data.txt", function(error, response) {
         ribbon_data = response;
         var lines = ribbon_data.split("\n");
-        lines.splice(-2,2); //two stragglers on this split, remove them
+        lines.splice(-1,1); //two stragglers on this split, remove them
 
         ribbon_data = [];
         for(var i = 0; i < lines.length; i++)
@@ -412,7 +418,6 @@ function conditional_clip(string, n)
     }
     return result;
 }
-
 
 
 //once executed, document_text should be a dictionary with the following layout:

@@ -1,5 +1,4 @@
 var chart;
-var topicData = [];
 var total_t_d_links = 0; //need this to compute proportions of topic relevance
 var margin;
 var width;
@@ -109,6 +108,7 @@ function constructCorpus(csv)
  
     var matrix = ribbon_counts; 
     var n_topics = matrix.length;
+    console.log(n_topics);
     process(matrix); 
 
     var width = 600,

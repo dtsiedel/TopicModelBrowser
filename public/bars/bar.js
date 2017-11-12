@@ -45,14 +45,14 @@ function getData()
             var d1 = url.searchParams.get("d1");
             var d2 = url.searchParams.get("d2");
 
-            if((d1 === null) || (d2 == null))
+            if(d1 === null)
             {
-                var d1 = randomDocument();
-                var d2 = randomDocument();
+                d1 = randomDocument();
             }
-
-            console.log(d1);
-            console.log(d2);
+            if(d2 === null)
+            {
+                d2 = randomDocument();
+            }
 
             constructBars(d1, d2);
         });
