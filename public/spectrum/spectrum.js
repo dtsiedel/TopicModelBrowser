@@ -28,7 +28,7 @@ function getData()
         {
             getRibbonData(function()
             {
-                get_topic_words(function()
+                get_stopwords(function()
                 {
                     if(t1 === null)
                     {
@@ -40,22 +40,113 @@ function getData()
                     }
                     console.log(t1);
                     console.log(t2);
-                    constructSpectrum(t1, t2);
+                    constructSpectrum(t1, t2, 10);
                 });
             });
         });
     });
 }
 
-//make the corpus view, incuding arcs and ribbons
-function constructSpectrum(t1, t2)
+//get n random documents from the list n
+function randomSample(docList, n)
 {
-    var words1 = topic_words[t1];
-    var words2 = topic_words[t2];
-    console.log(words1);
-    console.log(words1);
+    if(docList.length < n)
+    {
+        return docList;
+    }
+
+    var result = [];
+    for(var i = 0; i < n; i++)
+    {
+        var random; 
+        while(true)
+        {
+            random = Math.floor(Math.random()*docList.length);
+            if(!result.includes(random))
+                break;
+        }
+        result.push(random);
+    }
+    return result;
 }
 
+//make the spectrum view, including the two sides and the inner words
+function constructSpectrum(t1, t2, n)
+{
+    var docs1 = randomSample(ribbon_data[t1][t1], n);
+    var docs2 = randomSample(ribbon_data[t2][t2], n);
+    var shared = randomSample(ribbon_data[t1][t2], n);
+    var alignment = {"left": [], "center": [], "right": []};
+    alignDocs(docs1, docs2, shared, alignment);
+}
+
+//for each document number in the doclist, get the text
+//returns a list of document texts
+function getDocText(docList)
+{
+    var result = [];
+    for(var i = 0; i < docList.length; i++)
+    {
+        result.push(document_text[docList[i]].text);
+    }
+    return result;
+}
+
+//get the n most used words in each of the documents in the list
+function getWordCounts(textList, n)
+{
+    var result = {};
+    for(var i = 0; i < textList.length; i++)
+    {
+        var words = textList[i].split(/[.,\/ -]/);
+        for(var i = 0; i < words.length; i++)
+        {
+            var word = words[i];
+            if(stopwords.includes(word))
+            {
+                continue;
+            }
+            if(word in result)
+            {
+                result[word]++; 
+            }
+            else
+            {
+                result[word] = 1;
+            }
+        }
+    }
+    
+    var items = Object.keys(result).map(function(key) {
+        return [key, result[key]];
+    });
+    items.sort(function(first, second) {
+        return second[1] - first[1];
+    });
+
+    items = items.map(function(x) {
+        return x[0];
+    });
+
+    return items.slice(0,n);
+}
+
+//determine where in the spectrum words should be placed
+function alignDocs(left, right, center, alignment)
+{
+    var textLeft = getDocText(left);
+    var textRight = getDocText(right);
+    var textCenter = getDocText(center);
+    var leftCounts = getWordCounts(textLeft, 10);
+    var rightCounts = getWordCounts(textRight, 10);
+    var centerCounts = getWordCounts(textCenter, 10);
+   
+    console.log(centerCounts); 
+    console.log(leftCounts); 
+    console.log(rightCounts); 
+}
+
+//make a text representation of the document
 function generate_document_info(source, target)
 {
     var result = "Topic ";

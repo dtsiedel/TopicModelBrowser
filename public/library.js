@@ -19,6 +19,8 @@ var colors = ["#1CE6FF", "#FF34FF", "#FF4A46", "#008941", "#006FA6", "#A30059",
         "#83AB58", "#001C1E", "#004B28", "#C8D0F6", "#A3A489", "#806C66", "#222800",
         "#BF5650", "#E83000", "#66796D", "#DA007C", "#FF1A59", "#8ADBB4", "#1E0200", "#5B4E51",
         "#C895C5", "#320033", "#FF6832", "#66E1D3", "#CFCDAC", "#D0AC94", "#7ED379", "#012C58"];
+//var stopwords = ["", "I", "and", "the", "to", "was", "you", "a", "in", "of", "is", "as", "that", "they", "their", "our", "-", "we", "when", "like", "it", "for", "are", "be", "has", "have", "be", "”", "\n", "<", "at ", "at", "am", "he", "his", "at", "my", "–", "“I", "she", ]; 
+var stopwords;
 var color_map = {};
 var filteredData;
 var csv_data = [];
@@ -122,7 +124,6 @@ function addLegend(chart, data, legendRectSize, legendSpacing)
         .style('stroke', "gray")
         .on("mouseover", function(){return tooltip.style("visibility", "visible");}) //bind tooltip to when mouse goes over arc
         .on("mousemove", function(d){
-            console.log(d);
             var topic_text = d.topic;
             var index = d.index
             return tooltip.style("top", (event.pageY-10)+"px").style("left",(event.pageX+10)+"px").html(generate_tooltip_html(index, topic_text, d.value)).style("background-color", d.color).style("color", "white");})
@@ -459,17 +460,11 @@ function get_document_full_texts(callback)
     });
 }
 
-//once executed, topic_words will be populated with the format {*topic_num*:[*list of words*]}
-function get_topic_words(callback)
+function get_stopwords(callback)
 {
-    d3.csv("/topic_words.csv", function(error, response)
+    d3.text("/stopwords.txt", function(error, response)
     {
-        var temp = response;
-        for(var i = 0; i < response.length; i++)
-        {
-            //topic_words[i] = 
-        }
-
+        stopwords = response.split(",");
         callback();
     });
 }

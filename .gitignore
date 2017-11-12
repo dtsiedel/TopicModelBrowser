@@ -5,3 +5,4 @@ public/ribbon_counts.csv
 public/ribbon_documents.txt
 public/document_data.csv
 public/filtered_merged_file.json
+public/stopwords.txt

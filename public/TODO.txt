@@ -6,14 +6,16 @@
 -Replace all Document N with our title indicator
 -figure out ribbon scaling and thresholds (thresh should be function of input size and how connected things are)
 -figure out legend visuals
--make the self links be the documents that are only about that topic (calculate in preprocess)
 
 (GENERAL)
 -make getTopicIndices() only called once (do this after we've merged views). Cache results of fetching csv data when appropriate
 
+(SPECTRUM)
+-turn words lists into actual visuals
+
 (SINGLE TOPIC)
--Alex is doing it
+-link it in
 
 (MULTI TOPIC)
--Lena is doing it
+-link it in
 
