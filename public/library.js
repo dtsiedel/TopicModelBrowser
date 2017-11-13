@@ -19,7 +19,6 @@ var colors = ["#1CE6FF", "#FF34FF", "#FF4A46", "#008941", "#006FA6", "#A30059",
         "#83AB58", "#001C1E", "#004B28", "#C8D0F6", "#A3A489", "#806C66", "#222800",
         "#BF5650", "#E83000", "#66796D", "#DA007C", "#FF1A59", "#8ADBB4", "#1E0200", "#5B4E51",
         "#C895C5", "#320033", "#FF6832", "#66E1D3", "#CFCDAC", "#D0AC94", "#7ED379", "#012C58"];
-//var stopwords = ["", "I", "and", "the", "to", "was", "you", "a", "in", "of", "is", "as", "that", "they", "their", "our", "-", "we", "when", "like", "it", "for", "are", "be", "has", "have", "be", "”", "\n", "<", "at ", "at", "am", "he", "his", "at", "my", "–", "“I", "she", ]; 
 var stopwords;
 var color_map = {};
 var filteredData;
@@ -460,6 +459,7 @@ function get_document_full_texts(callback)
     });
 }
 
+//fetch stopwords file
 function get_stopwords(callback)
 {
     d3.text("/stopwords.txt", function(error, response)
@@ -467,4 +467,15 @@ function get_stopwords(callback)
         stopwords = response.split(",");
         callback();
     });
+}
+
+//return an array of n random numbers between start and stop
+function nRandRange(n, start, stop)
+{
+    var result = [];
+    for(var i = 0; i < n; i++)
+    {
+        result.push(Math.floor(Math.random() * (stop - start + 1)) + start);
+    }
+    return result;
 }
