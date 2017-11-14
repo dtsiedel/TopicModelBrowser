@@ -121,6 +121,7 @@ function plotTopics(t1, t2, color_scale)
             var topic_text = reverse_topic_indices[index];
             return tooltip.style("top", (event.pageY-10)+"px").style("left",(event.pageX+10)+"px").html(generate_spectrum_tooltip(index, topic_text)).style("background-color", colors[index]).style("color", "white");})
         .on("mouseout", function(){return tooltip.style("visibility", "hidden");})    
+        .on("click", function() { window.location.href = "/topic?t=" + t1});
 
     chart.append("text")
         .attr("x", x_end - 10)
@@ -134,6 +135,7 @@ function plotTopics(t1, t2, color_scale)
             var topic_text = reverse_topic_indices[index];
             return tooltip.style("top", (event.pageY-10)+"px").style("left",(event.pageX+10)+"px").html(generate_spectrum_tooltip(index, topic_text)).style("background-color", colors[index]).style("color", "white");})
         .on("mouseout", function(){return tooltip.style("visibility", "hidden");})    
+        .on("click", function() { window.location.href = "/topic?t=" + t1});
 }
 
 //create the html for the tooltip div in this view
