@@ -95,13 +95,63 @@ function randomSample(docList, n)
     return result;
 }
 
+//gets the max n documents by proportion about topic *t*
+function maxN(topic, doc_list, n)
+{
+    var values = [];
+    for(var i = 0; i < doc_list.length; i++)
+    {
+        var current = doc_list[i];
+        var temp = [];
+        temp[0] = current;
+        temp[1] = csv_data[current][reverse_topic_indices[topic]];
+        values.push(temp);
+    }
+    values.sort(function(x, y){return y[1] - x[1];});
+    
+    var result = [];
+    for(var i = 0; i < n; i++)
+    {
+        if(typeof values[i] !== 'undefined')
+        {
+            result.push(values[i][0]);
+        }
+    }
+    return result;
+}
+
+//same as above but for two topics
+function maxNShared(topic1, topic2, doc_list, n)
+{
+    var values = [];
+    for(var i = 0; i < doc_list.length; i++)
+    {
+        var current = doc_list[i];
+        var temp = [];
+        temp[0] = current;
+        temp[1] = csv_data[current][reverse_topic_indices[topic1]] + csv_data[current][reverse_topic_indices[topic2]];
+    }
+    values.sort(function(x, y){return y[1] - x[1];});
+    
+    var result = [];
+    for(var i = 0; i < n; i++)
+    {
+        if(typeof values[i] !== 'undefined')
+        {
+            result.push(values[i][0]);
+        }
+    }
+    return result;
+}
+
 //make the spectrum view, including the two sides and the inner words
 function constructSpectrum(t1, t2, n)
 {
     var color_scale = d3.interpolateRgb(colors[t1], colors[t2]);
-    var docs1 = randomSample(ribbon_data[t1][t1], n);
-    var docs2 = randomSample(ribbon_data[t2][t2], n);
-    var shared = randomSample(ribbon_data[t1][t2], n);
+    var docs1 = maxN(t1, ribbon_data[t1][t1], n);
+    var docs2 = maxN(t2, ribbon_data[t2][t2], n);
+    var shared = maxNShared(t1, t2, ribbon_data[t1][t2], n);
+    
     plotTopics(t1, t2, color_scale);
     alignDocs(docs1, docs2, shared, 10, color_scale);
 }
@@ -217,8 +267,6 @@ function alignDocs(left, right, center, wordCount, color_scale)
     var leftCounts = getWordCounts(textLeft, wordCount);
     var rightCounts = getWordCounts(textRight, wordCount);
     var centerCounts = getWordCounts(textCenter, wordCount);
-   
-    console.log(leftCounts);
      
     plotWords(leftCounts, centerCounts, rightCounts, color_scale);
 }

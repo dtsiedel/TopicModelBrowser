@@ -12,7 +12,7 @@
 -figure out legend visuals
 
 (SPECTRUM)
--pull top n documents instead of random n
+-tweak how it works when comparing topic to itself
 
 (TOPIC)
 
