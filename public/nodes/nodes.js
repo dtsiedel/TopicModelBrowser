@@ -155,8 +155,6 @@ function cosineDistance(a, b) {
 }
 
 
-
-
 //make node diagram
 function constructChart(links, nodes){
   var width = 1200,
@@ -213,10 +211,9 @@ function constructChart(links, nodes){
       node.style('stroke', "#1F77B4")
     })
     .on("click", function(d) {
-      //window.location.href = "/topic?t="+d.data.index
+      window.location.href = "/donut?doc="+d.id;
     });
 
-    //add on click
 
   node.append("circle")
     .attr("r", function(d,i){ return i%2==0?7:5 })
