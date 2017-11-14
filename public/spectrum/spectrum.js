@@ -28,6 +28,19 @@ function getData()
         .attr("height", height + margin.top + margin.bottom)
         .append("g")
         .attr("transform", "translate(" + ((width/4)) + "," + ((height/2)+margin.top) + ")");
+
+    tooltip = d3.select("body")
+        .append("div")
+        .attr("class", "tooltip")
+        .style("position", "absolute")
+        .style("width", "225px")
+        .style("background-color", "white")
+        .style("padding-left", "5px")
+        .style("z-index", "10") //put it in front of the arcs
+        .style("border-radius", "10px")
+        .style("visibility", "hidden")
+        .style("border", "1px solid white")
+        .text("Error"); //bad to see this (obviously) 
  
     d3.csv("/topic_frame.csv", function(error, response) {
         csv_data = response;
@@ -52,9 +65,7 @@ function getData()
                     {
                         t2 = randomTopic();
                     }
-                    console.log(t1);
-                    console.log(t2);
-                    constructSpectrum(t1, t2, 10);
+                    constructSpectrum(t1, t2, 50);
                 });
             });
         });
@@ -102,15 +113,50 @@ function plotTopics(t1, t2, color_scale)
         .attr("x", x_start)
         .attr("y", y_mid)
         .style("fill", color_scale(0))
-        .style("font-size", "25px")
-        .text("T" + t1);
+        .style("font-size", "30px")
+        .text("T" + t1)
+        .on("mouseover", function(){return tooltip.style("visibility", "visible");}) //bind tooltip to when mouse goes over arc
+        .on("mousemove", function(d){
+            var index = t1;
+            var topic_text = reverse_topic_indices[index];
+            return tooltip.style("top", (event.pageY-10)+"px").style("left",(event.pageX+10)+"px").html(generate_spectrum_tooltip(index, topic_text)).style("background-color", colors[index]).style("color", "white");})
+        .on("mouseout", function(){return tooltip.style("visibility", "hidden");})    
 
     chart.append("text")
-        .attr("x", x_end)
+        .attr("x", x_end - 10)
         .attr("y", y_mid)
         .style("fill", color_scale(1))
-        .style("font-size", "25px")
-        .text("T" + t2);
+        .style("font-size", "30px")
+        .text("T" + t2)
+        .on("mouseover", function(){return tooltip.style("visibility", "visible");}) //bind tooltip to when mouse goes over arc
+        .on("mousemove", function(d){
+            var index = t2;
+            var topic_text = reverse_topic_indices[index];
+            return tooltip.style("top", (event.pageY-10)+"px").style("left",(event.pageX+10)+"px").html(generate_spectrum_tooltip(index, topic_text)).style("background-color", colors[index]).style("color", "white");})
+        .on("mouseout", function(){return tooltip.style("visibility", "hidden");})    
+}
+
+//create the html for the tooltip div in this view
+function generate_spectrum_tooltip(topic_number, topic_name)
+{
+    topic_words = topic_name.split("_");
+    text = "<div>";
+    if(topic_number === "~") //other
+    {
+        text += "Other";
+    }
+    else
+    {
+        text += "T" + topic_number;
+    }
+    text += "<br>Sample Words:<br>";
+    for(var i = 0; i < topic_words.length; i++)
+    {
+        text += topic_words[i];
+        text += "<br>"
+    }
+    text += "</div>";
+    return text; 
 }
 
 //for each document number in the doclist, get the text
@@ -157,10 +203,6 @@ function getWordCounts(textList, n)
         return second[1] - first[1];
     });
 
-    items = items.map(function(x) {
-        return x[0];
-    });
-
     return items.slice(0,n);
 }
 
@@ -173,11 +215,9 @@ function alignDocs(left, right, center, wordCount, color_scale)
     var leftCounts = getWordCounts(textLeft, wordCount);
     var rightCounts = getWordCounts(textRight, wordCount);
     var centerCounts = getWordCounts(textCenter, wordCount);
-    
-    console.log(centerCounts); 
-    console.log(leftCounts); 
-    console.log(rightCounts); 
-
+   
+    console.log(leftCounts);
+     
     plotWords(leftCounts, centerCounts, rightCounts, color_scale);
 }
 
@@ -198,7 +238,8 @@ function plotWords(leftCounts, centerCounts, rightCounts, color_scale)
         chart.append("text")
             .attr("x", x)
             .attr("y", y)
-            .text(leftCounts[i])
+            .text(leftCounts[i][0])
+            .style("font-size", Math.min(Math.max(parseInt(leftCounts[1][i]), 5), 30))
             .style("fill", color_scale((x+smoother)/(x_end-x_start)));
     }
       
@@ -210,7 +251,8 @@ function plotWords(leftCounts, centerCounts, rightCounts, color_scale)
         chart.append("text")
             .attr("x", x)
             .attr("y", y)
-            .text(centerCounts[i])
+            .style("font-size", Math.min(Math.max(parseInt(centerCounts[1][i]), 5), 30))
+            .text(centerCounts[i][0])
             .style("fill", color_scale((x+smoother)/(x_end-x_start)));
     }
    
@@ -221,34 +263,16 @@ function plotWords(leftCounts, centerCounts, rightCounts, color_scale)
         chart.append("text")
             .attr("x", x)
             .attr("y", y)
-            .text(rightCounts[i])
+            .text(rightCounts[i][0])
+            .style("font-size", Math.min(Math.max(parseInt(rightCounts[1][i]), 5), 30))
             .style("fill", color_scale((x-smoother)/(x_end-x_start)));
     }
-  
 }
 
 function fuzz(value, fuzz)
 {
     var fuzz = nRandRange(1, -fuzz, fuzz).pop(); 
     return value + fuzz;
-}
-
-//make a text representation of the document
-function generate_document_info(source, target)
-{
-    var result = "Topic ";
-    result += source + " and Topic ";
-    result += target + " Shared Documents:<br><br>";
-    var docs = ribbon_data[source][target]; 
-    for(var i = 0; i < docs.length; i++)
-    {
-        if(i > chord_threshold)
-        {
-            break;
-        }
-        result += "<a href=\"/donut?doc=" + docs[i] + "\">Document " + docs[i] + "</a><br>"; 
-    }
-    return result;
 }
 
 //wrapper to be called when page loads
