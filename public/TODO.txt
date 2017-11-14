@@ -1,20 +1,22 @@
+(GENERAL)
+-make getTopicIndices() only called once (do this after we've merged views). Cache results of fetching csv data when appropriate
+
 (BARS)
+-be able to get to it
 
 (DONUT)
 
 (CORPUS)
--Replace all Document N with our title indicator
+-Replace all Document N with our title (conditional clip)
 -figure out ribbon scaling and thresholds (thresh should be function of input size and how connected things are)
 -figure out legend visuals
-
-(GENERAL)
--make getTopicIndices() only called once (do this after we've merged views). Cache results of fetching csv data when appropriate
 
 (SPECTRUM)
 -pull top n documents instead of random n
 
-(SINGLE TOPIC)
--link it in
+(TOPIC)
+-add words of topic at top
 
-(MULTI TOPIC)
+(NODES)
+-be able to get to it
 -add tooltip excerpt/title
