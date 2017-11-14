@@ -108,7 +108,6 @@ function constructCorpus(csv)
  
     var matrix = ribbon_counts; 
     var n_topics = matrix.length;
-    console.log(n_topics);
     process(matrix); 
 
     var width = 600,

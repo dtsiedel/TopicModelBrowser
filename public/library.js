@@ -24,7 +24,7 @@ var stopwords;
 var color_map = {};
 var filteredData;
 var csv_data = [];
-var topic_data = [];
+//var topic_data = [];
 var topic_indices = {}; 
 var topic_words = {};
 var reverse_topic_indices = {};
