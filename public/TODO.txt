@@ -11,11 +11,10 @@
 -make getTopicIndices() only called once (do this after we've merged views). Cache results of fetching csv data when appropriate
 
 (SPECTRUM)
--turn words lists into actual visuals
+-pull top n documents instead of random n
 
 (SINGLE TOPIC)
 -link it in
 
 (MULTI TOPIC)
--link it in
 
