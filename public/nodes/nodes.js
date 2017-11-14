@@ -25,7 +25,7 @@ function getData()
     margin = {top: 20, right: 20, bottom: 20, left: 20};
     width = 1000 - margin.left - margin.right;
     height = width - margin.top - margin.bottom - 500;
-    radius = Math.min(width, height) / 2.5;
+    radius = 6;
 
     // add the canvas to the DOM
     chart = d3.select("#nodes-demo")
@@ -72,7 +72,6 @@ function getData()
 //This needs to change to have the key be distance measures between each of the topics
 function calculateDistance(documents)
 {
-    //results = [[]];
     results = [];
     //calculating similarity because, index
     for(var i = 0; i < documents.length; i++) {
@@ -85,7 +84,6 @@ function calculateDistance(documents)
       results.push(current);
     }
 
-    //console.log(results);
     constructChart(defineLinks(results, documents), defineNodes(documents));
 }
 
@@ -100,8 +98,6 @@ function defineLinks(results, documents) {
         obj.target = j;
         obj.value = results[i][j];
         links.push(obj);
-        //links[index] = {"source" : documents[i], "target" : documents[j], "value" : results[i][j]}
-        //index +=1;
       }
     }
   }
@@ -121,28 +117,6 @@ function defineNodes(documents) {
   }
   return nodes;
 }
-
-/*
-function defineLinks(results) {
-  jsonObj = [];
-   $("input[class=target]").each(function() {
-
-       var source = $(this).attr("title");
-       var target = $(this).val();
-       var value = $(this).val();
-
-       item = {}
-       item ["title"] = source;
-       item ["target"] = target;
-       item ["value"] = value
-
-       jsonObj.push(item);
-   });
-   console.log(jsonObj);
-
-  constructChart(jsonObj);
-}
-*/
 
 
 //This code is taken from the source code of the Jaccard library. The import would not work and so I directly copied the code into here
@@ -222,9 +196,6 @@ function constructChart(links, nodes){
     .on("mouseover", function(d) {
       //change node outline
       node.style('stroke', function(l) {
-        //return d === this ? "white" : "#1F77B4";
-        //console.log("MADE IT HERE")
-        //d3.select(this).style('stroke', 'white')
       });
       //change edge width
       link.style('stroke-width', function(l) {
@@ -254,13 +225,9 @@ function constructChart(links, nodes){
     })
     .on("mouseover", function(){return tooltip.style("visibility", "visible");}) //bind tooltip to when mouse goes over arc
     .on("mousemove", function(d){
-      //var topic_text = d3.select(this).data()[0]["data"]["document"];
-      //var id = d3.select(this).data()[0]["data"]["id"];
       console.log(d);
       return tooltip.style("top", (event.pageY-10)+"px").style("left",(event.pageX+10)+"px").text("Document " + d.id).style("background-color", "white").style("color", "black");})
     .on("mouseout", function(){return tooltip.style("visibility", "hidden");})
-
-
 
 
   force.on("tick", function() {
@@ -276,6 +243,9 @@ function constructChart(links, nodes){
       .attr("y2", function(d) {
         return d.target.y;
       });
+
+    node.attr("cx", function(d) { return d.x = Math.max(radius, Math.min(width - radius, d.x)); })
+    .attr("cy", function(d) { return d.y = Math.max(radius, Math.min(height - radius, d.y)); });
 
     d3.selectAll("circle").attr("cx", function(d) {
         return d.x;
@@ -293,12 +263,7 @@ function constructChart(links, nodes){
 
   });
 
-
 }
-
-
-
-
 
 
 
