@@ -15,7 +15,6 @@
 -pull top n documents instead of random n
 
 (TOPIC)
--add words of topic at top
 
 (NODES)
 -be able to get to it

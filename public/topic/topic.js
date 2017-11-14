@@ -8,7 +8,7 @@
 // an output that includes three sentence-excerpt from the article.
 function find_best_excerpt_from_selection(title, doc_number, percent_similarity, original_article, wordlist, link, topic)
 {
-    var split_list = original_article.split(/[\n\t\r.]/);
+    var split_list = original_article.match( /[^\.!\?]+[\.!\?]+/g )
     var kw_dict = {};
 
     for (var k = 0; k < wordlist.length; k++)
@@ -99,7 +99,6 @@ function find_best_excerpt_from_selection(title, doc_number, percent_similarity,
     }
 
     // Edit display:
-    document.getElementById("sample").innerHTML += "<br>";
     document.getElementById("sample").innerHTML += "<h3><a href='/donut?doc=" + doc_number.toString() + "'>" + title
         + "</a>  <a target = \"_blank\" href='" + link + "'> [original article] </a></h3>";
     document.getElementById("sample").innerHTML += "<h5>" + percent_similarity.toString() + "% topic match</h5>";
@@ -113,8 +112,9 @@ function find_best_excerpt_from_selection(title, doc_number, percent_similarity,
 // Given topic number, sets H2 in HTML to "TOPIC ###"
 function define_topicname_from_url(topic)
 {
-    document.getElementById("topicname").innerHTML = "Topic " + topic + " Summary";
-    d3.select("topicname").style("color", colors[topic]);
+    var topic_words = reverse_topic_indices[topic].split("_").join();
+    document.getElementById("topicname").innerHTML = "Topic " + topic + " Summary<br/><h6>Sample words: " + topic_words + "</h6>";
+    d3.select("#topicname").style("color", colors[topic]);
 }
 
 //parses our csv hosted on server
