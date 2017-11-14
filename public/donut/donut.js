@@ -135,6 +135,7 @@ function constructDonut(n)
                     
                     chart.append("text")
                         .attr("text-anchor", "middle")
+                        .attr("class", "title")
                         .text(conditional_clip(document_text[n]["title"], 30))
                         .style("fill", "white")
                         .on("mouseover", function(){return tooltip.style("visibility", "visible");}) 

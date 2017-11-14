@@ -100,7 +100,7 @@ function find_best_excerpt_from_selection(title, doc_number, percent_similarity,
 
     // Edit display:
     document.getElementById("sample").innerHTML += "<h3><a href='/donut?doc=" + doc_number.toString() + "'>" + title
-        + "</a>  <a target = \"_blank\" href='" + link + "'> [original article] </a></h3>";
+        + "</a>  <a class='outlink' target = '_blank' href='" + link + "'> [original article] </a></h3>";
     document.getElementById("sample").innerHTML += "<h5>" + percent_similarity.toString() + "% topic match</h5>";
     document.getElementById("sample").innerHTML += all_annotated_sentences[first];
     document.getElementById("sample").innerHTML += all_annotated_sentences[second];

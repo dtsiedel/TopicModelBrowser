@@ -2,14 +2,10 @@ body {
     background-color: black;
 }
 
-#donut-demo {
-    /*
-    margin: auto;
-    width: 50%;
-    */
-}
-
 #header {
     height: 80px;
 }
 
+.title {
+    cursor: alias; 
+}
