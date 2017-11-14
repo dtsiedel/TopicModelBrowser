@@ -65,8 +65,6 @@ function constructBars(d1, d2)
     var filtered_1 = filter(csv_data[d1]);
     var filtered_2 = filter(csv_data[d2]);
 
-    console.log(filtered_1)
-    
     done = false;
     generateBar(0, 40, 100, [filtered_1,filtered_2], [d1,d2], addLines);   
 }

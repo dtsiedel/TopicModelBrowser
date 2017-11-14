@@ -208,6 +208,7 @@ function constructCorpus(csv)
     function chordselected(d) {
         var text = generate_document_info(d.source.index, d.target.index);
         info.html(text);
+        d3.select("#topic_compare").on("click", function(){ window.location.href="/spectrum?t1="+d.source.index+"&t2="+d.target.index;});
     }
 
     function mouseover(d, i) {
@@ -221,7 +222,8 @@ function generate_document_info(source, target)
 {
     var result = "Topic ";
     result += source + " and Topic ";
-    result += target + " Shared Documents:<br><br>";
+    result += target + " Shared Documents:<br>";
+    result += "<button id='topic_compare' type='button'>Compare these topics!</button><br/><br/>";
     var docs = ribbon_data[source][target]; 
     for(var i = 0; i < docs.length; i++)
     {
