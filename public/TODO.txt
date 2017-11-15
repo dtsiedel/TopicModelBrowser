@@ -1,6 +1,7 @@
 (GENERAL)
 -make getTopicIndices() only called once (do this after we've merged views). Cache results of fetching csv data when appropriate
 -fix untitled documents
+-prevent all pages from scrolling (besides single topic)
 
 (BARS)
 -be able to get to it

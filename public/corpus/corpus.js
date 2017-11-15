@@ -218,6 +218,7 @@ function constructCorpus(csv)
         d3.select("#t2").style("color", colors[d.target.index]).style("font-size", "20px"); 
         d3.select("#topic_compare").on("click", function(){ window.location.href="/spectrum?t1="+d.source.index+"&t2="+d.target.index;});
         d3.select("#document_compare").on("click", function() {if(selected.length > 0){window.location.href="/nodes?d="+selected.join();}});
+        d3.select("#document_single").on("click", function() {if(selected.length === 1){window.location.href="/donut?doc="+selected[0];}});
     }
 
     function mouseover(d, i) {
@@ -239,12 +240,20 @@ function toggle_check_box(id)
     {
         selected.push(id);
     }
-    if(selected.length > 0)
+
+    if(selected.length === 1)
     {
+        d3.select("#document_single").style("background-color", "red").style("cursor", "default");
+        d3.select("#document_compare").style("background-color", "green").style("cursor", "default");
+    }
+    else if(selected.length > 0)
+    {
+        d3.select("#document_single").style("background-color", "#d3d3d3").style("cursor", "not-allowed");
         d3.select("#document_compare").style("background-color", "green").style("cursor", "default");
     }
     else
     {
+        d3.select("#document_single").style("background-color", "#d3d3d3").style("cursor", "not-allowed");
         d3.select("#document_compare").style("background-color", "#d3d3d3").style("cursor", "not-allowed");
     }
 }
@@ -255,8 +264,9 @@ function generate_document_info(source, target)
     var result = "<span id='t1'>Topic ";
     result += source + "</span> and <span id='t2'> Topic ";
     result += target + "</span> Shared Documents:<br>";
-    result += "<button id='topic_compare' type='button'>Compare these topics!</button></br>";
-    result += "<button id='document_compare' type='button'>Compare selected documents!</button><br/>";
+    result += "<button id='topic_compare' type='button'>Compare these topics!</button><br/>";
+    result += "<button id='document_compare' type='button'>Compare selected documents!</button>";
+    result += "<button id='document_single' type='button'>View single document!</button><br/>";
     var docs = ribbon_data[source][target]; 
     for(var i = 0; i < docs.length; i++)
     {
