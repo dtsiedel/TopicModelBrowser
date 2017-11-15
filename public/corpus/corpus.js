@@ -211,6 +211,7 @@ function constructCorpus(csv)
          
     function chordselected(d) {
         var text = generate_document_info(d.source.index, d.target.index);
+        selected = []; //need to reset this between chord clicks
         info.html(text);
         d3.selectAll("#checkbox").on("click", function() { toggle_check_box(d3.select(this).attr("data-id")); });
         d3.select("#t1").style("color", colors[d.source.index]).style("font-size", "20px"); 
