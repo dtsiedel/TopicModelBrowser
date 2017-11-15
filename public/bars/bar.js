@@ -164,34 +164,29 @@ function addLines(docList, indexList)
     {
         var t1 = d3.select("#bar_0_"+matches[i][0]); 
         var t2 = d3.select("#bar_1_"+matches[i][1]); 
-        drawLine(fetchX(t1), fetchY(t1), fetchHeight(t1), fetchX(t2), fetchY(t2), fetchHeight(t2), fetchColor(t2));
+        drawShape(t1, t2, i);
     }
 }
 
-//actually add the svg line to the bars
-function drawLine(x1, y1, height1, x2, y2, height2, color)
+//make a parellelogram across the bars
+function drawShape(t1, t2, i)
 {
-    var line = d3.svg.line()
-        .x(function(d) { return d.x; })
-        .y(function(d) { return d.y; })
-        .interpolate("basis");
+    var offset = 1; //make it look less ugly
+    var poly = [
+        {"x":fetchX(t1)+fetchWidth(t1)+offset, "y":fetchY(t1)+offset},
+        {"x":fetchX(t1)+fetchWidth(t1)+offset, "y":fetchY(t1)+fetchHeight(t1)-offset},
+        {"x":fetchX(t2)-offset,"y":fetchY(t2)+fetchHeight(t2)-offset},
+        {"x":fetchX(t2)-offset,"y":fetchY(t2)+offset}
+    ];
 
-    x1 += 50;
-    x2 += 50;
-    y1 += height1 / 2;
-    y2 += height2 / 2;
-    color = color.slice(6, -1);
-
-    var midX = ((x1 + x2) / 2) + randomOffset(100);
-    var midY = ((y1 + y2) / 2) + randomOffset(75);
-
-    var points = [{"x": x1, "y": y1}, {"x": midX, "y": midY}, {"x": x2, "y":y2}];
-
-    chart.append("path")
-        .style("fill", "none")
-        .style("stroke", color)
-        .style("stroke-width", "4")
-        .attr("d", function() { return line(points) });
+    chart.selectAll("polygon.x"+i)
+        .data([poly])
+        .enter().append("polygon")
+            .attr("points",function(d) { 
+                return d.map(function(d) { return [d.x,d.y].join(","); }).join(" ");})
+            .attr("stroke",fetchColor(t1))
+            .attr("fill",fetchColor(t1))
+            .attr("stroke-width",2);
 }
 
 //essentially randint in range (-max,max)
@@ -220,9 +215,14 @@ function fetchHeight(svgrect)
     return parseFloat(svgrect[0][0].height.baseVal.value);
 }
 
+function fetchWidth(svgrect)
+{
+    return parseFloat(svgrect[0][0].width.baseVal.value);
+}
+
 function fetchColor(svgrect)
 {
-    return svgrect[0][0].attributes[5].value;
+    return svgrect[0][0].attributes[5].value.slice(6,-1);
 }
 
 //check if list contains an entry with index *index*
