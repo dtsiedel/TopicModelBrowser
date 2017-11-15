@@ -179,14 +179,15 @@ function drawShape(t1, t2, i)
         {"x":fetchX(t2)-offset,"y":fetchY(t2)+offset}
     ];
 
-    chart.selectAll("polygon.x"+i)
+    chart.selectAll("polygon.x"+i) //a bit of a hack - selects need to be distinct so I gave it the number rect we are drawing
         .data([poly])
         .enter().append("polygon")
             .attr("points",function(d) { 
                 return d.map(function(d) { return [d.x,d.y].join(","); }).join(" ");})
             .attr("stroke",fetchColor(t1))
             .attr("fill",fetchColor(t1))
-            .attr("stroke-width",2);
+            .attr("stroke-width",2)
+        .attr("opacity", .4);
 }
 
 //essentially randint in range (-max,max)
