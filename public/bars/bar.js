@@ -120,6 +120,11 @@ function generateBar(num, x, y, data, indexList, callback)
                 .attr("x", x-10)
                 .attr("y", 20)
                 .text(conditional_clip(document_text[indexList[num]]["title"], 30))
+                .on("mouseover", function(){return tooltip.style("visibility", "visible");}) //bind tooltip to when mouse goes over arc
+                .on("mousemove", function(d){
+                    var index = indexList[num];
+                    return tooltip.style("top", (event.pageY-10)+"px").style("left",(event.pageX+10)+"px").html(generate_document_tooltip(index)).style("background-color", "#d3d3d3").style("color", "white");})
+                .on("mouseout", function(){return tooltip.style("visibility", "hidden");}) 
                 .style("fill", "white");
 
             if(num !== data.length - 1)

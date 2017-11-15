@@ -4,7 +4,6 @@
 -prevent all pages from scrolling? (besides single topic)
 
 (BARS)
--document tooltip on bar titles
 
 (DONUT)
 
@@ -13,7 +12,7 @@
 -figure out legend visuals
 
 (SPECTRUM)
--rework
+-rework, see below
 
 (TOPIC)
 -link back to corpus
