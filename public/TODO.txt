@@ -9,13 +9,12 @@
 
 (CORPUS)
 -figure out ribbon scaling and thresholds (thresh should be function of input size and how connected things are)
--figure out legend visuals
 
 (SPECTRUM)
 -rework, see below
 
 (TOPIC)
--link back to corpus
+-change color scheme to match the rest of everything
 
 (NODES)
 
