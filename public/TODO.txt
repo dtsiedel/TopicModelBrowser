@@ -1,15 +1,14 @@
 (GENERAL)
+-add "back to corpus" button to all views
 -make getTopicIndices() only called once (do this after we've merged views). Cache results of fetching csv data when appropriate
 -fix untitled documents
 -prevent all pages from scrolling (besides single topic)
 
 (BARS)
--be able to get to it
 
 (DONUT)
 
 (CORPUS)
--Replace all Document N with our title (conditional clip)
 -figure out ribbon scaling and thresholds (thresh should be function of input size and how connected things are)
 -figure out legend visuals
 
@@ -19,5 +18,3 @@
 (TOPIC)
 
 (NODES)
--be able to get to it
--add tooltip excerpt/title

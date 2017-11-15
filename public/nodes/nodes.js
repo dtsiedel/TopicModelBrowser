@@ -1,5 +1,3 @@
-//see bars for TODOs
-//var jaccard = require('jaccard');
 var gray = "#7d8084";
 var margin;
 var width;
@@ -15,6 +13,16 @@ var size = d3.scale.pow().exponent(1)
 function main()
 {
     getTopicIndices(getData);
+}
+
+//gets the document list from the url
+function fetch_documents()
+{
+    var url_string = window.location.href; //fetch document we want to show
+    var url = new URL(url_string);
+    var doc = url.searchParams.get("d");
+    doc = doc.split(",")
+    return doc;
 }
 
 //parses our csv hosted on server
@@ -50,20 +58,22 @@ function getData()
 
         d3.csv("/topic_frame.csv", function(error, response) {
             csv_data = response;
+            csv_data = rectify_csv_data(csv_data);
 
             //starting with 100 random unique documents
             //initalized with documents inside, otherwise it gets confused on the type
-            var documents = [csv_data[randomDocument()]];
+            documents = [csv_data[randomDocument()]];
+            var desired_documents = fetch_documents();
 
-            for (var i = 0; i < 99; i++) {
-              //isolate values (first value is doc num)
-              curDoc = (randomDocument());
-              while(documents.includes(curDoc)) {
-                curDoc = (randomDocument());
-              }
-              documents.push(csv_data[curDoc]);
-              documents[i] = Object.values(documents[i])
+            for (var i = 0; i < desired_documents.length; i++) {
+                //isolate values (first value is doc num)
+                var curDoc = (desired_documents[i]);
+                
+                documents.push(Object.values(csv_data[curDoc]));
+                documents[i] = Object.values(documents[i])
             }
+            documents = documents.slice(1,documents.length);
+            
             calculateDistance(documents);
     });
 }
@@ -222,7 +232,6 @@ function constructChart(links, nodes){
     })
     .on("mouseover", function(){return tooltip.style("visibility", "visible");}) //bind tooltip to when mouse goes over arc
     .on("mousemove", function(d){
-      console.log(d);
       return tooltip.style("top", (event.pageY-10)+"px").style("left",(event.pageX+10)+"px").text("Document " + d.id).style("background-color", "white").style("color", "black");})
     .on("mouseout", function(){return tooltip.style("visibility", "hidden");})
 
