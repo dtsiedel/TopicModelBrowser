@@ -479,3 +479,9 @@ function nRandRange(n, start, stop)
     }
     return result;
 }
+
+//for the back button
+function returnToCorpus()
+{
+    window.location.href = "/corpus"
+}
