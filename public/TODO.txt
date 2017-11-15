@@ -1,10 +1,10 @@
 (GENERAL)
--add "back to corpus" button to all views
 -make getTopicIndices() only called once (do this after we've merged views). Cache results of fetching csv data when appropriate
 -fix untitled documents
--prevent all pages from scrolling (besides single topic)
+-prevent all pages from scrolling? (besides single topic)
 
 (BARS)
+-document tooltip on bar titles
 
 (DONUT)
 
@@ -13,18 +13,18 @@
 -figure out legend visuals
 
 (SPECTRUM)
--tweak how it works when comparing topic to itself
+-rework
 
 (TOPIC)
+-link back to corpus
 
 (NODES)
 
 (FROM MEETING 11/15)
-unlink "other" in bars
-click title to select checkbox in corpus
-sort within ribbon by sum of proportions
-make spectrum scatterplot of docs instead of words
-ribbon select stays until you mark another one
-bugfix topic (ex t29)
-unlimited topic examples
-
+-unlink "other" in bars
+-click title to select checkbox in corpus
+-sort within ribbon by sum of proportions
+-make spectrum scatterplot of docs instead of words
+-ribbon select stays until you mark another one
+-bugfix topic (ex t29)
+-unlimited topic examples

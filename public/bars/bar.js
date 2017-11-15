@@ -145,7 +145,7 @@ function addLines(docList, indexList)
     var d2 = docList[1];
     matches = [];
 
-    for(var i = 0; i < d1.length; i++)
+    for(var i = 0; i < d1.length-1; i++)
     {
         var index = d1[i].index;
         var where = checkContains(index, d2);
@@ -154,6 +154,7 @@ function addLines(docList, indexList)
             matches.push([i, where]);
         }
     }
+
     for(var i = 0; i < matches.length; i++)
     {
         var t1 = d3.select("#bar_0_"+matches[i][0]); 
