@@ -169,6 +169,8 @@ function constructTopic(topic, numDocs)
         values.push(temp);
     }
     values.sort(function(x, y){return y[1] - x[1];});
+
+    console.log(values[5]);
     
     for(var i = 0; i < numDocs; i++)
     {

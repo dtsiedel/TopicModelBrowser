@@ -17,6 +17,20 @@ function getData()
     width = 600 - margin.left - margin.right;
     height = width - margin.top - margin.bottom;
     radius = Math.min(width, height) / 2;
+
+    tooltip = d3.select("body")
+        .append("div")
+        .attr("class", "tooltip")
+        .style("position", "absolute")
+        .style("width", "225px")
+        .style("background-color", "white")
+        .style("padding-left", "5px")
+        .style("z-index", "10") //put it in front of the arcs
+        .style("border-radius", "10px")
+        .style("visibility", "hidden")
+        .style("border", "1px solid white")
+        .text("Error"); //bad to see this (obviously)
+
  
     d3.csv("/topic_frame.csv", function(error, response) {
         get_document_full_texts(function()
@@ -168,7 +182,13 @@ function constructCorpus(csv)
         .attr("d", arc)
         .style("stroke", gray)
         .style("stroke-width", .05)
-        .on("click", function(d,i) {document.title="Topic " + i;})
+        .on("click", function(d,i) {window.location.href="/topic?t="+d.index;})
+        .on("mouseover", function(){return tooltip.style("visibility", "visible");}) //bind tooltip to when mouse goes over arc
+        .on("mousemove", function(d){
+            var topic_text = reverse_topic_indices[d.index];
+            var index = d.index; 
+            return tooltip.style("top", (event.pageY-10)+"px").style("left",(event.pageX+10)+"px").html(generate_tooltip_html(index, topic_text, d.value)).style("background-color", colors[index]).style("color", "white");})
+        .on("mouseout", function(){return tooltip.style("visibility", "hidden");})
         .style("fill", function(d) { return getColor(d.index % n_topics); });
      
     // Add a text label.
