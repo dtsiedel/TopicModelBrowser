@@ -9,7 +9,14 @@
 function find_best_excerpt_from_selection(title, doc_number, percent_similarity, original_article, wordlist, link, topic)
 {
     var split_list = original_article.match( /[^\.!\?]+[\.!\?]+/g )
+    console.log(split_list);
     var kw_dict = {};
+
+    //if there is only one line, just return that line
+    if(split_list === null)
+    {
+        split_list = [original_article];
+    }
 
     for (var k = 0; k < wordlist.length; k++)
     {
@@ -60,7 +67,7 @@ function find_best_excerpt_from_selection(title, doc_number, percent_similarity,
                 all_annotated_sentences[i] += " ";
             }
         }
-        all_annotated_sentences[i] += ". ";
+        all_annotated_sentences[i] += " ";
 
         if (current_total_wordcount > best_total_wordcount)
         {
@@ -102,9 +109,19 @@ function find_best_excerpt_from_selection(title, doc_number, percent_similarity,
     document.getElementById("sample").innerHTML += "<h3><a href='/donut?doc=" + doc_number.toString() + "'>" + title
         + "</a>  <a class='outlink' target = '_blank' href='" + link + "'> [original article] </a></h3>";
     document.getElementById("sample").innerHTML += "<h5>" + percent_similarity.toString() + "% topic match</h5>";
-    document.getElementById("sample").innerHTML += all_annotated_sentences[first];
-    document.getElementById("sample").innerHTML += all_annotated_sentences[second];
-    document.getElementById("sample").innerHTML += all_annotated_sentences[last];
+
+    if(all_annotated_sentences[first])
+    {
+        document.getElementById("sample").innerHTML += all_annotated_sentences[first];
+    }
+    if(all_annotated_sentences[second])
+    {
+        document.getElementById("sample").innerHTML += all_annotated_sentences[second];
+    }
+    if(all_annotated_sentences[last])
+    {
+        document.getElementById("sample").innerHTML += all_annotated_sentences[last];
+    }
 
     d3.selectAll(".marked").style("background-color", colors[topic]);
 }
@@ -160,6 +177,7 @@ function constructTopic(topic, numDocs)
     var word_list = reverse_topic_indices[topic].split("_");
     var doc_list = ribbon_data[topic][topic];
     var values = [];
+    
     for(var i = 0; i < doc_list.length; i++)
     {
         var current = doc_list[i];
@@ -169,9 +187,10 @@ function constructTopic(topic, numDocs)
         values.push(temp);
     }
     values.sort(function(x, y){return y[1] - x[1];});
-
-    console.log(values[5]);
     
+    if(numDocs > values.length) 
+        numDocs = values.length;
+
     for(var i = 0; i < numDocs; i++)
     {
         var this_doc = values[i];

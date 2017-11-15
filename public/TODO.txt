@@ -1,6 +1,6 @@
 (GENERAL)
--make getTopicIndices() only called once (do this after we've merged views). Cache results of fetching csv data when appropriate
 -fix untitled documents
+-make getTopicIndices() only called once (do this after we've merged views). Cache results of fetching csv data when appropriate
 -prevent all pages from scrolling? (besides single topic)
 
 (BARS)
@@ -19,9 +19,8 @@
 (NODES)
 
 (FROM MEETING 11/15)
+-unlimited topic examples
 -click title to select checkbox in corpus
 -sort within ribbon by sum of proportions
--make spectrum scatterplot of docs instead of words
+-make spectrum scatterplot of docs instead of words (y=sum of total proportion, x=ratio of proportion)
 -ribbon select stays until you mark another one
--bugfix topic (ex t29)
--unlimited topic examples
