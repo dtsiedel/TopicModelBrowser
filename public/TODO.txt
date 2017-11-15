@@ -21,7 +21,6 @@
 (NODES)
 
 (FROM MEETING 11/15)
--unlink "other" in bars
 -click title to select checkbox in corpus
 -sort within ribbon by sum of proportions
 -make spectrum scatterplot of docs instead of words
