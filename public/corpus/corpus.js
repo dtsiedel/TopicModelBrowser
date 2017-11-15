@@ -5,6 +5,7 @@ var width;
 var height;
 var radius;
 var tooltip;
+var selected = [];
 
 //parses our csv hosted on server
 //also does all of the one-time setup and calls our constructCorpus function the first time
@@ -18,10 +19,13 @@ function getData()
     radius = Math.min(width, height) / 2;
  
     d3.csv("/topic_frame.csv", function(error, response) {
-        csv_data = response;
-        csv_data = rectify_csv_data(csv_data);
-        
-        constructCorpus(csv_data);
+        get_document_full_texts(function()
+        {
+            csv_data = response;
+            csv_data = rectify_csv_data(csv_data);
+            
+            constructCorpus(csv_data);
+        });
     });
 }
 
@@ -208,7 +212,11 @@ function constructCorpus(csv)
     function chordselected(d) {
         var text = generate_document_info(d.source.index, d.target.index);
         info.html(text);
+        d3.selectAll("#checkbox").on("click", function() { toggle_check_box(d3.select(this).attr("data-id")); });
+        d3.select("#t1").style("color", colors[d.source.index]).style("font-size", "20px"); 
+        d3.select("#t2").style("color", colors[d.target.index]).style("font-size", "20px"); 
         d3.select("#topic_compare").on("click", function(){ window.location.href="/spectrum?t1="+d.source.index+"&t2="+d.target.index;});
+        d3.select("#document_compare").on("click", function() {if(selected.length > 0){window.location.href="/nodes?d="+selected.join();}});
     }
 
     function mouseover(d, i) {
@@ -218,12 +226,36 @@ function constructCorpus(csv)
     }
 }
 
+//handle checkbox state
+function toggle_check_box(id)
+{
+    //to translate javascript: if the id is in the list, remove it. Else add it. AKA toggle existence in list
+    if(selected.indexOf(id) > -1)
+    {
+        selected.splice(selected.indexOf(id), 1);
+    }
+    else
+    {
+        selected.push(id);
+    }
+    if(selected.length > 0)
+    {
+        d3.select("#document_compare").style("background-color", "green").style("cursor", "default");
+    }
+    else
+    {
+        d3.select("#document_compare").style("background-color", "#d3d3d3").style("cursor", "not-allowed");
+    }
+}
+
+//make the html element that goes on the right
 function generate_document_info(source, target)
 {
-    var result = "Topic ";
-    result += source + " and Topic ";
-    result += target + " Shared Documents:<br>";
-    result += "<button id='topic_compare' type='button'>Compare these topics!</button><br/><br/>";
+    var result = "<span id='t1'>Topic ";
+    result += source + "</span> and <span id='t2'> Topic ";
+    result += target + "</span> Shared Documents:<br>";
+    result += "<button id='topic_compare' type='button'>Compare these topics!</button></br>";
+    result += "<button id='document_compare' type='button'>Compare selected documents!</button><br/>";
     var docs = ribbon_data[source][target]; 
     for(var i = 0; i < docs.length; i++)
     {
@@ -231,7 +263,7 @@ function generate_document_info(source, target)
         {
             break;
         }
-        result += "<a href=\"/donut?doc=" + docs[i] + "\">Document " + docs[i] + "</a><br>"; 
+        result += "<input id='checkBox' data-id='"+docs[i]+"'type='checkbox'>" + conditional_clip(document_text[docs[i]]["title"],50) + "<br/>"
     }
     return result;
 }

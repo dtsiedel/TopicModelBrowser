@@ -1,5 +1,6 @@
 (GENERAL)
 -make getTopicIndices() only called once (do this after we've merged views). Cache results of fetching csv data when appropriate
+-fix untitled documents
 
 (BARS)
 -be able to get to it
