@@ -4,12 +4,13 @@
 // Designed to display unary topic view of data.
 // Meant to show a single topic through excerpts from a series of documents.
 
+var per_page = 20;
+
 // Finds most exemplary sentence from article for a given topic. Annotates as it processes each sentence, returns
 // an output that includes three sentence-excerpt from the article.
 function find_best_excerpt_from_selection(title, doc_number, percent_similarity, original_article, wordlist, link, topic)
 {
     var split_list = original_article.match( /[^\.!\?]+[\.!\?]+/g )
-    console.log(split_list);
     var kw_dict = {};
 
     //if there is only one line, just return that line
@@ -80,8 +81,11 @@ function find_best_excerpt_from_selection(title, doc_number, percent_similarity,
     if (best_sentence_index == -1)  // this would mean nothing was found with > 0 unique / total words: handle with
                                     // explanatory output to HTML (note: in long term, we'd just ignore this case)
     {
-        //document.getElementById("sample").innerHTML += "<p>Error: no keyword matches found!</p>"
-        return
+        best_sentence_index = 0;
+        all_annotated_sentences[0] = "<p>No sufficient matches found</p>";
+        all_annotated_sentences[1] = null;
+        all_annotated_sentences[2] = null;
+        //return
     }
 
     var first = -1, second = -1, last = -1;
@@ -127,10 +131,10 @@ function find_best_excerpt_from_selection(title, doc_number, percent_similarity,
 }
 
 // Given topic number, sets H2 in HTML to "TOPIC ###"
-function define_topicname_from_url(topic)
+function define_topicname_from_url(topic, page_n)
 {
     var topic_words = reverse_topic_indices[topic].split("_").join();
-    document.getElementById("topicname").innerHTML = "Topic " + topic + " Summary<br/><h6>Sample words: " + topic_words + "</h6>";
+    document.getElementById("topicname").innerHTML = "Topic " + topic + " Summary (Page "+page_n+")<br/><h6>Sample words: " + topic_words + "</h6>";
     d3.select("#topicname").style("color", colors[topic]);
 }
 
@@ -158,25 +162,34 @@ function getData()
         var url_string = window.location.href; //fetch document we want to show
         var url = new URL(url_string);
         var topic = url.searchParams.get("t");
+        var page_n = url.searchParams.get("page");
        
         if(topic === null)
+        {
             topic = randomTopic();
+            window.location.href = "/topic?t="+randomTopic+"&page="+page_n;
+        }
 
+        if(page_n === null)
+        {
+            window.location.href = "/topic?t="+topic+"&page=1";
+        }
         get_document_full_texts(function()
         {
-            define_topicname_from_url(topic);
-            constructTopic(topic, 20);
+            define_topicname_from_url(topic, page_n);
+            constructTopic(topic, per_page, page_n);
         });
     });
 }
 
 //actually make the physical representation of the topic
-function constructTopic(topic, numDocs)
+function constructTopic(topic, numDocs, page_n)
 {
     document.title = "Topic " + topic;  
     var word_list = reverse_topic_indices[topic].split("_");
     var doc_list = ribbon_data[topic][topic];
     var values = [];
+    var end = false;
     
     for(var i = 0; i < doc_list.length; i++)
     {
@@ -189,13 +202,59 @@ function constructTopic(topic, numDocs)
     values.sort(function(x, y){return y[1] - x[1];});
     
     if(numDocs > values.length) 
+    {
         numDocs = values.length;
+    }
+   
+    if(page_n == maxPage(topic))
+    {
+        numDocs = doc_list.length % per_page;
+        end = true; 
+    }
 
-    for(var i = 0; i < numDocs; i++)
+    var start = (page_n-1) * numDocs;
+    for(var i = start; i < start+numDocs; i++)
     {
         var this_doc = values[i];
         find_best_excerpt_from_selection(conditional_clip(document_text[this_doc[0]]["title"], 70), this_doc[0], (this_doc[1] * 100).toFixed(2), document_text[this_doc[0]]["text"], word_list, document_text[this_doc[0]]["url"], topic);
     }
+    if(end)
+    {
+        document.getElementById("sample").innerHTML += "<br><br><h3>((END OF RESULTS))</h3></br></br>"
+    }
+}
+
+//control next page logic
+function pageNext()
+{
+    var this_page = new URL(window.location.href).searchParams.get("page");
+    var this_topic = new URL(window.location.href).searchParams.get("t");
+    if(this_page === null)
+        this_page = 1;
+    if(this_page >= maxPage(this_topic))
+        return;
+    var target = parseInt(this_page)+1;
+    window.location.href = "/topic?t="+this_topic+"&page="+target;
+}
+
+//what is the highest number page you can get for the topic?
+function maxPage(topic)
+{
+    var n_docs = ribbon_data[topic][topic].length;    
+    return Math.ceil(n_docs / per_page);
+}
+
+//control last page logic
+function pageLast()
+{
+    var this_page = new URL(window.location.href).searchParams.get("page");
+    var this_topic = new URL(window.location.href).searchParams.get("t");
+    if(this_page === null)
+        this_page = 1
+    if(this_page <= 1)
+        return;
+    var target = parseInt(this_page)-1
+    window.location.href = "/topic?t="+this_topic+"&page="+target;
 }
 
 //wrapper to call data load functions
@@ -208,3 +267,5 @@ function main()
 document.addEventListener("DOMContentLoaded", function(e) {
     main();
 });
+
+

@@ -4,7 +4,11 @@
     <script src="/library.js"></script>
     <link rel="stylesheet" type="text/css" href="style_topic.css">
     <body>
-        <button onclick='returnToCorpus()'>Back to Main View</button>
+        <div id="header">
+            <button onclick='returnToCorpus()'>Back to Main View</button>
+            <button id="next" onclick='pageNext()'>Next page --&gt;</button>
+            <button id="prev" onclick='pageLast()'>&lt;--Previous Page</button>
+        </div>
         <h2 id="topicname"></h2>
         <div id="sample"></div>
     </body>

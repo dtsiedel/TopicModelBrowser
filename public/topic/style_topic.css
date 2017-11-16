@@ -15,3 +15,17 @@ h2 {
 .outlink {
     cursor: alias; 
 }
+
+/*
+.header {
+    width: 100%;
+}
+*/
+
+#prev {
+    float: right;
+}
+
+#next {
+    float: right;
+}
