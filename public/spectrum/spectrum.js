@@ -117,7 +117,7 @@ function plotTopics(t1, t2, color_scale)
             var topic_text = reverse_topic_indices[index];
             return tooltip.style("top", (event.pageY-10)+"px").style("left",(event.pageX+10)+"px").html(generate_spectrum_tooltip(index, topic_text)).style("background-color", colors[index]).style("color", "white");})
         .on("mouseout", function(){return tooltip.style("visibility", "hidden");})    
-        .on("click", function() { window.location.href = "/topic?t=" + t1});
+        .on("click", function() { window.location.href = "/topic?t=" + t2});
 }
 
 //puts the documents from the document list onto the canvas
@@ -134,7 +134,7 @@ function plotDocuments(docList, t1, t2, color_scale)
         var id = docList[i];
         var prop_1 = csv_data[id][reverse_topic_indices[t1]];
         var prop_2 = csv_data[id][reverse_topic_indices[t2]];
-        var color = color_scale((prop_2-prop_1).map(-1,1,0,1));
+        var color = color_scale(.75*(prop_2-prop_1).map(-1,1,0,1));
 
         data.push({"id":id,"prop_1":prop_1,"prop_2":prop_2,"color":color,"cx":x_mid+(prop_2-prop_1)*(x_end-x_start)/2,"cy":current_y});
 
@@ -151,7 +151,7 @@ function plotDocuments(docList, t1, t2, color_scale)
         .style("fill", function(d) {return d.color; })
         .on("mouseover", function(){return tooltip.style("visibility", "visible");}) 
         .on("mousemove", function(d,i){
-                return tooltip.style("top", (event.pageY-10)+"px").style("left",(event.pageX+10)+"px").html(generate_spectrum_document(d.id, d.prop_1, d.prop_2, d.t1, d.t2)).style("background-color", color).style("color", "white");})
+                return tooltip.style("top", (event.pageY-10)+"px").style("left",(event.pageX+10)+"px").html(generate_spectrum_document(d.id, d.prop_1, d.prop_2, d.t1, d.t2)).style("background-color", d.color).style("color", "white");})
         .on("mouseout", function(){return tooltip.style("visibility", "hidden");}) 
         .on("click", function(d) {window.location.href = "/donut?doc="+d.id});
 }
