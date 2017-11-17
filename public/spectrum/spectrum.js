@@ -6,10 +6,15 @@ var tooltip;
 
 var x_start = -100;
 var x_end = 600;
+var x_mid = (x_start + x_end) / 2;
 var y_start = 0;
 var y_end = -200;
-var _mid = (x_start + x_end) / 2
 var y_mid = (y_start + y_end) / 2;
+
+//let us map from input range to output range
+Number.prototype.map = function (in_min, in_max, out_min, out_max) {
+  return (this - in_min) * (out_max - out_min) / (in_max - in_min) + out_min;
+}
 
 //parses our csv hosted on server
 //also does all of the one-time setup and calls our constructSpectrum function the first time
@@ -55,7 +60,7 @@ function getData()
         {
             getRibbonData(function()
             {
-                get_stopwords(function()
+                get_document_full_texts(function()
                 {
                     if(t1 === null)
                     {
@@ -65,95 +70,22 @@ function getData()
                     {
                         t2 = randomTopic();
                     }
-                    constructSpectrum(t1, t2, 50);
+                    constructSpectrum(t1, t2);
                 });
             });
         });
     });
 }
 
-//get n random documents from the list n
-function randomSample(docList, n)
-{
-    if(docList.length < n)
-    {
-        return docList;
-    }
-
-    var result = [];
-    for(var i = 0; i < n; i++)
-    {
-        var random; 
-        while(true)
-        {
-            random = Math.floor(Math.random()*docList.length);
-            if(!result.includes(random))
-                break;
-        }
-        result.push(random);
-    }
-    return result;
-}
-
-//gets the max n documents by proportion about topic *t*
-function maxN(topic, doc_list, n)
-{
-    var values = [];
-    for(var i = 0; i < doc_list.length; i++)
-    {
-        var current = doc_list[i];
-        var temp = [];
-        temp[0] = current;
-        temp[1] = csv_data[current][reverse_topic_indices[topic]];
-        values.push(temp);
-    }
-    values.sort(function(x, y){return y[1] - x[1];});
-    
-    var result = [];
-    for(var i = 0; i < n; i++)
-    {
-        if(typeof values[i] !== 'undefined')
-        {
-            result.push(values[i][0]);
-        }
-    }
-    return result;
-}
-
-//same as above but for two topics
-function maxNShared(topic1, topic2, doc_list, n)
-{
-    var values = [];
-    for(var i = 0; i < doc_list.length; i++)
-    {
-        var current = doc_list[i];
-        var temp = [];
-        temp[0] = current;
-        temp[1] = csv_data[current][reverse_topic_indices[topic1]] + csv_data[current][reverse_topic_indices[topic2]];
-    }
-    values.sort(function(x, y){return y[1] - x[1];});
-    
-    var result = [];
-    for(var i = 0; i < n; i++)
-    {
-        if(typeof values[i] !== 'undefined')
-        {
-            result.push(values[i][0]);
-        }
-    }
-    return result;
-}
 
 //make the spectrum view, including the two sides and the inner words
-function constructSpectrum(t1, t2, n)
+function constructSpectrum(t1, t2)
 {
     var color_scale = d3.interpolateRgb(colors[t1], colors[t2]);
-    var docs1 = maxN(t1, ribbon_data[t1][t1], n);
-    var docs2 = maxN(t2, ribbon_data[t2][t2], n);
-    var shared = maxNShared(t1, t2, ribbon_data[t1][t2], n);
+    var shared = ribbon_data[t1][t2];
     
     plotTopics(t1, t2, color_scale);
-    alignDocs(docs1, docs2, shared, 10, color_scale);
+    plotDocuments(shared, t1, t2, color_scale);
 }
 
 //put the topic names onto the screen
@@ -188,6 +120,44 @@ function plotTopics(t1, t2, color_scale)
         .on("click", function() { window.location.href = "/topic?t=" + t1});
 }
 
+//puts the documents from the document list onto the canvas
+function plotDocuments(docList, t1, t2, color_scale)
+{
+    docList = sortRibbon(docList, t1, t2);
+    var y_step = (y_start - y_end) / docList.length;
+    var current_y = y_end;    
+    for(var i = 0; i < docList.length; i++)
+    {
+        var id = docList[i];
+        var prop_1 = csv_data[id][reverse_topic_indices[t1]];
+        var prop_2 = csv_data[id][reverse_topic_indices[t2]];
+        var color = color_scale((prop_2-prop_1).map(-1,1,0,1));
+
+        chart.append("circle")
+            .attr("class", "node_"+i)
+            .attr("cx", x_mid+(prop_2-prop_1)*(x_end-x_start)/2)
+            .attr("cy", current_y) 
+            .attr("r", 3)
+            .style("fill", color)
+            .on("mouseover", function(){return tooltip.style("visibility", "visible");}) //bind tooltip to when mouse goes over arc
+            .on("mousemove", function(d){
+                return tooltip.style("top", (event.pageY-10)+"px").style("left",(event.pageX+10)+"px").html(generate_spectrum_document(id, prop_1, prop_2, t1, t2)).style("background-color", color).style("color", "white");})
+            .on("mouseout", function(){return tooltip.style("visibility", "hidden");}) 
+
+        current_y += y_step;
+    }
+}
+
+//make the tooltip for one document (point) in this graph
+function generate_spectrum_document(id, prop_1, prop_2, t1, t2)
+{
+    console.log(id);
+    var result = "<div>"+document_text[id].title;
+
+    result += "</div>"
+    return result;
+}
+
 //create the html for the tooltip div in this view
 function generate_spectrum_tooltip(topic_number, topic_name)
 {
@@ -211,119 +181,6 @@ function generate_spectrum_tooltip(topic_number, topic_name)
     return text; 
 }
 
-//for each document number in the doclist, get the text
-//returns a list of document texts
-function getDocText(docList)
-{
-    var result = [];
-    for(var i = 0; i < docList.length; i++)
-    {
-        result.push(document_text[docList[i]].text);
-    }
-    return result;
-}
-
-//get the n most used words in each of the documents in the list
-function getWordCounts(textList, n)
-{
-    var result = {};
-    for(var i = 0; i < textList.length; i++)
-    {
-        var words = textList[i].split(/[.,\/ -]/);
-        for(var i = 0; i < words.length; i++)
-        {
-            var word = words[i];
-            if(stopwords.includes(word))
-            {
-                continue;
-            }
-            if(word in result)
-            {
-                result[word]++; 
-            }
-            else
-            {
-                result[word] = 1;
-            }
-        }
-    }
-    
-    var items = Object.keys(result).map(function(key) {
-        return [key, result[key]];
-    });
-    items.sort(function(first, second) {
-        return second[1] - first[1];
-    });
-
-    return items.slice(0,n);
-}
-
-//determine where in the spectrum words should be placed
-function alignDocs(left, right, center, wordCount, color_scale)
-{
-    var textLeft = getDocText(left);
-    var textRight = getDocText(right);
-    var textCenter = getDocText(center);
-    var leftCounts = getWordCounts(textLeft, wordCount);
-    var rightCounts = getWordCounts(textRight, wordCount);
-    var centerCounts = getWordCounts(textCenter, wordCount);
-     
-    plotWords(leftCounts, centerCounts, rightCounts, color_scale);
-}
-
-//actually draws all the words that we want
-function plotWords(leftCounts, centerCounts, rightCounts, color_scale)
-{
-    var x_length = x_end - x_start;
-    var left_x = x_start + 1/4 * x_length;
-    var center_x = x_start + 1/2 * x_length;
-    var right_x = x_start + 3/4 * x_length;
-    var y_array = nRandRange(30, y_start, y_end);
-    var smoother = 15; //smooth near edges, where words don't reach
-  
-    for(var i = 0; i < leftCounts.length; i++)
-    {
-        var x = fuzz(left_x, (x_end - x_start) / 5);
-        var y = y_array.pop();
-        chart.append("text")
-            .attr("x", x)
-            .attr("y", y)
-            .text(leftCounts[i][0])
-            .style("font-size", Math.min(Math.max(parseInt(leftCounts[1][i]), 5), 30))
-            .style("fill", color_scale((x+smoother)/(x_end-x_start)));
-    }
-      
-    for(var i = 0; i < centerCounts.length; i++)
-    {
-        var x = center_x; 
-        var x = fuzz(center_x, (x_end - x_start) / 5);
-        var y = y_array.pop();
-        chart.append("text")
-            .attr("x", x)
-            .attr("y", y)
-            .style("font-size", Math.min(Math.max(parseInt(centerCounts[1][i]), 5), 30))
-            .text(centerCounts[i][0])
-            .style("fill", color_scale((x+smoother)/(x_end-x_start)));
-    }
-   
-    for(var i = 0; i < rightCounts.length; i++)
-    {
-        var x = fuzz(right_x, (x_end - x_start) / 5);
-        var y = y_array.pop();
-        chart.append("text")
-            .attr("x", x)
-            .attr("y", y)
-            .text(rightCounts[i][0])
-            .style("font-size", Math.min(Math.max(parseInt(rightCounts[1][i]), 5), 30))
-            .style("fill", color_scale((x-smoother)/(x_end-x_start)));
-    }
-}
-
-function fuzz(value, fuzz)
-{
-    var fuzz = nRandRange(1, -fuzz, fuzz).pop(); 
-    return value + fuzz;
-}
 
 //wrapper to be called when page loads
 function main()
