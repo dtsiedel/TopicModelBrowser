@@ -291,6 +291,7 @@ function generate_document_info(source, target)
     result += "<button id='document_compare' type='button'>Compare selected documents!</button>";
     result += "<button id='document_single' type='button'>View single document!</button><br/>";
     var docs = ribbon_data[source][target]; 
+    docs = sortRibbon(docs, source, target);
     for(var i = 0; i < docs.length; i++)
     {
         if(i > chord_threshold)

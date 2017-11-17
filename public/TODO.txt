@@ -21,6 +21,5 @@
 
 (FROM MEETING 11/15)
 -click title to select checkbox in corpus
--sort within ribbon by sum of proportions
 -make spectrum scatterplot of docs instead of words (y=sum of total proportion, x=ratio of proportion)
 -ribbon select stays until you mark another one

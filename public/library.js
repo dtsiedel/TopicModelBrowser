@@ -485,3 +485,22 @@ function returnToCorpus()
 {
     window.location.href = "/corpus"
 }
+
+//sort the documents belonging to given ribbon
+function sortRibbon(documents, t1, t2)
+{
+    var temp = [];
+    var t1 = reverse_topic_indices[t1];
+    var t2 = reverse_topic_indices[t2];
+    for(var i = 0; i < documents.length; i++)
+    {
+        temp.push([documents[i], parseFloat(csv_data[documents[i]][t1])+parseFloat(csv_data[documents[i]][t2])]);
+    } 
+    temp.sort(function(x,y){return y[1]-x[1]}); 
+    var result = [];
+    for(var i = 0; i < temp.length; i++)
+    {
+        result.push(temp[i][0]);
+    }
+    return result;
+}
