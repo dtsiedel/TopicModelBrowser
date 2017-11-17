@@ -126,6 +126,9 @@ function plotDocuments(docList, t1, t2, color_scale)
     docList = sortRibbon(docList, t1, t2);
     var y_step = (y_start - y_end) / docList.length;
     var current_y = y_end;    
+    var marked = [];
+    var data = [];
+
     for(var i = 0; i < docList.length; i++)
     {
         var id = docList[i];
@@ -133,28 +136,34 @@ function plotDocuments(docList, t1, t2, color_scale)
         var prop_2 = csv_data[id][reverse_topic_indices[t2]];
         var color = color_scale((prop_2-prop_1).map(-1,1,0,1));
 
-        chart.append("circle")
-            .attr("class", "node_"+i)
-            .attr("cx", x_mid+(prop_2-prop_1)*(x_end-x_start)/2)
-            .attr("cy", current_y) 
-            .attr("r", 3)
-            .style("fill", color)
-            .on("mouseover", function(){return tooltip.style("visibility", "visible");}) //bind tooltip to when mouse goes over arc
-            .on("mousemove", function(d){
-                return tooltip.style("top", (event.pageY-10)+"px").style("left",(event.pageX+10)+"px").html(generate_spectrum_document(id, prop_1, prop_2, t1, t2)).style("background-color", color).style("color", "white");})
-            .on("mouseout", function(){return tooltip.style("visibility", "hidden");}) 
+        data.push({"id":id,"prop_1":prop_1,"prop_2":prop_2,"color":color,"cx":x_mid+(prop_2-prop_1)*(x_end-x_start)/2,"cy":current_y});
 
         current_y += y_step;
     }
+
+    chart.selectAll(".node")
+        .data(data)
+        .enter()
+        .append("circle")
+        .attr("cx", function(d) { return d.cx; })
+        .attr("cy", function(d) { return d.cy; }) 
+        .attr("r", 3)
+        .style("fill", function(d) {return d.color; })
+        .on("mouseover", function(){return tooltip.style("visibility", "visible");}) 
+        .on("mousemove", function(d,i){
+                return tooltip.style("top", (event.pageY-10)+"px").style("left",(event.pageX+10)+"px").html(generate_spectrum_document(d.id, d.prop_1, d.prop_2, d.t1, d.t2)).style("background-color", color).style("color", "white");})
+        .on("mouseout", function(){return tooltip.style("visibility", "hidden");}) 
+        .on("click", function(d) {window.location.href = "/donut?doc="+d.id});
 }
 
 //make the tooltip for one document (point) in this graph
 function generate_spectrum_document(id, prop_1, prop_2, t1, t2)
 {
-    console.log(id);
-    var result = "<div>"+document_text[id].title;
-
-    result += "</div>"
+    var result = "<div>"+conditional_clip(document_text[id].title, 30);
+    result += "<br><span class='id_t1'>" + (prop_1*100).toFixed(2) + "%" + " vs " + "<span class='id_t2'>" + (prop_2*100).toFixed(2) + "%";
+    result += "<br>Excerpt:<br>";
+    result += conditional_clip(document_text[id].text, 200);
+    result += "</div>";
     return result;
 }
 
