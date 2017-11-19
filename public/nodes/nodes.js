@@ -12,7 +12,13 @@ var size = d3.scale.pow().exponent(1)
 //driver
 function main()
 {
-    getTopicIndices(getData);
+    getTopicIndices(function()
+    {
+        get_document_full_texts(function()
+        {
+            getData();
+        });
+    });
 }
 
 //gets the document list from the url
@@ -232,7 +238,7 @@ function constructChart(links, nodes){
     })
     .on("mouseover", function(){return tooltip.style("visibility", "visible");}) //bind tooltip to when mouse goes over arc
     .on("mousemove", function(d){
-      return tooltip.style("top", (event.pageY-10)+"px").style("left",(event.pageX+10)+"px").text("Document " + d.id).style("background-color", "white").style("color", "black");})
+      return tooltip.style("top", (event.pageY-10)+"px").style("left",(event.pageX+10)+"px").html(generate_document_tooltip(d.id)).style("background-color", "white").style("color", "black");})
     .on("mouseout", function(){return tooltip.style("visibility", "hidden");})
 
 
