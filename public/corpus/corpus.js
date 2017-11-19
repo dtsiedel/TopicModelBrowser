@@ -233,7 +233,8 @@ function constructCorpus(csv)
         var text = generate_document_info(d.source.index, d.target.index);
         selected = []; //need to reset this between chord clicks
         info.html(text);
-        d3.selectAll("#checkbox").on("click", function() { toggle_check_box(d3.select(this).attr("data-id")); });
+        d3.selectAll(".checkbox").on("click", function() { toggle_check_box(d3.select(this).attr("data-id")); });
+        d3.selectAll(".checktitle").on("click", function() { visually_toggle(d3.select(this).attr("data-id")); toggle_check_box(d3.select(this).attr("data-id")); });
         d3.select("#t1").style("color", colors[d.source.index]).style("font-size", "20px"); 
         d3.select("#t2").style("color", colors[d.target.index]).style("font-size", "20px"); 
         d3.select("#topic_compare").on("click", function(){ window.location.href="/spectrum?t1="+d.source.index+"&t2="+d.target.index;});
@@ -249,6 +250,16 @@ function constructCorpus(csv)
             return p.source.index !== i && p.target.index !== i;
         });
     }
+}
+
+//change the appearance of checkbox when clicking title
+function visually_toggle(index)
+{
+    var element = d3.selectAll(".check"+index);
+    if(element.property("checked"))
+        element.property("checked",false);
+    else
+        element.property("checked",true);
 }
 
 //handle checkbox state
@@ -298,7 +309,7 @@ function generate_document_info(source, target)
         {
             break;
         }
-        result += "<input id='checkBox' data-id='"+docs[i]+"'type='checkbox'>" + conditional_clip(document_text[docs[i]]["title"],50) + "<br/>"
+        result += "<input class='checkBox check"+docs[i]+"' data-id='"+docs[i]+"'type='checkbox'>" + "<span class='checktitle' data-id="+docs[i]+">" + conditional_clip(document_text[docs[i]]["title"],50) + "</span><br/>";
     }
     return result;
 }

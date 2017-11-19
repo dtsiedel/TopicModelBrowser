@@ -2,7 +2,6 @@ body {
     background-color: black;
 }
 
-
 #circle circle {
     fill: none;
     pointer-events: all;
@@ -44,26 +43,18 @@ button {
 
 #topic_compare {
     background-color: #5492f7;
-    /*
-    height: 30px;
-    width: 300px;
-    */
 }
 
 #document_compare {
     background-color: #d3d3d3;
     cursor: not-allowed;
-    /*
-    height: 30px;
-    width: 150px;
-    */
 }
 
 #document_single {
     background-color: #d3d3d3;
     cursor: not-allowed;
-    /*
-    height: 30px;
-    width: 150px;
-    */
+}
+
+.checktitle {
+    cursor:default;
 }

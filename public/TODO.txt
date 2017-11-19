@@ -1,5 +1,5 @@
 (GENERAL)
--fix untitled documents
+-see if untitled documents are valid
 -make getTopicIndices() only called once (do this after we've merged views). Cache results of fetching csv data when appropriate
 -prevent all pages from scrolling? (besides single topic)
 
@@ -19,6 +19,6 @@
 (NODES)
 
 (FROM MEETING 11/15)
--click title to select checkbox in corpus
 -ribbon select stays until you mark another one
 -loading icon
+-drag to select documents
