@@ -247,7 +247,7 @@ function constructCorpus(csv)
                 toggle_check_box(current);
             }
         });
-        d3.selectAll(".checktitle").on("mouseup", function() {
+        d3.selectAll("html").on("mouseup", function() {
             dragSelecting = false;
         });
         d3.select("#t1").style("color", colors[d.source.index]).style("font-size", "20px"); 

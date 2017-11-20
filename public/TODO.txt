@@ -25,3 +25,4 @@
 -examples of broken highlighting (missing some highlighting, ex T7)
 
 (NODES)
+-limit number of documents shown so it doesn't become a huge mess
