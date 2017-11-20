@@ -1,26 +1,32 @@
 (GENERAL)
 -MERGE!
--see if untitled documents are valid
--make getTopicIndices() only called once (do this after we've merged views). Cache results of fetching csv data when appropriate
--prevent all pages from scrolling? (besides single topic)
+-loading icon
+-help button/page
 -https
+-see if untitled documents are valid
+-prevent all pages from scrolling? (besides single topic)
 
 (BARS)
 
 (DONUT)
+-move title to top (remove Doc X), and put url in the middle
+-introduce other metadata (i.e. aggregate by blog, or anything else given)
 
 (CORPUS)
--figure out ribbon scaling and thresholds (thresh should be function of input size and how connected things are)
+-percentages!?
+-persistent word labels on topics? With just a few
+-drag to select documents
+-ribbon select stays until you mark another one
 
 (SPECTRUM)
+-consider transparency of some sort to indicate selected documents in spectrum
+-or have fewer docs in it for legibility
 
 (TOPIC)
 -change color scheme to match the rest of everything
 -make percent indicator a progress bar
+-examples of broken highlighting (missing some highlighting, ex T7)
+-number the topics
 
 (NODES)
 
-(FROM MEETING 11/15)
--ribbon select stays until you mark another one
--loading icon
--drag to select documents
