@@ -13,7 +13,6 @@
 
 (CORPUS)
 -persistent word labels on topics? With just a few
--drag to select documents
 -ribbon select stays until you mark another one
 
 (SPECTRUM)

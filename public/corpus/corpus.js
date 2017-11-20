@@ -5,6 +5,7 @@ var height;
 var radius;
 var tooltip;
 var selected = [];
+var dragSelecting = false;
 
 //parses our csv hosted on server
 //also does all of the one-time setup and calls our constructCorpus function the first time
@@ -233,7 +234,22 @@ function constructCorpus(csv)
         selected = []; //need to reset this between chord clicks
         info.html(text);
         d3.selectAll(".checkbox").on("click", function() { toggle_check_box(d3.select(this).attr("data-id")); });
-        d3.selectAll(".checktitle").on("click", function() { visually_toggle(d3.select(this).attr("data-id")); toggle_check_box(d3.select(this).attr("data-id")); });
+        d3.selectAll(".checktitle").on("mousedown", function() {
+            dragSelecting = true;
+            var current = d3.select(this).attr("data-id");
+            visually_toggle(current); 
+            toggle_check_box(current);
+        });
+        d3.selectAll(".checktitle").on("mouseover", function() {
+            if(dragSelecting){
+                var current = d3.select(this).attr("data-id");
+                visually_toggle(current);
+                toggle_check_box(current);
+            }
+        });
+        d3.selectAll(".checktitle").on("mouseup", function() {
+            dragSelecting = false;
+        });
         d3.select("#t1").style("color", colors[d.source.index]).style("font-size", "20px"); 
         d3.select("#t2").style("color", colors[d.target.index]).style("font-size", "20px"); 
         d3.select("#topic_compare").on("click", function(){ window.location.href="/spectrum?t1="+d.source.index+"&t2="+d.target.index;});
