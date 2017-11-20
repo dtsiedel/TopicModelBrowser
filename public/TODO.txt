@@ -24,7 +24,5 @@
 -change color scheme to match the rest of everything
 -make percent indicator a progress bar
 -examples of broken highlighting (missing some highlighting, ex T7)
--number the topics
 
 (NODES)
-

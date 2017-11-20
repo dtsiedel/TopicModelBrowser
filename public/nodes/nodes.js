@@ -32,7 +32,7 @@ function fetch_documents()
 }
 
 //parses our csv hosted on server
-//also does all of the one-time setup and calls our constructChart function the first time
+//also does all of the one-time setup and calls our constructNodes function the first time
 function getData()
 {
     //variables to control the graph result
@@ -66,8 +66,6 @@ function getData()
             csv_data = response;
             csv_data = rectify_csv_data(csv_data);
 
-            //starting with 100 random unique documents
-            //initalized with documents inside, otherwise it gets confused on the type
             documents = [csv_data[randomDocument()]];
             var desired_documents = fetch_documents();
 
@@ -100,7 +98,7 @@ function calculateDistance(documents)
       results.push(current);
     }
 
-    constructChart(defineLinks(results, documents), defineNodes(documents));
+    constructNodes(defineLinks(results, documents), defineNodes(documents));
 }
 
 
@@ -164,15 +162,12 @@ function cosineDistance(a, b) {
     return Math.sqrt(sum);
 
   }
-
   return dot(a, b)/(magnitude(a) * magnitude(b));
-
-
 }
 
 
 //make node diagram
-function constructChart(links, nodes){
+function constructNodes(links, nodes){
   var width = 1200,
     height = 600;
 
@@ -187,7 +182,7 @@ function constructChart(links, nodes){
     .attr("width", width)
     .attr("height", height);
 
-  //allign in the center of the graph
+  //align in the center of the graph
   d3.select("#chart").attr("align","center");
 
   force.nodes(nodes)

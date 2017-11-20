@@ -8,7 +8,7 @@ var per_page = 20;
 
 // Finds most exemplary sentence from article for a given topic. Annotates as it processes each sentence, returns
 // an output that includes three sentence-excerpt from the article.
-function find_best_excerpt_from_selection(title, doc_number, percent_similarity, original_article, wordlist, link, topic)
+function find_best_excerpt_from_selection(title, doc_number, percent_similarity, original_article, wordlist, link, topic, n)
 {
     var split_list = original_article.match( /[^\.!\?]+[\.!\?]+/g )
     var kw_dict = {};
@@ -110,7 +110,7 @@ function find_best_excerpt_from_selection(title, doc_number, percent_similarity,
     }
 
     // Edit display:
-    document.getElementById("sample").innerHTML += "<h3><a href='/donut?doc=" + doc_number.toString() + "'>" + title
+    document.getElementById("sample").innerHTML += "<h3>"+n+". <a href='/donut?doc=" + doc_number.toString() + "'>" + title
         + "</a>  <a class='outlink' target = '_blank' href='" + link + "'> [original article] </a></h3>";
     document.getElementById("sample").innerHTML += "<h5>" + percent_similarity.toString() + "% topic match</h5>";
 
@@ -216,7 +216,7 @@ function constructTopic(topic, numDocs, page_n)
     for(var i = start; i < start+numDocs; i++)
     {
         var this_doc = values[i];
-        find_best_excerpt_from_selection(conditional_clip(document_text[this_doc[0]]["title"], 70), this_doc[0], (this_doc[1] * 100).toFixed(2), document_text[this_doc[0]]["text"], word_list, document_text[this_doc[0]]["url"], topic);
+        find_best_excerpt_from_selection(conditional_clip(document_text[this_doc[0]]["title"], 70), this_doc[0], (this_doc[1] * 100).toFixed(2), document_text[this_doc[0]]["text"], word_list, document_text[this_doc[0]]["url"], topic, i+1);
     }
     if(end)
     {
