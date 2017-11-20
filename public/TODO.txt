@@ -12,7 +12,6 @@
 -introduce other metadata (i.e. aggregate by blog, or anything else given)
 
 (CORPUS)
--percentages!?
 -persistent word labels on topics? With just a few
 -drag to select documents
 -ribbon select stays until you mark another one
