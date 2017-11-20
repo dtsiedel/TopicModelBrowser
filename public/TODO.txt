@@ -9,7 +9,6 @@
 (BARS)
 
 (DONUT)
--move title to top (remove Doc X), and put url in the middle
 -introduce other metadata (i.e. aggregate by blog, or anything else given)
 
 (CORPUS)

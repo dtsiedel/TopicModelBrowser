@@ -136,7 +136,7 @@ function constructDonut(n)
                     chart.append("text")
                         .attr("text-anchor", "middle")
                         .attr("class", "title")
-                        .text(conditional_clip(document_text[n]["title"], 30))
+                        .text(conditional_clip(document_text[n].url, 30))
                         .style("fill", "white")
                         .on("mouseover", function(){return tooltip.style("visibility", "visible");}) 
                         .on("mousemove", function(d){
@@ -156,7 +156,7 @@ function constructDonut(n)
         .attr("y", -200)
         .style("font-size", "35px")
         .style("fill", "white")
-        .text("Document " + n);
+        .text(conditional_clip(document_text[n].title, 30));
 
 }
 
