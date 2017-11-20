@@ -1,7 +1,9 @@
 (GENERAL)
+-MERGE!
 -see if untitled documents are valid
 -make getTopicIndices() only called once (do this after we've merged views). Cache results of fetching csv data when appropriate
 -prevent all pages from scrolling? (besides single topic)
+-https
 
 (BARS)
 
