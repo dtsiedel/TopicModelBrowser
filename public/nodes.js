@@ -186,7 +186,7 @@ function constructNodes(links, nodes){
       node.style('stroke', "#1F77B4")
     })
     .on("click", function(d) {
-      window.location.href = "/donut?doc="+d.id;
+        goTo(pages.nodes, pages.donut, d.id)
     });
 
 
@@ -225,20 +225,13 @@ function constructNodes(links, nodes){
       .attr("cy", function(d) {
         return d.y;
       });
-
-    d3.selectAll("text").attr("x", function(d) {
-        return d.x;
-      })
-      .attr("y", function(d) {
-        return d.y;
-      });
-
   });
 }
 
 //remove everything we added for nodes
 function nodesCleanup()
 {
+    d3.select(".tooltip").style("visibility", "hidden");
     removeCorpusButton();
     d3.select(".nodes-svg").remove();    
 }
