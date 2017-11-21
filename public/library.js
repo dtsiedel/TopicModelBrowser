@@ -129,7 +129,9 @@ function addLegend(chart, data, legendRectSize, legendSpacing)
             var index = d.index
             return tooltip.style("top", (event.pageY-10)+"px").style("left",(event.pageX+10)+"px").html(generate_tooltip_html(index, topic_text, d.value)).style("background-color", d.color).style("color", "white");})
         .on("mouseout", function(){return tooltip.style("visibility", "hidden");})
-        .on("click", function(d,i) {window.location = "/topic?t=" + d.index; });
+        .on("click", function(d,i) {
+            goTo(pages.donut, pages.topic, d.index);
+        });
 
     legend.append('text')
         .attr('x', legendRectSize + legendSpacing)
