@@ -519,6 +519,9 @@ function goTo(source, target, parameters)
         case pages.donut:
             donutCleanup();
             break;
+        case pages.topic:
+            topicCleanup();
+            break;
     }
 
     switch(target)
@@ -529,8 +532,23 @@ function goTo(source, target, parameters)
         case pages.donut:
             donutMain(parameters);
             break;
-
+        case pages.topic:
+            topicMain(parameters);
+            break;
 
     } 
 }
 
+//add a back to corpus button
+function addCorpusLink(source)
+{
+    d3.select("#header").append("button").attr("class", "corpus-link").text("Back to Corpus!").on("click", function()
+    {
+        goTo(source, pages.corpus, [])
+    });
+}
+
+function removeCorpusButton()
+{
+    d3.select(".corpus-link").remove();
+}

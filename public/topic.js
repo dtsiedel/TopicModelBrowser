@@ -110,21 +110,22 @@ function find_best_excerpt_from_selection(title, doc_number, percent_similarity,
     }
 
     // Edit display:
-    document.getElementById("sample").innerHTML += "<h3>"+n+". <a href='/donut?doc=" + doc_number.toString() + "'>" + title
+    d3.select("#chart-container").append("div").attr("id", "sample");
+    document.getElementById("sample").innerHTML += "<h3 class='topic-match'>"+n+". <a href='/donut?doc=" + doc_number.toString() + "'>" + title
         + "</a>  <a class='outlink' target = '_blank' href='" + link + "'> [original article] </a></h3>";
-    document.getElementById("sample").innerHTML += "<h5>" + percent_similarity.toString() + "% topic match</h5>";
+    document.getElementById("sample").innerHTML += "<h5 class='topic-match'>" + percent_similarity.toString() + "% topic match</h5>";
 
     if(all_annotated_sentences[first])
     {
-        document.getElementById("sample").innerHTML += all_annotated_sentences[first];
+        document.getElementById("sample").innerHTML += "<span class='topic-match'>" + all_annotated_sentences[first] + "</span>";
     }
     if(all_annotated_sentences[second])
     {
-        document.getElementById("sample").innerHTML += all_annotated_sentences[second];
+        document.getElementById("sample").innerHTML += "<span class='topic-match'>" + all_annotated_sentences[second] + "</span>";
     }
     if(all_annotated_sentences[last])
     {
-        document.getElementById("sample").innerHTML += all_annotated_sentences[last];
+        document.getElementById("sample").innerHTML += "<span class='topic-match'>" + all_annotated_sentences[last] + "</span>";
     }
 
     d3.selectAll(".marked").style("background-color", colors[topic]);
@@ -134,52 +135,18 @@ function find_best_excerpt_from_selection(title, doc_number, percent_similarity,
 function define_topicname_from_url(topic, page_n)
 {
     var topic_words = reverse_topic_indices[topic].split("_").join();
+    d3.select("#chart-container").append("h2").attr("id", "topicname");
     document.getElementById("topicname").innerHTML = "Topic " + topic + " Summary (Page "+page_n+")<br/><h6>Sample words: " + topic_words + "</h6>";
     d3.select("#topicname").style("color", colors[topic]);
 }
 
 //parses our csv hosted on server
 //also does all of the one-time setup and calls our constructDonut function the first time
-function getData()
+function setUpTopic(parameters, page)
 {
-    tooltip = d3.select("body")
-        .append("div")
-        .attr("class", "tooltip")
-        .style("position", "absolute")
-        .style("width", "225px")
-        .style("background-color", "white")
-        .style("padding-left", "5px")
-        .style("z-index", "10") //put it in front of the arcs
-        .style("border-radius", "10px")
-        .style("visibility", "hidden")
-        .style("border", "1px solid white")
-        .text("Error"); //bad to see this (obviously)
-
-    d3.csv("/topic_frame.csv", function(error, response) {
-        csv_data = response;
-        csv_data = rectify_csv_data(csv_data);
-
-        var url_string = window.location.href; //fetch document we want to show
-        var url = new URL(url_string);
-        var topic = url.searchParams.get("t");
-        var page_n = url.searchParams.get("page");
-       
-        if(topic === null)
-        {
-            topic = randomTopic();
-            window.location.href = "/topic?t="+randomTopic+"&page="+page_n;
-        }
-
-        if(page_n === null)
-        {
-            window.location.href = "/topic?t="+topic+"&page=1";
-        }
-        get_document_full_texts(function()
-        {
-            define_topicname_from_url(topic, page_n);
-            constructTopic(topic, per_page, page_n);
-        });
-    });
+    addCorpusLink(pages.topic);
+    define_topicname_from_url(parameters, page);
+    constructTopic(parameters, per_page, page);
 }
 
 //actually make the physical representation of the topic
@@ -257,15 +224,17 @@ function pageLast()
     window.location.href = "/topic?t="+this_topic+"&page="+target;
 }
 
-//wrapper to call data load functions
-function main()
+//remove all stuff we put on there
+function topicCleanup()
 {
-    getTopicIndices(getData); //eventually calling it just once will make it available to all views
+    removeCorpusButton();
+    d3.select("#chart-container").remove();
+    d3.select("#container").append("div").attr("id", "chart-container");
 }
 
-//call main
-document.addEventListener("DOMContentLoaded", function(e) {
-    main();
-});
-
+//wrapper to call data load functions
+function topicMain(topic)
+{
+    setUpTopic(topic, 1); //eventually calling it just once will make it available to all views
+}
 

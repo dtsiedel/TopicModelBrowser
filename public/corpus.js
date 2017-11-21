@@ -36,21 +36,24 @@ function getData()
 
     if(!loaded_data)
     {    
-        d3.csv("/topic_frame.csv", function(error, response) 
+        getTopicIndices(function()
         {
-            get_document_full_texts(function()
+            d3.csv("/topic_frame.csv", function(error, response) 
             {
-                csv_data = response;
-                csv_data = rectify_csv_data(csv_data);
-                
-                constructCorpus(csv_data);
+                get_document_full_texts(function()
+                {
+                    csv_data = response;
+                    csv_data = rectify_csv_data(csv_data);
+                    
+                    constructCorpus(csv_data);
+                });
             });
         });
         loaded_data = true;
     }
     else
     {
-        constructCorpus(csv_data);
+        getTopicIndices(function(){constructCorpus(csv_data)}); //should be just constructCorpus(csv_data) but it doesnt work
     }
 }
 
@@ -134,7 +137,6 @@ function process(matrix)
 function constructCorpus(csv)
 {
     //var processed = processData(csv);   //don't do this anymore, since it is done offline
- 
     var matrix = ribbon_counts; 
     var n_topics = matrix.length;
     process(matrix); 
@@ -176,10 +178,10 @@ function constructCorpus(csv)
     svg.append("circle")
         .attr("r", outerRadius);
      
-    // Compute the chord layout.
+    // Compute the chord 
     layout.matrix(matrix);
-     
-    // Add a group per neighborhood.
+    
+    // Add a group per topic
     var group = svg.selectAll(".group")
         .data(layout.groups)
         .enter().append("g")
@@ -193,7 +195,9 @@ function constructCorpus(csv)
         .attr("d", arc)
         .style("stroke", gray)
         .style("stroke-width", .05)
-        .on("click", function(d,i) {window.location.href="/topic?t="+d.index;})
+        .on("click", function(d,i) {
+            goTo(pages.corpus, pages.topic, d.index);
+        })
         .on("mouseover", function(){return tooltip.style("visibility", "visible");}) //bind tooltip to when mouse goes over arc
         .on("mousemove", function(d){
             var topic_text = reverse_topic_indices[d.index];
@@ -202,7 +206,7 @@ function constructCorpus(csv)
             return tooltip.style("top", (event.pageY-10)+"px").style("left",(event.pageX+10)+"px").html(generate_tooltip_html(index, topic_text, value)).style("background-color", colors[index]).style("color", "white");})
         .on("mouseout", function(){return tooltip.style("visibility", "hidden");})
         .style("fill", function(d) { return getColor(d.index % n_topics); });
-     
+ 
     // Add a text label.
     var groupText = group.append("text")
         .attr("x", 6)
@@ -350,6 +354,7 @@ function generate_document_info(source, target)
 //remove all traces of the corpus view from existence
 function corpusCleanup()
 {
+    d3.select(".tooltip").style("visibility", "hidden");
     d3.select("#corpus-svg").remove();
     d3.select(".info-box").remove();
 }
@@ -357,7 +362,7 @@ function corpusCleanup()
 //wrapper to be called when page loads
 function main()
 {
-    getTopicIndices(getData); //eventually calling it just once will make it available to all views
+    getData(); 
 }
 
 //call main

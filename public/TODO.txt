@@ -1,5 +1,11 @@
 (GENERAL)
--MERGE!
+-MERGE! TODO:
+    -donut -> topic
+    -corpus -> bars
+    -corpus -> nodes
+    -nodes -> donut
+    -others I'm sure
+    
 -loading icon
 -help button/page
 -https
@@ -20,7 +26,6 @@
 -or have fewer docs in it for legibility
 
 (TOPIC)
--change color scheme to match the rest of everything
 -make percent indicator a progress bar
 -examples of broken highlighting (missing some highlighting, ex T7)
 

@@ -10,12 +10,12 @@ var tooltip;
 //driver
 function donutMain(parameters)
 {
-    getTopicIndices(function(){getDataDonut(parameters)});
+    setUpDonut(parameters);
 }
 
 //parses our csv hosted on server
 //also does all of the one-time setup and calls our constructDonut function the first time
-function getDataDonut(doc)
+function setUpDonut(doc)
 {
     //variables to control the graph result
     margin = {top: 20, right: 20, bottom: 20, left: 20};
@@ -23,7 +23,7 @@ function getDataDonut(doc)
     height = width - margin.top - margin.bottom - 500;
     radius = Math.min(width, height) / 2.5;
 
-    addCorpusLink();
+    addCorpusLink(pages.donut);
 
     // add the canvas to the DOM 
     chart = d3.select("#chart-container")
@@ -33,7 +33,6 @@ function getDataDonut(doc)
         .attr("height", height + margin.top + margin.bottom)
         .append("g")
         .attr("transform", "translate(" + ((width/4)) + "," + ((height/2)+margin.top) + ")");
-
 
     constructDonut(doc);
 }
@@ -143,16 +142,3 @@ function donutCleanup()
 }
 
 
-//add link to corpus view
-function addCorpusLink()
-{
-    d3.select("#header").append("button").text("Back to Corpus!").attr("id", "corpus-link").on("click", function(){
-        goTo(pages.donut, pages.corpus, []);
-    });
-}
-
-//get rid of the button we added
-function removeCorpusButton()
-{
-    d3.select("#corpus-link").remove();
-}

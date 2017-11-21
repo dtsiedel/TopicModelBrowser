@@ -64,3 +64,27 @@ path.chord {
 .title {
     cursor: alias; 
 }
+
+h2#topicname {
+    width: 50%;
+    margin-left: auto;
+    margin-right: auto;
+    text-align: center;
+    vertical-align: middle;
+}
+
+.outlink {
+    cursor: alias;
+}
+
+#prev {
+    float: right;
+}
+
+#next {
+    float: right;
+}
+
+.topic-match {
+    color: white;
+}
