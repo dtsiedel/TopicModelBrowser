@@ -71,7 +71,9 @@ function constructDonut(n)
         .data(pie(filteredData))
         .enter().append("g")
         .attr("class", "arc")
-        .on("click", function(d) { window.location.href = "/topic?t="+d.data.index });
+        .on("click", function(d) {
+            goTo(pages.donut, pages.topic, d.data.index);
+        });
 
     chart.selectAll('.legend').remove();
 
@@ -137,6 +139,7 @@ function constructDonut(n)
 //cleanup all things created by donut
 function donutCleanup()
 {
+    d3.select(".tooltip").style("visibility", "hidden");
     d3.select("#donut-svg").remove();
     removeCorpusButton();
 }
