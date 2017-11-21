@@ -18,6 +18,8 @@ function constructBars(d1, d2)
         .attr("stroke", gray)
         .attr("stroke-width", "0.5");
 
+    addCorpusLink(pages.bars);
+
     var filtered_1 = filter(csv_data[d1]);
     var filtered_2 = filter(csv_data[d2]);
 
@@ -39,7 +41,9 @@ function generateBar(num, x, y, data, indexList, callback)
         .attr("x", x)
         .attr("y", y)
         .attr("height", 0)
-        .on("click", function(d) { window.location = "/topic?t="+d.index; })
+        .on("click", function(d) { 
+            goTo(pages.bars, pages.topic, d.index); 
+        })
         .on("mouseover", function(){return tooltip.style("visibility", "visible");}) //bind tooltip to when mouse goes over arc
         .on("mousemove", function(d){
             var topic_text;
@@ -195,6 +199,15 @@ function checkContains(index, list)
     return -1;
 }
 
+//remove all traces of bars diagram
+function barsCleanup()
+{
+    removeCorpusButton();
+    d3.select(".tooltip").style("visibility", "hidden");
+    d3.select(".bar-svg").remove();
+}
+
+//main
 function barsMain(parameters)
 {
     setUpBars(parameters);
