@@ -111,8 +111,7 @@ function find_best_excerpt_from_selection(title, doc_number, percent_similarity,
 
     // Edit display:
     d3.select("#chart-container").append("div").attr("id", "sample");
-    document.getElementById("sample").innerHTML += "<h3 class='topic-match'>"+n+". <a href='/donut?doc=" + doc_number.toString() + "'>" + title
-        + "</a>  <a class='outlink' target = '_blank' href='" + link + "'> [original article] </a></h3>";
+    document.getElementById("sample").innerHTML += "<h3 class='topic-match'>"+n+". <span class='topic-doc-link' onclick='loadDoc(" + doc_number.toString() + ")'>" + title + "</span>  <a class='outlink' target = '_blank' href='" + link + "'> [original article] </a></h3>";
     document.getElementById("sample").innerHTML += "<h5 class='topic-match'>" + percent_similarity.toString() + "% topic match</h5>";
 
     if(all_annotated_sentences[first])
@@ -230,6 +229,12 @@ function topicCleanup()
     removeCorpusButton();
     d3.select("#chart-container").remove();
     d3.select("#container").append("div").attr("id", "chart-container");
+}
+
+//go to given document number
+function loadDoc(n)
+{
+    goTo(pages.topic, pages.donut, n);
 }
 
 //wrapper to call data load functions

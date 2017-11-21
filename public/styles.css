@@ -88,3 +88,8 @@ h2#topicname {
 .topic-match {
     color: white;
 }
+
+.topic-doc-link {
+    cursor: default;
+    color: blue;
+}
