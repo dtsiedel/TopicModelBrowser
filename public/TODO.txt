@@ -1,7 +1,6 @@
 (GENERAL)
 -MERGE! TODO:
-    -bars center in frame
-    -bars -> topic
+    -donut side bar -> topic
     -corpus -> nodes
     -nodes -> donut
     -nodes -> corpus
@@ -9,6 +8,7 @@
     -spectrum -> topic
     -spectrum -> donut
     -spectrum -> corpus
+    -bars center in frame
     
 -loading icon
 -help button/page

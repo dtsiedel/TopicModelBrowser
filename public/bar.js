@@ -42,7 +42,10 @@ function generateBar(num, x, y, data, indexList, callback)
         .attr("y", y)
         .attr("height", 0)
         .on("click", function(d) { 
-            goTo(pages.bars, pages.topic, d.index); 
+            if(d.index !== "~")
+            {
+                goTo(pages.bars, pages.topic, d.index); 
+            }
         })
         .on("mouseover", function(){return tooltip.style("visibility", "visible");}) //bind tooltip to when mouse goes over arc
         .on("mousemove", function(d){
@@ -76,7 +79,9 @@ function generateBar(num, x, y, data, indexList, callback)
 
             chart.append("text")
                 .attr("class", "document_text")
-                .on("click", function() { window.location.href = "/donut?doc="+indexList[num]; })
+                .on("click", function() { 
+                    goTo(pages.bars, pages.donut, indexList[num]);
+                })
                 .attr("x", x-10)
                 .attr("y", 20)
                 .text(conditional_clip(document_text[indexList[num]]["title"], 30))
