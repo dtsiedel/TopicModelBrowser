@@ -28,7 +28,7 @@ path.chord {
 }
 
 #header {
-    height: 80px;
+    height: 50px;
 }
 
 .corpus-button {
@@ -100,4 +100,18 @@ h2#topicname {
 
 .document_text {
     cursor: default;
+}
+
+.link {
+  stroke: #999;
+  stroke-opacity: 0.6;
+}
+
+.nodes {
+  stroke: #fff;
+  stroke-width: 1.5px;
+}
+
+.node .selected {
+  stroke: black;
 }

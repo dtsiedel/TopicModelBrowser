@@ -527,6 +527,9 @@ function goTo(source, target, parameters)
         case pages.bars:
             barsCleanup();
             break;
+        case pages.nodes:
+            nodesCleanup();
+            break;
 
     }
 
@@ -543,6 +546,9 @@ function goTo(source, target, parameters)
             break;
         case pages.bars:
             barsMain(parameters);
+            break;
+        case pages.nodes:
+            nodesMain(parameters);
             break;
 
     } 

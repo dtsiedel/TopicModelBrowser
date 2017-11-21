@@ -9,77 +9,40 @@ var size = d3.scale.pow().exponent(1)
   .domain([1,100])
   .range([8,24]);
 
-//driver
-function main()
+//main
+function nodesMain(parameters)
 {
-    getTopicIndices(function()
-    {
-        get_document_full_texts(function()
-        {
-            getData();
-        });
-    });
-}
-
-//gets the document list from the url
-function fetch_documents()
-{
-    var url_string = window.location.href; //fetch document we want to show
-    var url = new URL(url_string);
-    var doc = url.searchParams.get("d");
-    doc = doc.split(",")
-    return doc;
+    setUpNodes(parameters);
 }
 
 //parses our csv hosted on server
 //also does all of the one-time setup and calls our constructNodes function the first time
-function getData()
+function setUpNodes(parameters)
 {
-    //variables to control the graph result
-    margin = {top: 20, right: 20, bottom: 20, left: 20};
-    width = 1000 - margin.left - margin.right;
-    height = width - margin.top - margin.bottom - 500;
-    radius = 6;
-
     // add the canvas to the DOM
     chart = d3.select("#nodes-demo")
         .append('svg')
+        .attr("class", "nodes-svg")
         .attr("width", width + margin.left + margin.right)
         .attr("height", height + margin.top + margin.bottom)
         .append("g")
         .attr("transform", "translate(" + ((width/4)) + "," + ((height/2)+margin.top) + ")");
 
-    tooltip = d3.select("body")
-        .append("div")
-        .attr("class", "tooltip")
-        .style("position", "absolute")
-        .style("width", "200px")
-        .style("background-color", "white")
-        .style("padding-left", "5px")
-        .style("z-index", "10") //put it in front of the arcs
-        .style("border-radius", "10px")
-        .style("visibility", "hidden")
-        .style("border", "1px solid white")
-        .text("Error"); //bad to see this (obviously)
+    addCorpusLink(pages.nodes);
 
-        d3.csv("/topic_frame.csv", function(error, response) {
-            csv_data = response;
-            csv_data = rectify_csv_data(csv_data);
+    documents = [csv_data[randomDocument()]];
+    var desired_documents = parameters;
 
-            documents = [csv_data[randomDocument()]];
-            var desired_documents = fetch_documents();
-
-            for (var i = 0; i < desired_documents.length; i++) {
-                //isolate values (first value is doc num)
-                var curDoc = (desired_documents[i]);
-                
-                documents.push(Object.values(csv_data[curDoc]));
-                documents[i] = Object.values(documents[i])
-            }
-            documents = documents.slice(1,documents.length);
-            
-            calculateDistance(documents);
-    });
+    for (var i = 0; i < desired_documents.length; i++) {
+        //isolate values (first value is doc num)
+        var curDoc = (desired_documents[i]);
+        
+        documents.push(Object.values(csv_data[curDoc]));
+        documents[i] = Object.values(documents[i])
+    }
+    documents = documents.slice(1,documents.length);
+    
+    calculateDistance(documents);
 }
 
 
@@ -179,6 +142,7 @@ function constructNodes(links, nodes){
     .size([width, height]);
 
   var svg = d3.select("body").append("svg")
+    .attr("class", "nodes-svg")
     .attr("width", width)
     .attr("height", height);
 
@@ -227,6 +191,7 @@ function constructNodes(links, nodes){
 
 
   node.append("circle")
+    .attr("class", "nodes-circle")
     .attr("r", function(d,i){ return i%2==0?7:5 })
     .style("fill", function(d) {
       return color(d.group);
@@ -254,7 +219,7 @@ function constructNodes(links, nodes){
     node.attr("cx", function(d) { return d.x = Math.max(radius, Math.min(width - radius, d.x)); })
     .attr("cy", function(d) { return d.y = Math.max(radius, Math.min(height - radius, d.y)); });
 
-    d3.selectAll("circle").attr("cx", function(d) {
+    d3.selectAll(".nodes-circle").attr("cx", function(d) {
         return d.x;
       })
       .attr("cy", function(d) {
@@ -269,13 +234,11 @@ function constructNodes(links, nodes){
       });
 
   });
-
 }
 
-
-
-//waiting for page to load, then call main
-//call main on load
-document.addEventListener("DOMContentLoaded", function(e) {
-  main();
-});
+//remove everything we added for nodes
+function nodesCleanup()
+{
+    removeCorpusButton();
+    d3.select(".nodes-svg").remove();    
+}
