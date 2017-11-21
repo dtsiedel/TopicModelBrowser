@@ -1,11 +1,14 @@
 (GENERAL)
 -MERGE! TODO:
     -bars center in frame
-    -bars -> donut
     -bars -> topic
-    -bars back to corpus (etc)
     -corpus -> nodes
     -nodes -> donut
+    -nodes -> corpus
+    -corpus -> spectrum
+    -spectrum -> topic
+    -spectrum -> donut
+    -spectrum -> corpus
     
 -loading icon
 -help button/page
