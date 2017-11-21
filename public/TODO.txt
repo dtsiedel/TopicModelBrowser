@@ -1,10 +1,4 @@
 (GENERAL)
--MERGE! TODO:
-    -spectrum -> topic
-    -spectrum -> donut
-    -spectrum -> corpus
-    -center spectrum
-    -bars center in frame
     
 -loading icon
 -help button/page
@@ -13,6 +7,7 @@
 -prevent all pages from scrolling? (besides single topic)
 
 (BARS)
+-center in frame? 
 
 (DONUT)
 -introduce other metadata (i.e. aggregate by blog, or anything else given)
@@ -22,6 +17,7 @@
 -ribbon select stays until you mark another one
 
 (SPECTRUM)
+-center?
 -consider transparency of some sort to indicate selected documents in spectrum
 -or have fewer docs in it for legibility
 
