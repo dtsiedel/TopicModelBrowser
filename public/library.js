@@ -20,6 +20,8 @@ var colors = ["#1CE6FF", "#FF34FF", "#FF4A46", "#008941", "#006FA6", "#A30059",
         "#83AB58", "#001C1E", "#004B28", "#C8D0F6", "#A3A489", "#806C66", "#222800",
         "#BF5650", "#E83000", "#66796D", "#DA007C", "#FF1A59", "#8ADBB4", "#1E0200", "#5B4E51",
         "#C895C5", "#320033", "#FF6832", "#66E1D3", "#CFCDAC", "#D0AC94", "#7ED379", "#012C58"];
+var pages = {"corpus":0, "donut":1, "topic":2, "bars":3, "nodes":4, "spectrum":5}; //enum for which page to go to
+var loaded_data = false; //flag to prevent reload on corpus reload
 var total_t_d_links = 0; //need this to compute proportions of topic relevance
 var color_map = {};
 var filteredData;
@@ -505,3 +507,30 @@ function sortRibbon(documents, t1, t2)
     }
     return result;
 }
+
+//transition state machine for going to various pages
+function goTo(source, target, parameters)
+{
+    switch(source)
+    {
+        case pages.corpus:
+            corpusCleanup();
+            break;
+        case pages.donut:
+            donutCleanup();
+            break;
+    }
+
+    switch(target)
+    {
+        case pages.corpus:
+            main();
+            break;
+        case pages.donut:
+            donutMain(parameters);
+            break;
+
+
+    } 
+}
+

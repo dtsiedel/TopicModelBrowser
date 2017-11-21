@@ -8,14 +8,14 @@ var chart;
 var tooltip;
 
 //driver
-function main()
+function donutMain(parameters)
 {
-    getTopicIndices(getData);
+    getTopicIndices(function(){getDataDonut(parameters)});
 }
 
 //parses our csv hosted on server
 //also does all of the one-time setup and calls our constructDonut function the first time
-function getData()
+function getDataDonut(doc)
 {
     //variables to control the graph result
     margin = {top: 20, right: 20, bottom: 20, left: 20};
@@ -23,45 +23,21 @@ function getData()
     height = width - margin.top - margin.bottom - 500;
     radius = Math.min(width, height) / 2.5;
 
+    addCorpusLink();
+
     // add the canvas to the DOM 
-    chart = d3.select("#donut-demo")
+    chart = d3.select("#chart-container")
         .append('svg')
+        .attr("id", "donut-svg")
         .attr("width", width + margin.left + margin.right)
         .attr("height", height + margin.top + margin.bottom)
         .append("g")
         .attr("transform", "translate(" + ((width/4)) + "," + ((height/2)+margin.top) + ")");
 
-    tooltip = d3.select("body")
-        .append("div")
-        .attr("class", "tooltip")
-        .style("position", "absolute")
-        .style("width", "225px")
-        .style("background-color", "white")
-        .style("padding-left", "5px")
-        .style("z-index", "10") //put it in front of the arcs
-        .style("border-radius", "10px")
-        .style("visibility", "hidden")
-        .style("border", "1px solid white")
-        .text("Error"); //bad to see this (obviously)
 
-    d3.csv("/topic_frame.csv", function(error, response) {
-        csv_data = response;
-        csv_data = rectify_csv_data(csv_data);
-        
-        var url_string = window.location.href; //fetch document we want to show
-        var url = new URL(url_string);
-        var doc = url.searchParams.get("doc");
-
-
-        get_document_full_texts(function()
-        {    
-            if(doc === null)
-                constructDonut(randomDocument());
-            else
-                constructDonut(doc);
-        });
-    });
+    constructDonut(doc);
 }
+
 
 //comparison function to use when sorting our topics
 function compare_value(a,b)
@@ -157,11 +133,26 @@ function constructDonut(n)
         .style("font-size", "35px")
         .style("fill", "white")
         .text(conditional_clip(document_text[n].title, 30));
+}
 
+//cleanup all things created by donut
+function donutCleanup()
+{
+    d3.select("#donut-svg").remove();
+    removeCorpusButton();
 }
 
 
-//call main on load
-document.addEventListener("DOMContentLoaded", function(e) {
-    main();
-});
+//add link to corpus view
+function addCorpusLink()
+{
+    d3.select("#header").append("button").text("Back to Corpus!").attr("id", "corpus-link").on("click", function(){
+        goTo(pages.donut, pages.corpus, []);
+    });
+}
+
+//get rid of the button we added
+function removeCorpusButton()
+{
+    d3.select("#corpus-link").remove();
+}

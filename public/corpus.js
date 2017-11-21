@@ -18,29 +18,40 @@ function getData()
     height = width - margin.top - margin.bottom;
     radius = Math.min(width, height) / 2;
 
-    tooltip = d3.select("body")
-        .append("div")
-        .attr("class", "tooltip")
-        .style("position", "absolute")
-        .style("width", "225px")
-        .style("background-color", "white")
-        .style("padding-left", "5px")
-        .style("z-index", "10") //put it in front of the arcs
-        .style("border-radius", "10px")
-        .style("visibility", "hidden")
-        .style("border", "1px solid white")
-        .text("Error"); //bad to see this (obviously)
+    if(d3.selectAll(".tooltip")[0].length === 0)
+    {
+        tooltip = d3.select("body")
+            .append("div")
+            .attr("class", "tooltip")
+            .style("position", "absolute")
+            .style("width", "225px")
+            .style("background-color", "white")
+            .style("padding-left", "5px")
+            .style("z-index", "10") //put it in front of the arcs
+            .style("border-radius", "10px")
+            .style("visibility", "hidden")
+            .style("border", "1px solid white")
+            .text("Error"); //bad to see this (obviously)
+    }
 
- 
-    d3.csv("/topic_frame.csv", function(error, response) {
-        get_document_full_texts(function()
+    if(!loaded_data)
+    {    
+        d3.csv("/topic_frame.csv", function(error, response) 
         {
-            csv_data = response;
-            csv_data = rectify_csv_data(csv_data);
-            
-            constructCorpus(csv_data);
+            get_document_full_texts(function()
+            {
+                csv_data = response;
+                csv_data = rectify_csv_data(csv_data);
+                
+                constructCorpus(csv_data);
+            });
         });
-    });
+        loaded_data = true;
+    }
+    else
+    {
+        constructCorpus(csv_data);
+    }
 }
 
 //get relevant data from CSV
@@ -149,6 +160,7 @@ function constructCorpus(csv)
     var svg = d3.select("body").append("svg")
         .attr("width", width)
         .attr("height", height)
+        .attr("id", "corpus-svg")
         .append("g")
         .attr("id", "circle")
         .attr("transform", "translate(" + width / 2 + "," + height / 2 + ")");
@@ -257,7 +269,13 @@ function constructCorpus(csv)
             if(selected.length > 2){window.location.href="/nodes?d="+selected.join();}
             else if(selected.length === 2){window.location.href="/bars?d1="+selected[0]+"&d2="+selected[1];}
         });
-        d3.select("#document_single").on("click", function() {if(selected.length === 1){window.location.href="/donut?doc="+selected[0];}});
+        d3.select("#document_single").on("click", function() {
+            if(selected.length === 1)
+            {
+                goTo(pages.corpus, pages.donut, selected[0]);
+            }
+        });
+
     }
 
     function mouseover(d, i) {
@@ -313,9 +331,9 @@ function generate_document_info(source, target)
     var result = "<span id='t1'>Topic ";
     result += source + "</span> and <span id='t2'> Topic ";
     result += target + "</span> Shared Documents:<br>";
-    result += "<button id='topic_compare' type='button'>Compare these topics!</button><br/>";
-    result += "<button id='document_compare' type='button'>Compare selected documents!</button>";
-    result += "<button id='document_single' type='button'>View single document!</button><br/>";
+    result += "<button class='corpus-button' id='topic_compare' type='button'>Compare these topics!</button><br/>";
+    result += "<button class='corpus-button' id='document_compare' type='button'>Compare selected documents!</button>";
+    result += "<button class='corpus-button' id='document_single' type='button'>View single document!</button><br/>";
     var docs = ribbon_data[source][target]; 
     docs = sortRibbon(docs, source, target);
     for(var i = 0; i < docs.length; i++)
@@ -329,6 +347,13 @@ function generate_document_info(source, target)
     return result;
 }
 
+//remove all traces of the corpus view from existence
+function corpusCleanup()
+{
+    d3.select("#corpus-svg").remove();
+    d3.select(".info-box").remove();
+}
+
 //wrapper to be called when page loads
 function main()
 {
@@ -339,3 +364,5 @@ function main()
 document.addEventListener("DOMContentLoaded", function(e) {
     main();
 });
+
+

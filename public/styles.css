@@ -32,7 +32,7 @@ path.chord {
     height: 80px;
 }
 
-button {
+.corpus-button {
     border: 0;
     color: white; 
     box-shadow: none;
@@ -59,4 +59,8 @@ button {
     cursor:default;
     user-select: none; 
     width: 100%;
+}
+
+.title {
+    cursor: alias; 
 }
