@@ -13,68 +13,25 @@ var y_mid = (y_start + y_end) / 2;
 
 //let us map from input range to output range
 Number.prototype.map = function (in_min, in_max, out_min, out_max) {
-  return (this - in_min) * (out_max - out_min) / (in_max - in_min) + out_min;
+    return (this - in_min) * (out_max - out_min) / (in_max - in_min) + out_min;
 }
 
 //parses our csv hosted on server
 //also does all of the one-time setup and calls our constructSpectrum function the first time
 //needs to be split later so that we can not duplicate code
-function getData()
+function setUpSpectrum(parameters)
 {
-    //variables to control the graph result
-    margin = {top: 20, right: 20, bottom: 20, left: 20};
-    width = 840 - margin.left - margin.right;
-    height = width - margin.top - margin.bottom;
-    radius = Math.min(width, height) / 2;
-
-    chart = d3.select("#spectrum-demo")
+    chart = d3.select("#chart-container")
         .append('svg')
-        .attr("width", width + margin.left + margin.right)
+        .attr("class", "spectrum-svg")
+        .attr("width", width + 500)
         .attr("height", height + margin.top + margin.bottom)
         .append("g")
         .attr("transform", "translate(" + ((width/4)) + "," + ((height/2)+margin.top) + ")");
 
-    tooltip = d3.select("body")
-        .append("div")
-        .attr("class", "tooltip")
-        .style("position", "absolute")
-        .style("width", "225px")
-        .style("background-color", "white")
-        .style("padding-left", "5px")
-        .style("z-index", "10") //put it in front of the arcs
-        .style("border-radius", "10px")
-        .style("visibility", "hidden")
-        .style("border", "1px solid white")
-        .text("Error"); //bad to see this (obviously) 
- 
-    d3.csv("/topic_frame.csv", function(error, response) {
-        csv_data = response;
-        csv_data = rectify_csv_data(csv_data);
+    addCorpusLink(pages.spectrum);
 
-        var url_string = window.location.href; //fetch document we want to show
-        var url = new URL(url_string);
-        var t1 = url.searchParams.get("t1");
-        var t2 = url.searchParams.get("t2");
-        
-        get_document_full_texts(function()
-        {
-            getRibbonData(function()
-            {
-                get_document_full_texts(function()
-                {
-                    if(t1 === null)
-                    {
-                        t1 = randomTopic();
-                    }
-                    if(t2 === null)
-                    {
-                        t2 = randomTopic();
-                    }
-                    constructSpectrum(t1, t2);
-                });
-            });
-        });
-    });
+    constructSpectrum(parameters[0], parameters[1]);
 }
 
 
@@ -97,6 +54,7 @@ function plotTopics(t1, t2, color_scale)
         .style("fill", color_scale(0))
         .style("font-size", "30px")
         .text("T" + t1)
+        .attr("class", "topic-name")
         .on("mouseover", function(){return tooltip.style("visibility", "visible");}) //bind tooltip to when mouse goes over arc
         .on("mousemove", function(d){
             var index = t1;
@@ -190,14 +148,16 @@ function generate_spectrum_tooltip(topic_number, topic_name)
     return text; 
 }
 
+//destroy all traces of spectrum
+function spectrumCleanup()
+{
+    removeCorpusButton();
+    d3.selectAll(".spectrum-svg").remove();
+} 
 
 //wrapper to be called when page loads
-function main()
+function spectrumMain(paramaters)
 {
-    getTopicIndices(getData); //eventually calling it just once will make it available to all views
+    setUpSpectrum(paramaters);
 }
 
-//call main
-document.addEventListener("DOMContentLoaded", function(e) {
-    main();
-});

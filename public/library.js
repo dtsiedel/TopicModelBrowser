@@ -530,7 +530,9 @@ function goTo(source, target, parameters)
         case pages.nodes:
             nodesCleanup();
             break;
-
+        case pages.spectrum:
+            spectrumCleanup();
+            break;
     }
 
     switch(target)
@@ -550,7 +552,8 @@ function goTo(source, target, parameters)
         case pages.nodes:
             nodesMain(parameters);
             break;
-
+        case pages.spectrum:
+            spectrumMain(parameters);
     } 
 }
 

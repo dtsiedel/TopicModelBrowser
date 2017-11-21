@@ -1,9 +1,9 @@
 (GENERAL)
 -MERGE! TODO:
-    -corpus -> spectrum
     -spectrum -> topic
     -spectrum -> donut
     -spectrum -> corpus
+    -center spectrum
     -bars center in frame
     
 -loading icon

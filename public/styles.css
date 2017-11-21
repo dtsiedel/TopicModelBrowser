@@ -115,3 +115,7 @@ h2#topicname {
 .node .selected {
   stroke: black;
 }
+
+.topic-name {
+    cursor: default;
+}

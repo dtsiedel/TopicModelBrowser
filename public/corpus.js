@@ -268,7 +268,10 @@ function constructCorpus(csv)
         });
         d3.select("#t1").style("color", colors[d.source.index]).style("font-size", "20px"); 
         d3.select("#t2").style("color", colors[d.target.index]).style("font-size", "20px"); 
-        d3.select("#topic_compare").on("click", function(){ window.location.href="/spectrum?t1="+d.source.index+"&t2="+d.target.index;});
+        d3.select("#topic_compare").on("click", function(){
+            //window.location.href="/spectrum?t1="+d.source.index+"&t2="+d.target.index;
+            goTo(pages.corpus, pages.spectrum, [d.source.index, d.target.index]);
+        });
         d3.select("#document_compare").on("click", function() {
             if(selected.length > 2){
                 goTo(pages.corpus, pages.nodes, selected);
