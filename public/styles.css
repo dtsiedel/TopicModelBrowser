@@ -8,7 +8,6 @@ body {
 }
  
 .group path {
-    /*fill-opacity: .25;*/
 }
  
 path.chord {
@@ -92,4 +91,13 @@ h2#topicname {
 .topic-doc-link {
     cursor: default;
     color: blue;
+}
+
+.bar-svg {
+    margin: 0 auto;
+    /*width: 50%;*/
+}
+
+.document_text {
+    cursor: default;
 }

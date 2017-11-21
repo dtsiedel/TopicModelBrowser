@@ -1,67 +1,23 @@
-var chart;
-var tooltip;
-var done;
+//makes two bars with lines indicating which two are matching
+var chart; 
 
-//parses our csv hosted on server
-//also does all of the one-time setup and calls our constructBars function the first time
-//needs to be split later so that we can not duplicate code
-function getData()
+function setUpBars(parameters)
 {
-    //variables to control the graph result
-    margin = {top: 20, right: 20, bottom: 20, left: 20};
-    width = 600 - margin.left - margin.right;
-    height = width - margin.top - margin.bottom + 140;
-    radius = Math.min(width, height) / 2;
+    constructBars(parameters[0], parameters[1]);
+}
 
-    // add the canvas to the DOM 
-    chart = d3.select("#bar-demo")
+//direct comparison of two documents by their topic makeup
+function constructBars(d1, d2)
+{
+    chart = d3.select("#chart-container")
         .append('svg')
+        .attr("class", "bar-svg")
         .attr("width", width + margin.left + margin.right)
         .attr("height", height + margin.top + margin.bottom)
         .append("g")
         .attr("stroke", gray)
         .attr("stroke-width", "0.5");
 
-    tooltip = d3.select("body")
-        .append("div")
-        .attr("class", "tooltip")
-        .style("width", "200px")
-        .style("padding-left", "5px")
-        .style("position", "absolute")
-        .style("z-index", "10") //put it in front of the arcs
-        .style("border-radius", "10px")
-        .style("visibility", "hidden")
-        .style("border", "1px solid white")
-        .text("Error"); //bad to see this (obviously)
-
-    get_document_full_texts(function()
-    {
-        d3.csv("/topic_frame.csv", function(error, response) {
-            csv_data = response;
-
-            var url = window.location.href;
-            url = new URL(url);
-        
-            var d1 = url.searchParams.get("d1");
-            var d2 = url.searchParams.get("d2");
-
-            if(d1 === null)
-            {
-                d1 = randomDocument();
-            }
-            if(d2 === null)
-            {
-                d2 = randomDocument();
-            }
-
-            constructBars(d1, d2);
-        });
-    });
-}
-
-//direct comparison of two documents by their topic makeup
-function constructBars(d1, d2)
-{
     var filtered_1 = filter(csv_data[d1]);
     var filtered_2 = filter(csv_data[d2]);
 
@@ -239,12 +195,7 @@ function checkContains(index, list)
     return -1;
 }
 
-function main()
+function barsMain(parameters)
 {
-    getTopicIndices(getData);
+    setUpBars(parameters);
 }
-
-//call main
-document.addEventListener("DOMContentLoaded", function(e) {
-    main();
-});

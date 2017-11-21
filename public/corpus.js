@@ -271,7 +271,9 @@ function constructCorpus(csv)
         d3.select("#topic_compare").on("click", function(){ window.location.href="/spectrum?t1="+d.source.index+"&t2="+d.target.index;});
         d3.select("#document_compare").on("click", function() {
             if(selected.length > 2){window.location.href="/nodes?d="+selected.join();}
-            else if(selected.length === 2){window.location.href="/bars?d1="+selected[0]+"&d2="+selected[1];}
+            else if(selected.length === 2){
+                goTo(pages.corpus, pages.bars, selected);
+            }
         });
         d3.select("#document_single").on("click", function() {
             if(selected.length === 1)

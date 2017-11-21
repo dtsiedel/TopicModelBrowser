@@ -522,6 +522,10 @@ function goTo(source, target, parameters)
         case pages.topic:
             topicCleanup();
             break;
+        case pages.bars:
+            barsCleanup();
+            break;
+
     }
 
     switch(target)
@@ -534,6 +538,9 @@ function goTo(source, target, parameters)
             break;
         case pages.topic:
             topicMain(parameters);
+            break;
+        case pages.bars:
+            barsMain(parameters);
             break;
 
     } 

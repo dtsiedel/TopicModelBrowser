@@ -1,9 +1,11 @@
 (GENERAL)
 -MERGE! TODO:
-    -corpus -> bars
+    -bars center in frame
+    -bars -> donut
+    -bars -> topic
+    -bars back to corpus (etc)
     -corpus -> nodes
     -nodes -> donut
-    -others I'm sure
     
 -loading icon
 -help button/page
@@ -25,6 +27,8 @@
 -or have fewer docs in it for legibility
 
 (TOPIC)
+-janky on last page of results
+-"original link" should just be the URL
 -make percent indicator a progress bar
 -examples of broken highlighting (missing some highlighting, ex T7)
 

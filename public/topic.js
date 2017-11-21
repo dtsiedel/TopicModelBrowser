@@ -144,6 +144,7 @@ function define_topicname_from_url(topic, page_n)
 function setUpTopic(parameters, page)
 {
     addCorpusLink(pages.topic);
+    addNavButtons(parameters, page);
     define_topicname_from_url(parameters, page);
     constructTopic(parameters, per_page, page);
 }
@@ -191,16 +192,13 @@ function constructTopic(topic, numDocs, page_n)
 }
 
 //control next page logic
-function pageNext()
+function pageNext(topic, current_page)
 {
-    var this_page = new URL(window.location.href).searchParams.get("page");
-    var this_topic = new URL(window.location.href).searchParams.get("t");
-    if(this_page === null)
-        this_page = 1;
-    if(this_page >= maxPage(this_topic))
+    if(current_page >= maxPage(topic))
         return;
-    var target = parseInt(this_page)+1;
-    window.location.href = "/topic?t="+this_topic+"&page="+target;
+    var target = parseInt(current_page)+1;
+    topicCleanup();
+    setUpTopic(topic, target);
 }
 
 //what is the highest number page you can get for the topic?
@@ -211,24 +209,35 @@ function maxPage(topic)
 }
 
 //control last page logic
-function pageLast()
+function pageLast(topic, current_page)
 {
-    var this_page = new URL(window.location.href).searchParams.get("page");
-    var this_topic = new URL(window.location.href).searchParams.get("t");
-    if(this_page === null)
-        this_page = 1
-    if(this_page <= 1)
+    if(current_page <= 1)
         return;
-    var target = parseInt(this_page)-1
-    window.location.href = "/topic?t="+this_topic+"&page="+target;
+    var target = parseInt(current_page)-1
+    topicCleanup();
+    setUpTopic(topic, target);
+}
+
+//put the next/past buttons into the header
+function addNavButtons(topic, current_page)
+{
+    d3.select("#header").append("button").attr("class", "nav-button last-button").text("Last Page").on("click", function() {pageLast(topic, current_page)});
+    d3.select("#header").append("button").attr("class", "nav-button next-button").text("Next Page").on("click", function() {pageNext(topic, current_page)});
 }
 
 //remove all stuff we put on there
 function topicCleanup()
 {
     removeCorpusButton();
+    removeOtherButtons();
     d3.select("#chart-container").remove();
     d3.select("#container").append("div").attr("id", "chart-container");
+}
+
+//remove the forward/backward buttons
+function removeOtherButtons()
+{
+    d3.selectAll(".nav-button").remove();
 }
 
 //go to given document number
