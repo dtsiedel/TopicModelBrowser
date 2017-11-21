@@ -72,7 +72,10 @@ function constructDonut(n)
         .enter().append("g")
         .attr("class", "arc")
         .on("click", function(d) {
-            goTo(pages.donut, pages.topic, d.data.index);
+            if(d.data.index !== "~")
+            {
+                goTo(pages.donut, pages.topic, d.data.index);
+            }
         });
 
     chart.selectAll('.legend').remove();

@@ -1,9 +1,7 @@
 (GENERAL)
-    
 -loading icon
 -help button/page
 -https
--see if untitled documents are valid
 -prevent all pages from scrolling? (besides single topic)
 
 (BARS)
@@ -23,9 +21,8 @@
 
 (TOPIC)
 -janky on last page of results
--"original link" should just be the URL
 -make percent indicator a progress bar
 -examples of broken highlighting (missing some highlighting, ex T7)
 
 (NODES)
--limit number of documents shown so it doesn't become a huge mess?
+-limit number of documents shown for legibility?
