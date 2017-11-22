@@ -30,7 +30,7 @@ function setUpNodes(parameters)
 
     addCorpusLink(pages.nodes);
 
-    documents = [csv_data[randomDocument()]];
+    documents = [];
     var desired_documents = parameters;
 
     for (var i = 0; i < desired_documents.length; i++) {
@@ -40,8 +40,7 @@ function setUpNodes(parameters)
         documents.push(Object.values(csv_data[curDoc]));
         documents[i] = Object.values(documents[i])
     }
-    documents = documents.slice(1,documents.length);
-    
+
     calculateDistance(documents);
 }
 
