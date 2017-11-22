@@ -36,15 +36,22 @@ function getData()
 
     if(!loaded_data)
     {    
+        d3.select("#chart-container").append("div").attr("class", "loader");
+        d3.select("#chart-container").append("div").attr("class", "load-text").html("<br/>Loading Data...");
+        d3.select(".loader").style("border-top", "16px solid " + randomColor()); 
         getTopicIndices(function()
         {
+            d3.select(".loader").style("border-top", "16px solid " + randomColor()); 
             d3.csv("/topic_frame.csv", function(error, response) 
             {
+                d3.select(".loader").style("border-top", "16px solid " + randomColor()); 
                 get_document_full_texts(function()
                 {
                     csv_data = response;
                     csv_data = rectify_csv_data(csv_data);
-                    
+                   
+                    d3.select(".loader").remove();
+                    d3.select(".load-text").remove();
                     constructCorpus(csv_data);
                 });
             });

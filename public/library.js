@@ -38,6 +38,12 @@ document.addEventListener("DOMContentLoaded", function(e) {
     console.log("loaded libary");
 });
 
+//random one of our colors
+function randomColor()
+{
+    return colors[Math.floor(Math.random()*colors.length)];
+}
+
 //gives a random index in the range of our documents
 function randomDocument()
 {   
@@ -130,7 +136,10 @@ function addLegend(chart, data, legendRectSize, legendSpacing)
             return tooltip.style("top", (event.pageY-10)+"px").style("left",(event.pageX+10)+"px").html(generate_tooltip_html(index, topic_text, d.value)).style("background-color", d.color).style("color", "white");})
         .on("mouseout", function(){return tooltip.style("visibility", "hidden");})
         .on("click", function(d,i) {
-            goTo(pages.donut, pages.topic, d.index);
+            if(d.index !== "~")
+            {
+                goTo(pages.donut, pages.topic, d.index);
+            }
         });
 
     legend.append('text')

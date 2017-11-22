@@ -1,5 +1,4 @@
 (GENERAL)
--loading icon
 -help button/page
 -https
 -prevent all pages from scrolling? (besides single topic)
@@ -26,3 +25,4 @@
 
 (NODES)
 -limit number of documents shown for legibility?
+-odd one out is suspicious
