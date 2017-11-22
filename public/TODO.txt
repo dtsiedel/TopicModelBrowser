@@ -1,5 +1,6 @@
 (GENERAL)
 -help button/page
+-parse json each time for document_data? Very slow from das-lab server
 -https
 -prevent all pages from scrolling? (besides single topic)
 
