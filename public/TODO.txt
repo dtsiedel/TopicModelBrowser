@@ -25,5 +25,3 @@
 -examples of broken highlighting (missing some highlighting, ex T7)
 
 (NODES)
--limit number of documents shown for legibility?
--odd one out is suspicious

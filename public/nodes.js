@@ -49,12 +49,10 @@ function setUpNodes(parameters)
 function calculateDistance(documents)
 {
     results = [];
-    //calculating similarity because, index
     for(var i = 0; i < documents.length; i++) {
       var current = [];
-      //if not -1 get NaNs
-      for(var j = i+1; j < documents.length - 1; j++) {
-        //get just values of each document
+
+      for(var j = i+1; j < documents.length; j++) {
         current[j] = cosineDistance(documents[i], documents[j]);
       }
       results.push(current);
@@ -148,6 +146,8 @@ function constructNodes(links, nodes){
   //align in the center of the graph
   d3.select("#chart").attr("align","center");
 
+
+  //console.log(links);
   force.nodes(nodes)
     .links(links)
     .start();
