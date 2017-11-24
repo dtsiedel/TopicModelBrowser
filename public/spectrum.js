@@ -40,7 +40,7 @@ function constructSpectrum(t1, t2)
 {
     var color_scale = d3.interpolateRgb(colors[t1], colors[t2]);
     var shared = ribbon_data[t1][t2];
-    shared = shared.slice(0,500);
+    shared = shared.slice(0,250);
    
     getDocumentData(shared, function()
     { 
