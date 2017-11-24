@@ -180,15 +180,23 @@ function constructTopic(topic, numDocs, page_n)
     }
 
     var start = (page_n-1) * numDocs;
+    var targets = []
     for(var i = start; i < start+numDocs; i++)
     {
-        var this_doc = values[i];
-        find_best_excerpt_from_selection(conditional_clip(document_text[this_doc[0]]["title"], 70), this_doc[0], (this_doc[1] * 100).toFixed(2), document_text[this_doc[0]]["text"], word_list, document_text[this_doc[0]]["url"], topic, i+1);
+        targets.push(values[i][0]);
     }
-    if(end)
+    getDocumentData(targets, function()
     {
-        document.getElementById("sample").innerHTML += "<br><br><h3>((END OF RESULTS))</h3></br></br>"
-    }
+        for(var i = start; i < start+numDocs; i++)
+        {
+            var this_doc = values[i];
+            find_best_excerpt_from_selection(conditional_clip(document_text[this_doc[0]]["title"], 70), this_doc[0], (this_doc[1] * 100).toFixed(2), document_text[this_doc[0]]["text"], word_list, document_text[this_doc[0]]["url"], topic, i+1);
+        }
+        if(end)
+        {
+            document.getElementById("sample").innerHTML += "<br><br><h3>((END OF RESULTS))</h3></br></br>"
+        }
+    });
 }
 
 //control next page logic

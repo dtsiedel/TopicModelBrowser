@@ -45,15 +45,15 @@ function getData()
             d3.csv("/topic_frame.csv", function(error, response) 
             {
                 d3.select(".loader").style("border-top", "16px solid " + randomColor()); 
-                get_document_full_texts(function()
-                {
+                //get_document_full_texts(function()
+                //{
                     csv_data = response;
                     csv_data = rectify_csv_data(csv_data);
                    
                     d3.select(".loader").remove();
                     d3.select(".load-text").remove();
                     constructCorpus(csv_data);
-                });
+                //});
             });
         });
         loaded_data = true;
@@ -253,47 +253,48 @@ function constructCorpus(csv)
         .attr("d", path);
          
     function chordselected(d) {
-        var text = generate_document_info(d.source.index, d.target.index);
-        selected = []; //need to reset this between chord clicks
-        info.html(text);
-        d3.selectAll(".checkbox").on("click", function() { toggle_check_box(d3.select(this).attr("data-id")); });
-        d3.selectAll(".checktitle").on("mousedown", function() {
-            dragSelecting = true;
-            var current = d3.select(this).attr("data-id");
-            visually_toggle(current); 
-            toggle_check_box(current);
-        });
-        d3.selectAll(".checktitle").on("mouseover", function() {
-            if(dragSelecting){
+        generate_document_info(d.source.index, d.target.index, function(result)
+        {
+            text=result;
+            selected = []; //need to reset this between chord clicks
+            info.html(text);
+            d3.selectAll(".checkbox").on("click", function() { toggle_check_box(d3.select(this).attr("data-id")); });
+            d3.selectAll(".checktitle").on("mousedown", function() {
+                dragSelecting = true;
                 var current = d3.select(this).attr("data-id");
-                visually_toggle(current);
+                visually_toggle(current); 
                 toggle_check_box(current);
-            }
+            });
+            d3.selectAll(".checktitle").on("mouseover", function() {
+                if(dragSelecting){
+                    var current = d3.select(this).attr("data-id");
+                    visually_toggle(current);
+                    toggle_check_box(current);
+                }
+            });
+            d3.selectAll("html").on("mouseup", function() {
+                dragSelecting = false;
+            });
+            d3.select("#t1").style("color", colors[d.source.index]).style("font-size", "20px"); 
+            d3.select("#t2").style("color", colors[d.target.index]).style("font-size", "20px"); 
+            d3.select("#topic_compare").on("click", function(){
+                goTo(pages.corpus, pages.spectrum, [d.source.index, d.target.index]);
+            });
+            d3.select("#document_compare").on("click", function() {
+                if(selected.length > 2){
+                    goTo(pages.corpus, pages.nodes, selected);
+                }
+                else if(selected.length === 2){
+                    goTo(pages.corpus, pages.bars, selected);
+                }
+            });
+            d3.select("#document_single").on("click", function() {
+                if(selected.length === 1)
+                {
+                    goTo(pages.corpus, pages.donut, selected[0]);
+                }
+            });
         });
-        d3.selectAll("html").on("mouseup", function() {
-            dragSelecting = false;
-        });
-        d3.select("#t1").style("color", colors[d.source.index]).style("font-size", "20px"); 
-        d3.select("#t2").style("color", colors[d.target.index]).style("font-size", "20px"); 
-        d3.select("#topic_compare").on("click", function(){
-            //window.location.href="/spectrum?t1="+d.source.index+"&t2="+d.target.index;
-            goTo(pages.corpus, pages.spectrum, [d.source.index, d.target.index]);
-        });
-        d3.select("#document_compare").on("click", function() {
-            if(selected.length > 2){
-                goTo(pages.corpus, pages.nodes, selected);
-            }
-            else if(selected.length === 2){
-                goTo(pages.corpus, pages.bars, selected);
-            }
-        });
-        d3.select("#document_single").on("click", function() {
-            if(selected.length === 1)
-            {
-                goTo(pages.corpus, pages.donut, selected[0]);
-            }
-        });
-
     }
 
     function mouseover(d, i) {
@@ -344,7 +345,7 @@ function toggle_check_box(id)
 }
 
 //make the html element that goes on the right
-function generate_document_info(source, target)
+function generate_document_info(source, target, callback)
 {
     var result = "<span id='t1'>Topic ";
     result += source + "</span> and <span id='t2'> Topic ";
@@ -354,15 +355,20 @@ function generate_document_info(source, target)
     result += "<button class='corpus-button' id='document_single' type='button'>View single document!</button><br/>";
     var docs = ribbon_data[source][target]; 
     docs = sortRibbon(docs, source, target);
-    for(var i = 0; i < docs.length; i++)
+    docs = docs.slice(0,100);
+    getDocumentData(docs, function()
     {
-        if(i > chord_threshold)
+        for(var i = 0; i < docs.length; i++)
         {
-            break;
+            if(i > chord_threshold)
+            {
+                break;
+            }
+            var title = conditional_clip(document_text[docs[i]]["title"], 50);
+            result += "<input class='checkBox check"+docs[i]+"' data-id='"+docs[i]+"'type='checkbox'>" + "<span class='checktitle' data-id="+docs[i]+">" + conditional_clip(title, 50) + "</span><br/>";
         }
-        result += "<input class='checkBox check"+docs[i]+"' data-id='"+docs[i]+"'type='checkbox'>" + "<span class='checktitle' data-id="+docs[i]+">" + conditional_clip(document_text[docs[i]]["title"],50) + "</span><br/>";
-    }
-    return result;
+        callback(result);
+    });
 }
 
 //remove all traces of the corpus view from existence

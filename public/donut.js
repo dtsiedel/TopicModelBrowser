@@ -80,63 +80,66 @@ function constructDonut(n)
 
     chart.selectAll('.legend').remove();
 
-    g.append("path")
-      .on("mouseover", function(){return tooltip.style("visibility", "visible");}) //bind tooltip to when mouse goes over arc
-      .on("mousemove", function(d){
-            var topic_text = d3.select(this).data()[0]["data"]["topic"]; 
-            var index = d3.select(this).data()[0]["data"]["index"];
-            return tooltip.style("top", (event.pageY-10)+"px").style("left",(event.pageX+10)+"px").html(generate_tooltip_html(index, topic_text, d.value)).style("background-color", d.data.color).style("color", "white");})
-      .on("mouseout", function(){return tooltip.style("visibility", "hidden");})
-      .style("fill", function(d,i) { return d.data.color; })
-      .transition().duration(750)
-      .attr("id", function(d,i) { return "arc_"+i; })
-      .attrTween('d', function(d) {
-           var i = d3.interpolate(d.startAngle, d.endAngle-.01); //calculate the in between positions to draw in 
-           return function(t) {
-               d.endAngle = i(t);
-             return arc(d);
-           }
-        }).each("end", function(d,i) {
-            //Append the month names within the arcs after all have loaded
-            if(i == filteredData.length - 1)
-            {
-                g.selectAll(".arcText")
-                        .data(filteredData)
-                   .enter().append("text")
-                        .attr("class", "arcText")
-                        .attr("x", 7) //Move the text from the start angle of the arc
-                        .attr("dy", 18) //Move the text down
-                        .attr("letter-spacing", "1px")
-                        .style("font-family", "sans-serif")
-                   .append("textPath")
-                        .attr("xlink:href",function(d,i){return "#arc_"+i;}) //xlink seems to bind the text to the arc
-                        .text(function(d){if(d.index === '~'){return "Other";} return "T" + d.index;}) 
-                        .style("fill", "white");	 
-                    
-                    chart.append("text")
-                        .attr("text-anchor", "middle")
-                        .attr("class", "title")
-                        .text(conditional_clip(document_text[n].url, 30))
-                        .style("fill", "white")
-                        .on("mouseover", function(){return tooltip.style("visibility", "visible");}) 
-                        .on("mousemove", function(d){
-                                return tooltip.style("top", (event.pageY+20)+"px").style("left",(event.pageX+10)+"px").html(generate_document_tooltip(n)).style("background-color", gray).style("color", "white");})
-                        .on("mouseout", function(){return tooltip.style("visibility", "hidden");})
-                        .on("click", function(){ 
-                            var url = document_text[n]["url"];
-                            window.open(url, "_blank");
-                        });
-                    
-                    addLegend(chart, filteredData, 18, 12);
-            }
-    });
+    getDocumentData([n,0], function()
+    {
+        g.append("path")
+          .on("mouseover", function(){return tooltip.style("visibility", "visible");}) //bind tooltip to when mouse goes over arc
+          .on("mousemove", function(d){
+                var topic_text = d3.select(this).data()[0]["data"]["topic"]; 
+                var index = d3.select(this).data()[0]["data"]["index"];
+                return tooltip.style("top", (event.pageY-10)+"px").style("left",(event.pageX+10)+"px").html(generate_tooltip_html(index, topic_text, d.value)).style("background-color", d.data.color).style("color", "white");})
+          .on("mouseout", function(){return tooltip.style("visibility", "hidden");})
+          .style("fill", function(d,i) { return d.data.color; })
+          .transition().duration(750)
+          .attr("id", function(d,i) { return "arc_"+i; })
+          .attrTween('d', function(d) {
+               var i = d3.interpolate(d.startAngle, d.endAngle-.01); //calculate the in between positions to draw in 
+               return function(t) {
+                   d.endAngle = i(t);
+                 return arc(d);
+               }
+            }).each("end", function(d,i) {
+                //Append the month names within the arcs after all have loaded
+                if(i == filteredData.length - 1)
+                {
+                    g.selectAll(".arcText")
+                            .data(filteredData)
+                       .enter().append("text")
+                            .attr("class", "arcText")
+                            .attr("x", 7) //Move the text from the start angle of the arc
+                            .attr("dy", 18) //Move the text down
+                            .attr("letter-spacing", "1px")
+                            .style("font-family", "sans-serif")
+                       .append("textPath")
+                            .attr("xlink:href",function(d,i){return "#arc_"+i;}) //xlink seems to bind the text to the arc
+                            .text(function(d){if(d.index === '~'){return "Other";} return "T" + d.index;}) 
+                            .style("fill", "white");	 
+                        
+                        chart.append("text")
+                            .attr("text-anchor", "middle")
+                            .attr("class", "title")
+                            .text(conditional_clip(document_text[n].url, 30))
+                            .style("fill", "white")
+                            .on("mouseover", function(){return tooltip.style("visibility", "visible");}) 
+                            .on("mousemove", function(d){
+                                    return tooltip.style("top", (event.pageY+20)+"px").style("left",(event.pageX+10)+"px").html(generate_document_tooltip(n)).style("background-color", gray).style("color", "white");})
+                            .on("mouseout", function(){return tooltip.style("visibility", "hidden");})
+                            .on("click", function(){ 
+                                var url = document_text[n]["url"];
+                                window.open(url, "_blank");
+                            });
+                        
+                        addLegend(chart, filteredData, 18, 12);
+                }
+        });
 
-    chart.append("text")
-        .attr("x", -90)
-        .attr("y", -200)
-        .style("font-size", "35px")
-        .style("fill", "white")
-        .text(conditional_clip(document_text[n].title, 30));
+        chart.append("text")
+            .attr("x", -90)
+            .attr("y", -200)
+            .style("font-size", "35px")
+            .style("fill", "white")
+            .text(conditional_clip(document_text[n]["title"], 30));
+    });
 }
 
 //cleanup all things created by donut

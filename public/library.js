@@ -396,7 +396,7 @@ function rectify_csv_data(csv_data)
 }
 
 //create the html element that the tooltip resides in
-function generate_document_tooltip(id)
+function generate_document_tooltip(id, callback)
 {
     var data = document_text[id];
     var result = "<div>";
@@ -468,7 +468,7 @@ function get_document_full_texts(callback)
                 count++;
             }
         }
-
+        
         callback();
     });
 }
@@ -575,7 +575,34 @@ function addCorpusLink(source)
     });
 }
 
+//take off the button added by addCorpusLink
 function removeCorpusButton()
 {
     d3.select(".corpus-link").remove();
+}
+
+//get a given document from the server
+function getDocumentData(docs, callback, parameters)
+{
+    var requests = Array();
+    for(var i = 0; i < docs.length; i++)
+    {
+        //if(!docs[i] in document_text)
+        //{
+            requests.push($.get('/document_text?doc='+docs[i]));
+        //}
+    }
+
+    var defer = $.when.apply($, requests);
+    defer.done(function(){
+        // This is executed only after every ajax request has been completed
+
+        $.each(arguments, function(index, responseData){
+            var current = responseData[0];
+            var i = docs[index];
+            //console.log(current + " " + docs[index]);
+            document_text[i] = responseData[0];
+        });
+        callback(parameters);
+    });
 }

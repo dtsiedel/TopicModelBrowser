@@ -1,7 +1,7 @@
 (GENERAL)
--fix performance for document data - make server parse it on startup and give request back in ajax call
 -help button/page
 -https
+-favicon
 -prevent all pages from scrolling? (besides single topic)
 
 (BARS)

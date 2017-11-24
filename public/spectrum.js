@@ -40,9 +40,13 @@ function constructSpectrum(t1, t2)
 {
     var color_scale = d3.interpolateRgb(colors[t1], colors[t2]);
     var shared = ribbon_data[t1][t2];
-    
-    plotTopics(t1, t2, color_scale);
-    plotDocuments(shared, t1, t2, color_scale);
+    shared = shared.slice(0,500);
+   
+    getDocumentData(shared, function()
+    { 
+        plotTopics(t1, t2, color_scale);
+        plotDocuments(shared, t1, t2, color_scale);
+    });
 }
 
 //put the topic names onto the screen

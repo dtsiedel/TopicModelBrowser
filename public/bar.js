@@ -24,7 +24,10 @@ function constructBars(d1, d2)
     var filtered_2 = filter(csv_data[d2]);
 
     done = false;
-    generateBar(0, 40, 100, [filtered_1,filtered_2], [d1,d2], addLines);   
+    getDocumentData([d1,d2], function()
+    {
+        generateBar(0, 40, 100, [filtered_1,filtered_2], [d1,d2], addLines);   
+    });
 }
 
 //generate a single bar
@@ -77,6 +80,7 @@ function generateBar(num, x, y, data, indexList, callback)
                 .text(function(){if(d.index === '~'){return "Other";}else{return "T" + d.index;}})
                 .style("fill", function(){if(d.index==="~"){return "black";} return "white";})
 
+            
             chart.append("text")
                 .attr("class", "document_text")
                 .on("click", function() { 

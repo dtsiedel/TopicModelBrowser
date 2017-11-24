@@ -128,103 +128,112 @@ function cosineDistance(a, b) {
 
 //make node diagram
 function constructNodes(links, nodes){
-  var width = 1200,
-    height = 600;
+  var docs = [];
+  for(var i = 0; i < nodes.length; i++)
+  {
+    docs.push(nodes[i].id);
+  }
+  getDocumentData([docs], function()
+  {
+      var width = 1200,
+        height = 600;
 
-  var color = d3.scale.category20();
+      var color = d3.scale.category20();
 
-  var force = d3.layout.force()
-    .charge(-500)
-    .linkDistance(80)
-    .size([width, height]);
+      var force = d3.layout.force()
+        .charge(-500)
+        .linkDistance(80)
+        .size([width, height]);
 
-  var svg = d3.select("body").append("svg")
-    .attr("class", "nodes-svg")
-    .attr("width", width)
-    .attr("height", height);
+      var svg = d3.select("body").append("svg")
+        .attr("class", "nodes-svg")
+        .attr("width", width)
+        .attr("height", height);
 
-  //align in the center of the graph
-  d3.select("#chart").attr("align","center");
+      //align in the center of the graph
+      d3.select("#chart").attr("align","center");
+
+      //console.log(links);
+      force.nodes(nodes)
+        .links(links)
+        .start();
+
+      var link = svg.selectAll(".link")
+        .data(links)
+        .enter().append("line")
+        .attr("class", "link")
+        .style("stroke-width", function(d) {
+          return Math.sqrt(d.value);
+        });
+
+      var node = svg.selectAll(".node")
+        .data(nodes)
+        .enter().append("g")
+        .attr("class", "node")
+        .call(force.drag)
+        .on("mouseover", function(d) {
+          //change node outline
+          node.style('stroke', function(l) {
+          });
+          //change edge width
+          link.style('stroke-width', function(l) {
+            return d === l.source || d === l.target ? 5 : Math.sqrt(d.value);
+          });
+          //change edge color
+          link.style('stroke', function(l) {
+            return d === l.source || d === l.target ? "#C7E1F3" : "white";
+          });
+
+        })
+        .on('mouseout', function() {
+          link.style('stroke-width', .4);
+          link.style('stroke', "white")
+          node.style('stroke', "#1F77B4")
+        })
+        .on("click", function(d) {
+            goTo(pages.nodes, pages.donut, d.id)
+        });
 
 
-  //console.log(links);
-  force.nodes(nodes)
-    .links(links)
-    .start();
+      node.append("circle")
+        .attr("class", "nodes-circle")
+        .attr("r", function(d,i){ return i%2==0?7:5 })
+        .style("fill", function(d) {
+          return color(d.group);
+        })
+        .on("mouseover", function(){return tooltip.style("visibility", "visible");}) //bind tooltip to when mouse goes over arc
+        .on("mousemove", function(d)
+        {
+            return tooltip.style("top", (event.pageY-10)+"px").style("left",(event.pageX+10)+"px").html(generate_document_tooltip(d.id)).style("background-color", "white").style("color", "black").on("mouseout", function(){return tooltip.style("visibility", "hidden")});
+        })
+        .on("mouseout", function(){return tooltip.style("visibility", "hidden");});
 
-  var link = svg.selectAll(".link")
-    .data(links)
-    .enter().append("line")
-    .attr("class", "link")
-    .style("stroke-width", function(d) {
-      return Math.sqrt(d.value);
+
+      force.on("tick", function() {
+        link.attr("x1", function(d) {
+            return d.source.x;
+          })
+          .attr("y1", function(d) {
+            return d.source.y;
+          })
+          .attr("x2", function(d) {
+            return d.target.x;
+          })
+          .attr("y2", function(d) {
+            return d.target.y;
+          });
+
+        node.attr("cx", function(d) { return d.x = Math.max(radius, Math.min(width - radius, d.x)); })
+        .attr("cy", function(d) { return d.y = Math.max(radius, Math.min(height - radius, d.y)); });
+
+        d3.selectAll(".nodes-circle").attr("cx", function(d) {
+            return d.x;
+          })
+          .attr("cy", function(d) {
+            return d.y;
+          });
+      });
     });
-
-  var node = svg.selectAll(".node")
-    .data(nodes)
-    .enter().append("g")
-    .attr("class", "node")
-    .call(force.drag)
-    .on("mouseover", function(d) {
-      //change node outline
-      node.style('stroke', function(l) {
-      });
-      //change edge width
-      link.style('stroke-width', function(l) {
-        return d === l.source || d === l.target ? 5 : Math.sqrt(d.value);
-      });
-      //change edge color
-      link.style('stroke', function(l) {
-        return d === l.source || d === l.target ? "#C7E1F3" : "white";
-      });
-
-    })
-    .on('mouseout', function() {
-      link.style('stroke-width', .4);
-      link.style('stroke', "white")
-      node.style('stroke', "#1F77B4")
-    })
-    .on("click", function(d) {
-        goTo(pages.nodes, pages.donut, d.id)
-    });
-
-
-  node.append("circle")
-    .attr("class", "nodes-circle")
-    .attr("r", function(d,i){ return i%2==0?7:5 })
-    .style("fill", function(d) {
-      return color(d.group);
-    })
-    .on("mouseover", function(){return tooltip.style("visibility", "visible");}) //bind tooltip to when mouse goes over arc
-    .on("mousemove", function(d){
-      return tooltip.style("top", (event.pageY-10)+"px").style("left",(event.pageX+10)+"px").html(generate_document_tooltip(d.id)).style("background-color", "white").style("color", "black");})
-    .on("mouseout", function(){return tooltip.style("visibility", "hidden");})
-
-
-  force.on("tick", function() {
-    link.attr("x1", function(d) {
-        return d.source.x;
-      })
-      .attr("y1", function(d) {
-        return d.source.y;
-      })
-      .attr("x2", function(d) {
-        return d.target.x;
-      })
-      .attr("y2", function(d) {
-        return d.target.y;
-      });
-
-    node.attr("cx", function(d) { return d.x = Math.max(radius, Math.min(width - radius, d.x)); })
-    .attr("cy", function(d) { return d.y = Math.max(radius, Math.min(height - radius, d.y)); });
-
-    d3.selectAll(".nodes-circle").attr("cx", function(d) {
-        return d.x;
-      })
-      .attr("cy", function(d) {
-        return d.y;
-      });
-  });
 }
 
 //remove everything we added for nodes
