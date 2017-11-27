@@ -1,8 +1,11 @@
 (GENERAL)
 -help button/page
+-back button
+-weird spacing in document excerpts
 -https
 -favicon
 -prevent all pages from scrolling? (besides single topic)
+-user setting names of topics
 
 (BARS)
 -center in frame? 
@@ -11,6 +14,9 @@
 -introduce other metadata (i.e. aggregate by blog, or anything else given)
 
 (CORPUS)
+-represent proportions of topics on selector screen
+-widen divs to full size of box
+-representation of topics that aren't linked to anything
 -persistent word labels on topics? With just a few
 -ribbon select stays until you mark another one
 
@@ -20,8 +26,10 @@
 -or have fewer docs in it for legibility
 
 (TOPIC)
--janky on last page of results?
+-color of links
 -make percent indicator a progress bar
+-janky on last page of results?
 -examples of broken highlighting (missing some highlighting, ex T7)
 
 (NODES)
+
