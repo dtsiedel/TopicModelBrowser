@@ -587,8 +587,9 @@ function getDocumentData(docs, callback, parameters)
     var requests = Array();
     for(var i = 0; i < docs.length; i++)
     {
-        //if(!docs[i] in document_text)
+        //if(!(docs[i] in document_text))
         //{
+            console.log("hit");
             requests.push($.get('/document_text?doc='+docs[i]));
         //}
     }

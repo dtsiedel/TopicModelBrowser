@@ -20,7 +20,7 @@
 -or have fewer docs in it for legibility
 
 (TOPIC)
--janky on last page of results
+-janky on last page of results?
 -make percent indicator a progress bar
 -examples of broken highlighting (missing some highlighting, ex T7)
 
