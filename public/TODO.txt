@@ -22,7 +22,6 @@
 -or have fewer docs in it for legibility
 
 (TOPIC)
--color of links
 -make percent indicator a progress bar
 -janky on last page of results?
 -examples of broken highlighting (missing some highlighting, ex T7)

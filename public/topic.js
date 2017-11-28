@@ -111,7 +111,7 @@ function find_best_excerpt_from_selection(title, doc_number, percent_similarity,
 
     // Edit display:
     d3.select("#chart-container").append("div").attr("id", "sample");
-    document.getElementById("sample").innerHTML += "<h3 class='topic-match'>"+n+". <span class='topic-doc-link' onclick='loadDoc(" + doc_number.toString() + ")'>" + title + "</span>  <a class='outlink' target = '_blank' href='" + link + "'> ["+link+"] </a></h3>";
+    document.getElementById("sample").innerHTML += "<h3 class='topic-match'>"+n+". <span class='topic-doc-link' onclick='loadDoc(" + doc_number.toString() + ")'>" + title + "<br/></span>  <a class='outlink' target = '_blank' href='" + link + "'> ["+link+"] </a></h3>";
     document.getElementById("sample").innerHTML += "<h5 class='topic-match'>" + percent_similarity.toString() + "% topic match</h5>";
 
     if(all_annotated_sentences[first])

@@ -73,6 +73,7 @@ h2#topicname {
 
 .outlink {
     cursor: alias;
+    color: white; 
 }
 
 #prev {
@@ -89,7 +90,7 @@ h2#topicname {
 
 .topic-doc-link {
     cursor: default;
-    color: blue;
+    color: white;
 }
 
 .bar-svg {
