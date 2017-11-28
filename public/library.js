@@ -589,7 +589,6 @@ function getDocumentData(docs, callback, parameters)
     {
         //if(!(docs[i] in document_text))
         //{
-            console.log("hit");
             requests.push($.get('/document_text?doc='+docs[i]));
         //}
     }
@@ -601,7 +600,6 @@ function getDocumentData(docs, callback, parameters)
         $.each(arguments, function(index, responseData){
             var current = responseData[0];
             var i = docs[index];
-            //console.log(current + " " + docs[index]);
             document_text[i] = responseData[0];
         });
         callback(parameters);

@@ -259,13 +259,13 @@ function constructCorpus(csv)
             selected = []; //need to reset this between chord clicks
             info.html(text);
             d3.selectAll(".checkbox").on("click", function() { toggle_check_box(d3.select(this).attr("data-id")); });
-            d3.selectAll(".checktitle").on("mousedown", function() {
+            d3.selectAll(".checktitle-container").on("mousedown", function() {
                 dragSelecting = true;
                 var current = d3.select(this).attr("data-id");
                 visually_toggle(current); 
                 toggle_check_box(current);
             });
-            d3.selectAll(".checktitle").on("mouseover", function() {
+            d3.selectAll(".checktitle-container").on("mouseover", function() {
                 if(dragSelecting){
                     var current = d3.select(this).attr("data-id");
                     visually_toggle(current);
@@ -365,7 +365,7 @@ function generate_document_info(source, target, callback)
                 break;
             }
             var title = conditional_clip(document_text[docs[i]]["title"], 50);
-            result += "<input class='checkBox check"+docs[i]+"' data-id='"+docs[i]+"'type='checkbox'>" + "<span class='checktitle' data-id="+docs[i]+">" + conditional_clip(title, 50) + "</span><br/>";
+            result += "<input class='checkBox check"+docs[i]+"' data-id='"+docs[i]+"'type='checkbox'>" + "<div class='checktitle-container' data-id="+docs[i]+">" + conditional_clip(title, 50) + "</div>";
         }
         callback(result);
     });

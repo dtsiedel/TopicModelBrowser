@@ -15,7 +15,6 @@
 
 (CORPUS)
 -represent proportions of topics on selector screen
--widen divs to full size of box
 -representation of topics that aren't linked to anything
 -persistent word labels on topics? With just a few
 -ribbon select stays until you mark another one

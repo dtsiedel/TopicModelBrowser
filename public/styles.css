@@ -57,7 +57,6 @@ path.chord {
 .checktitle {
     cursor:default;
     user-select: none; 
-    width: 100%;
 }
 
 .title {
@@ -150,4 +149,15 @@ h2#topicname {
     text-align: center;
     width: 50%;
     margin: auto;
+}
+
+.checkBox {
+    float: left;
+    width: 5%;
+}
+
+.checktitle-container {
+    width: 95%;
+    cursor: default;
+    user-select: none;
 }
