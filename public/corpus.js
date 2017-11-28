@@ -31,7 +31,7 @@ function getData()
             .style("border-radius", "10px")
             .style("visibility", "hidden")
             .style("border", "1px solid white")
-            .text("Error"); //bad to see this (obviously)
+            .text(""); //bad to see this (obviously)
     }
 
     if(!loaded_data)

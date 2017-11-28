@@ -3,7 +3,6 @@
 -back button
 -weird spacing in document excerpts
 -https
--favicon
 -prevent all pages from scrolling? (besides single topic)
 -user setting names of topics
 
