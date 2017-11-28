@@ -333,10 +333,7 @@ function getRibbonData(func)
 
         func();
     });
-
 }
-
-
 
 //was used to generate the output for ribbon_counts.csv
 //just did it in the console because you can't write to files

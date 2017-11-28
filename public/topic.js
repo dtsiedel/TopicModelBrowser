@@ -112,7 +112,39 @@ function find_best_excerpt_from_selection(title, doc_number, percent_similarity,
     // Edit display:
     d3.select("#chart-container").append("div").attr("id", "sample");
     document.getElementById("sample").innerHTML += "<h3 class='topic-match'>"+n+". <span class='topic-doc-link' onclick='loadDoc(" + doc_number.toString() + ")'>" + title + "<br/></span>  <a class='outlink' target = '_blank' href='" + link + "'> ["+link+"] </a></h3>";
-    document.getElementById("sample").innerHTML += "<h5 class='topic-match'>" + percent_similarity.toString() + "% topic match</h5>";
+    document.getElementById("sample").innerHTML += "<p class='topic-match current'></p>";
+
+    var max_width = 200;
+    var data = [100, percent_similarity];
+    var x = d3.scale.linear() 
+        .domain([0, d3.max(data)])
+        .range([0, max_width]); 
+
+    var chart = d3.select(".current").append("svg")
+        .attr("height", 20)
+        .attr("width", max_width);
+
+    chart.selectAll("rect.current") // this is what actually creates the bars
+        .data(data)
+        .enter().append("rect")
+        .attr("fill", function(d,i){if(i===1){return colors[topic];}else{return "white";}})
+        .attr("width", x)
+        .attr("height", 20)
+        .attr("rx", 5) // rounded corners
+        .attr("ry", 5);
+    
+    chart.selectAll("text") // adding the text labels to the bar
+        .data(data)
+        .enter().append("text")
+        .attr("fill", "black")
+        .attr("x", x)
+        .attr("y", 10) // y position of the text inside bar
+        .attr("dx", -3) // padding-right
+        .attr("dy", ".35em") // vertical-align: middle
+        .attr("text-anchor", "end") // text-align: right
+        .text(function(d){if(d===100){return parseFloat(percent_similarity).toFixed(1).toString()+"%";}else{return "";}});
+
+    d3.select(".current").classed("current", false);
 
     if(all_annotated_sentences[first])
     {
