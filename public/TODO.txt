@@ -8,7 +8,6 @@
 -user setting names of topics
 
 (BARS)
--center in frame? 
 
 (DONUT)
 -introduce other metadata (i.e. aggregate by blog, or anything else given)

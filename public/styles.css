@@ -93,8 +93,8 @@ h2#topicname {
 }
 
 .bar-svg {
-    margin: 0 auto;
-    /*width: 50%;*/
+    display: block;
+    margin: auto;
 }
 
 .document_text {
