@@ -275,8 +275,9 @@ function constructCorpus(csv)
             d3.selectAll("html").on("mouseup", function() {
                 dragSelecting = false;
             });
-            d3.select("#t1").style("color", colors[d.source.index]).style("font-size", "20px"); 
-            d3.select("#t2").style("color", colors[d.target.index]).style("font-size", "20px"); 
+            d3.selectAll(".t1").style("color", colors[d.source.index]);
+            d3.selectAll(".t2").style("color", colors[d.target.index]);
+            d3.selectAll(".title").style("font-size", "20px"); 
             d3.select("#topic_compare").on("click", function(){
                 goTo(pages.corpus, pages.spectrum, [d.source.index, d.target.index]);
             });
@@ -347,8 +348,8 @@ function toggle_check_box(id)
 //make the html element that goes on the right
 function generate_document_info(source, target, callback)
 {
-    var result = "<span id='t1'>Topic ";
-    result += source + "</span> and <span id='t2'> Topic ";
+    var result = "<span class='t1 title'>Topic ";
+    result += source + "</span> and <span class='t2 title'> Topic ";
     result += target + "</span> Shared Documents:<br>";
     result += "<button class='corpus-button' id='topic_compare' type='button'>Compare these topics!</button><br/>";
     result += "<button class='corpus-button' id='document_compare' type='button'>Compare selected documents!</button>";
@@ -365,7 +366,7 @@ function generate_document_info(source, target, callback)
                 break;
             }
             var title = conditional_clip(document_text[docs[i]]["title"], 50);
-            result += "<input class='checkBox check"+docs[i]+"' data-id='"+docs[i]+"'type='checkbox'>" + "<div class='checktitle-container' data-id="+docs[i]+">" + conditional_clip(title, 50) + "</div>";
+            result += "<input class='checkBox check"+docs[i]+"' data-id='"+docs[i]+"'type='checkbox'>" + "<div class='checktitle-container' data-id="+docs[i]+">" + conditional_clip(title, 30) + " (<span class='t1'>" + ((csv_data[docs[i]][reverse_topic_indices[source]])*100).toFixed(2) + "%</span> and <span class='t2'>" + ((csv_data[docs[i]][reverse_topic_indices[target]])*100).toFixed(2) + "%</span>)</div>";
         }
         callback(result);
     });

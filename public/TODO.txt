@@ -14,10 +14,9 @@
 -introduce other metadata (i.e. aggregate by blog, or anything else given)
 
 (CORPUS)
--represent proportions of topics on selector screen
+-ribbon select stays until you mark another one
 -representation of topics that aren't linked to anything
 -persistent word labels on topics? With just a few
--ribbon select stays until you mark another one
 
 (SPECTRUM)
 -center?
