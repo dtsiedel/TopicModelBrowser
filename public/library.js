@@ -33,6 +33,8 @@ var gray = "#d3d3d3";
 var ribbon_data;
 var ribbon_counts;
 var document_text = {};
+var call_stack = [];
+var current_params = [];
 
 document.addEventListener("DOMContentLoaded", function(e) {
     console.log("loaded libary");
@@ -517,8 +519,14 @@ function sortRibbon(documents, t1, t2)
 }
 
 //transition state machine for going to various pages
-function goTo(source, target, parameters)
+function goTo(source, target, parameters, returning=false)
 {
+    if(!returning)
+    {
+        call_stack.push([source, current_params]);
+    } 
+
+    current_params = parameters;
     switch(source)
     {
         case pages.corpus:
@@ -563,6 +571,17 @@ function goTo(source, target, parameters)
     } 
 }
 
+//handle control of back button
+//by popping call stack and going there
+function goBack(current)
+{
+    if(call_stack.length < 1)
+        return;
+    var previous = call_stack.pop();
+    console.log(previous);
+    goTo(current, previous[0], previous[1], true);
+}
+
 //add a back to corpus button
 function addCorpusLink(source)
 {
@@ -570,12 +589,18 @@ function addCorpusLink(source)
     {
         goTo(source, pages.corpus, [])
     });
+    d3.select("#header").append("button").attr("class", "back-button").text("Back to Previous View").on("click", function()
+    {
+        goBack(source);
+    });
+    
 }
 
 //take off the button added by addCorpusLink
 function removeCorpusButton()
 {
     d3.select(".corpus-link").remove();
+    d3.select(".back-button").remove();
 }
 
 //get a given document from the server

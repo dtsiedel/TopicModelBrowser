@@ -1,6 +1,6 @@
 (GENERAL)
+-bug when going back from donut to bars
 -help button/page
--back button
 -weird spacing in document excerpts
 -https
 -prevent all pages from scrolling? (besides single topic)
@@ -26,4 +26,4 @@
 -examples of broken highlighting (missing some highlighting, ex T7)
 
 (NODES)
-
+-"go back" to nodes to make it look cleaner?
