@@ -9,11 +9,14 @@ function setUpBars(parameters)
 //direct comparison of two documents by their topic makeup
 function constructBars(d1, d2)
 {
+    width = 600;
+    height = 560;
+
     chart = d3.select("#chart-container")
         .append('svg')
         .attr("class", "bar-svg")
-        .attr("width", width + margin.left + margin.right)
-        .attr("height", height + margin.top + margin.bottom)
+        .attr("width", width)
+        .attr("height", height)
         .append("g")
         .attr("stroke", gray)
         .attr("stroke-width", "0.5");

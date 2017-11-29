@@ -1,5 +1,4 @@
 (GENERAL)
--bug when going back from donut to bars
 -help button/page
 -weird spacing in document excerpts
 -https
