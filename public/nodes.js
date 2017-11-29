@@ -141,7 +141,7 @@ function constructNodes(links, nodes){
       var color = d3.scale.category20();
 
       var force = d3.layout.force()
-        .charge(-500)
+        .charge(-1500)
         .linkDistance(80)
         .size([width, height]);
 
