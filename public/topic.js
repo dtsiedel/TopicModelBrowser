@@ -43,7 +43,7 @@ function find_best_excerpt_from_selection(title, doc_number, percent_similarity,
         //var current_sentence_array = split_list[i].split(" ");
         var temp_par = split_list[i];
 
-        var ea_word_in_current_sentence = split_list[i].split(" ");
+        var ea_word_in_current_sentence = split_list[i].match( /\b[^\s]+\b/g );
         // loop through each word in the current sentence
         for (var j = 0; j < ea_word_in_current_sentence.length; j++)
         {
@@ -82,7 +82,7 @@ function find_best_excerpt_from_selection(title, doc_number, percent_similarity,
                                     // explanatory output to HTML (note: in long term, we'd just ignore this case)
     {
         best_sentence_index = 0;
-        all_annotated_sentences[0] = "<p>No sufficient matches found</p>";
+        all_annotated_sentences[0] = "<p>No representative samples found.</p>";
         all_annotated_sentences[1] = null;
         all_annotated_sentences[2] = null;
         //return
