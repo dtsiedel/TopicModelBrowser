@@ -44,6 +44,8 @@ function find_best_excerpt_from_selection(title, doc_number, percent_similarity,
         var temp_par = split_list[i];
 
         var ea_word_in_current_sentence = split_list[i].match( /\b[^\s]+\b/g );
+        if(ea_word_in_current_sentence === null)
+            ea_word_in_current_sentence = split_list[i];
         // loop through each word in the current sentence
         for (var j = 0; j < ea_word_in_current_sentence.length; j++)
         {
