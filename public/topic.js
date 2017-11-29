@@ -68,7 +68,7 @@ function find_best_excerpt_from_selection(title, doc_number, percent_similarity,
                 all_annotated_sentences[i] += " ";
             }
         }
-        all_annotated_sentences[i] += " ";
+        all_annotated_sentences[i] += ". ";
 
         if (current_total_wordcount > best_total_wordcount)
         {
