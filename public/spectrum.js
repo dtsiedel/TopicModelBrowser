@@ -4,8 +4,8 @@ var width;
 var height;
 var tooltip;
 
-var x_start = -100;
-var x_end = 600;
+var x_start = -200;
+var x_end = 500;
 var x_mid = (x_start + x_end) / 2;
 var y_start = 0;
 var y_end = -200;
@@ -21,11 +21,14 @@ Number.prototype.map = function (in_min, in_max, out_min, out_max) {
 //needs to be split later so that we can not duplicate code
 function setUpSpectrum(parameters)
 {
+    width = 800;
+    height = 500; 
+
     chart = d3.select("#chart-container")
         .append('svg')
         .attr("class", "spectrum-svg")
-        .attr("width", width + 500)
-        .attr("height", height + margin.top + margin.bottom)
+        .attr("width", width)
+        .attr("height", height)
         .append("g")
         .attr("transform", "translate(" + ((width/4)) + "," + ((height/2)+margin.top) + ")");
 

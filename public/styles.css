@@ -98,6 +98,11 @@ h2#topicname {
     margin: auto;
 }
 
+.spectrum-svg {
+    display: block;
+    margin: auto
+}
+
 .document_text {
     cursor: default;
 }
