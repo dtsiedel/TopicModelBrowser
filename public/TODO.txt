@@ -19,11 +19,7 @@
 -or have fewer docs in it for legibility
 
 (TOPIC)
--add more spaces between documents
 -saturation of bar is how high the percent is
--include max page (page X of Y)
--put 'could not find' messag ein italics
--make clicky hand for document link
 -move page control to top right
 -duplicate page controls on bottom or have it scroll with you
 -add first/last page button
@@ -36,5 +32,6 @@
 (LONGTERM)
 -figure out improved way to represent nodes (scaling?)
 -introduce other metadata (i.e. aggregate by blog, or anything else given)
+-use browser back button
 -user setting names of topics
 -https

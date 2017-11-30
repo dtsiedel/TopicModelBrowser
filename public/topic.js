@@ -84,7 +84,7 @@ function find_best_excerpt_from_selection(title, doc_number, percent_similarity,
                                     // explanatory output to HTML (note: in long term, we'd just ignore this case)
     {
         best_sentence_index = 0;
-        all_annotated_sentences[0] = "<p>No representative samples found.</p>";
+        all_annotated_sentences[0] = "<p><i>No representative samples found.</i></p>";
         all_annotated_sentences[1] = null;
         all_annotated_sentences[2] = null;
         //return
@@ -160,16 +160,17 @@ function find_best_excerpt_from_selection(title, doc_number, percent_similarity,
     {
         document.getElementById("sample").innerHTML += "<span class='topic-match'>" + all_annotated_sentences[last] + "</span>";
     }
+    document.getElementById("sample").innerHTML += "<br/><br/><br/>";
 
     d3.selectAll(".marked").style("background-color", colors[topic]);
 }
 
 // Given topic number, sets H2 in HTML to "TOPIC ###"
-function define_topicname_from_url(topic, page_n)
+function define_topicname_from_url(topic, page_n, page_max)
 {
     var topic_words = reverse_topic_indices[topic].split("_").join();
     d3.select("#chart-container").append("h2").attr("id", "topicname");
-    document.getElementById("topicname").innerHTML = "Topic " + topic + " Summary (Page "+page_n+")<br/><h6>Sample words: " + topic_words + "</h6>";
+    document.getElementById("topicname").innerHTML = "Topic " + topic + " Summary (Page "+page_n+" of "+page_max+")<br/><h6>Sample words: " + topic_words + "</h6>";
     d3.select("#topicname").style("color", colors[topic]);
 }
 
@@ -179,7 +180,7 @@ function setUpTopic(parameters, page)
 {
     addCorpusLink(pages.topic);
     addNavButtons(parameters, page);
-    define_topicname_from_url(parameters, page);
+    define_topicname_from_url(parameters, page, maxPage(parameters));
     constructTopic(parameters, per_page, page);
 }
 

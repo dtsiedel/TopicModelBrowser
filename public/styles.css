@@ -89,7 +89,7 @@ h2#topicname {
 }
 
 .topic-doc-link {
-    cursor: default;
+    cursor: pointer;
     color: white;
 }
 
