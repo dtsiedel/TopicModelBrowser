@@ -19,9 +19,7 @@
 -or have fewer docs in it for legibility
 
 (TOPIC)
--add first/last page button
 -return to view goes to page you were on
--janky on last page of results?
 
 (NODES)
 -figure out rectangle issue

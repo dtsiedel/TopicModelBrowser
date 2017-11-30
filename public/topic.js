@@ -201,6 +201,7 @@ function constructTopic(topic, numDocs, page_n)
     var doc_list = ribbon_data[topic][topic];
     var values = [];
     var end = false;
+    var original_num_docs = numDocs;
     
     for(var i = 0; i < doc_list.length; i++)
     {
@@ -223,7 +224,7 @@ function constructTopic(topic, numDocs, page_n)
         end = true; 
     }
 
-    var start = (page_n-1) * numDocs;
+    var start = (page_n-1) * original_num_docs;
     var targets = []
     for(var i = start; i < start+numDocs; i++)
     {
@@ -236,11 +237,11 @@ function constructTopic(topic, numDocs, page_n)
             var this_doc = values[i];
             find_best_excerpt_from_selection(conditional_clip(document_text[this_doc[0]]["title"], 70), this_doc[0], (this_doc[1] * 100).toFixed(2), document_text[this_doc[0]]["text"], word_list, document_text[this_doc[0]]["url"], topic, i+1);
         }
+        addFooter(topic, page_n);
         if(end)
         {
-            document.getElementById("sample").innerHTML += "<br><br><h3>((END OF RESULTS))</h3></br></br>"
-        }
-        addFooter(topic, page_n);
+            d3.select("#footer").insert("div", ":first-child").attr("class", "results-end").html("((END OF RESULTS))<br/>").style("color", "red");
+        }       
     });
 }
 
@@ -261,8 +262,22 @@ function maxPage(topic)
     return Math.ceil(n_docs / per_page);
 }
 
-//control last page logic
-function pageLast(topic, current_page)
+//take you to the last available page
+function pageFinal(topic)
+{
+    topicCleanup();
+    setUpTopic(topic, maxPage(topic));
+}
+
+//take you to the first page
+function pageFirst(topic)
+{
+    topicCleanup();
+    setUpTopic(topic, 1);
+}
+
+//control previous page logic
+function pagePrevious(topic, current_page)
 {
     if(current_page <= 1)
         return;
@@ -274,8 +289,10 @@ function pageLast(topic, current_page)
 //put the next/past buttons into the header
 function addNavButtons(topic, current_page)
 {
+    d3.select("#header").append("button").attr("class", "nav-button final-button").text("Final Page").on("click", function() {pageFinal(topic)});
     d3.select("#header").append("button").attr("class", "nav-button next-button").text("Next Page").on("click", function() {pageNext(topic, current_page)});
-    d3.select("#header").append("button").attr("class", "nav-button last-button").text("Last Page").on("click", function() {pageLast(topic, current_page)});
+    d3.select("#header").append("button").attr("class", "nav-button last-button").text("Previous Page").on("click", function() {pagePrevious(topic, current_page)});
+    d3.select("#header").append("button").attr("class", "nav-button first-button").text("First Page").on("click", function() {pageFirst(topic)});
 }
 
 //get rid of the stuff in the footer
@@ -301,8 +318,10 @@ function addFooter(topic, current_page)
         goBack(pages.topic);
     });
 
+    footer.append("button").attr("class", "nav-button final-button").text("Final Page").on("click", function() {pageFinal(topic)});  
     footer.append("button").attr("class", "nav-button next-button").text("Next Page").on("click", function() {pageNext(topic, current_page)});
-    footer.append("button").attr("class", "nav-button last-button").text("Last Page").on("click", function() {pageLast(topic, current_page)});
+    footer.append("button").attr("class", "nav-button last-button").text("Last Page").on("click", function() {pagePrevious(topic, current_page)});
+    footer.append("button").attr("class", "nav-button first-button").text("First Page").on("click", function() {pageFirst(topic)});  
 }
 
 //remove all stuff we put on there

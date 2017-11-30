@@ -171,3 +171,7 @@ h2#topicname {
     cursor: default;
     user-select: none;
 }
+
+.results-end {
+    text-align: center;
+}
