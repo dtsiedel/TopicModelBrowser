@@ -126,10 +126,19 @@ function find_best_excerpt_from_selection(title, doc_number, percent_similarity,
         .attr("height", 20)
         .attr("width", max_width);
 
+    var color = d3.scale.linear()
+        .range(['#d3d3d3', colors[topic]]);
+
     chart.selectAll("rect.current") // this is what actually creates the bars
         .data(data)
         .enter().append("rect")
-        .attr("fill", function(d,i){if(i===1){return colors[topic];}else{return "white";}})
+        .attr("fill", function(d,i){
+            if(i===1){
+                //return colors[topic];
+                return color(1.1*percent_similarity/100); //get back to [0,1] space
+            }else{
+                return "white";}
+        })
         .attr("width", x)
         .attr("height", 20)
         .attr("rx", 5) // rounded corners

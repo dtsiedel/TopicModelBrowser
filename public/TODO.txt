@@ -19,7 +19,6 @@
 -or have fewer docs in it for legibility
 
 (TOPIC)
--saturation of bar is how high the percent is
 -move page control to top right
 -duplicate page controls on bottom or have it scroll with you
 -add first/last page button
