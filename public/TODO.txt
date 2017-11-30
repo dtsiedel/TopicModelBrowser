@@ -1,16 +1,15 @@
 (GENERAL)
 -help button/page
--weird spacing in document excerpts
--https
+-fragments for page control
 -prevent all pages from scrolling? (besides single topic)
--user setting names of topics
 
 (BARS)
 
 (DONUT)
--introduce other metadata (i.e. aggregate by blog, or anything else given)
+-move excerpt from on hover to bottom right (and annotate all words in it)
 
 (CORPUS)
+-devise new way to do the sizes, etc
 -ribbon select stays until you mark another one
 -representation of topics that aren't linked to anything
 -persistent word labels on topics? With just a few
@@ -20,8 +19,22 @@
 -or have fewer docs in it for legibility
 
 (TOPIC)
+-add more spaces between documents
+-saturation of bar is how high the percent is
+-include max page (page X of Y)
+-put 'could not find' messag ein italics
+-make clicky hand for document link
+-move page control to top right
+-duplicate page controls on bottom or have it scroll with you
+-add first/last page button
+-return to view goes to page you were on
 -janky on last page of results?
 
 (NODES)
 -figure out rectangle issue
 
+(LONGTERM)
+-figure out improved way to represent nodes (scaling?)
+-introduce other metadata (i.e. aggregate by blog, or anything else given)
+-user setting names of topics
+-https
