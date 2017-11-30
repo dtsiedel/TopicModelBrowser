@@ -3,7 +3,7 @@
 var threshold = 0.05; //how high must a topic be to be included?
 var corpus_threshold = 750; //how many documents must be shared for the link to be in the corpus view?
 var chord_threshold = 500; //how many related docs should be shown in info box per chord?
-var cosineThreshold = 0.9; //threshold for force-directed graph for multiple documents
+var cosineThreshold = 0.85; //threshold for force-directed graph for multiple documents
 var colors = ["#1CE6FF", "#FF34FF", "#FF4A46", "#008941", "#006FA6", "#A30059",
         "#FFDBE5", "#7A4900", "#0000A6", "#63FFAC", "#B79762", "#004D43", "#8FB0FF", "#997D87",
         "#5A0007", "#809693", "#1B4400", "#4FC601", "#3B5DFF", "#4A3B53", "#FF2F80",

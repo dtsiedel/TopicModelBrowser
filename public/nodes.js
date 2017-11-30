@@ -19,15 +19,6 @@ function nodesMain(parameters)
 //also does all of the one-time setup and calls our constructNodes function the first time
 function setUpNodes(parameters)
 {
-    // add the canvas to the DOM
-    chart = d3.select("#nodes-demo")
-        .append('svg')
-        .attr("class", "nodes-svg")
-        .attr("width", width + margin.left + margin.right)
-        .attr("height", height + margin.top + margin.bottom)
-        .append("g")
-        .attr("transform", "translate(" + ((width/4)) + "," + ((height/2)+margin.top) + ")");
-
     addCorpusLink(pages.nodes);
 
     documents = [];
@@ -135,8 +126,8 @@ function constructNodes(links, nodes){
   }
   getDocumentData([docs], function()
   {
-      var width = 1200,
-        height = 600;
+      var width = 1000;
+      var height = 1000;
 
       var color = d3.scale.category20();
 
@@ -145,13 +136,13 @@ function constructNodes(links, nodes){
         .linkDistance(80)
         .size([width, height]);
 
-      var svg = d3.select("body").append("svg")
+      var svg = d3.select("#chart-container").append("svg")
         .attr("class", "nodes-svg")
         .attr("width", width)
         .attr("height", height);
 
       //align in the center of the graph
-      d3.select("#chart").attr("align","center");
+      //d3.select("#chart").attr("align","center");
 
       //console.log(links);
       force.nodes(nodes)
@@ -193,7 +184,6 @@ function constructNodes(links, nodes){
         .on("click", function(d) {
             goTo(pages.nodes, pages.donut, d.id)
         });
-
 
       node.append("circle")
         .attr("class", "nodes-circle")
