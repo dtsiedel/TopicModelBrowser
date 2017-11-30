@@ -578,7 +578,6 @@ function goBack(current)
     if(call_stack.length < 1)
         return;
     var previous = call_stack.pop();
-    console.log(previous);
     goTo(current, previous[0], previous[1], true);
 }
 

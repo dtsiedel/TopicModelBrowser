@@ -19,8 +19,6 @@
 -or have fewer docs in it for legibility
 
 (TOPIC)
--move page control to top right
--duplicate page controls on bottom or have it scroll with you
 -add first/last page button
 -return to view goes to page you were on
 -janky on last page of results?

@@ -162,6 +162,10 @@ h2#topicname {
     width: 5%;
 }
 
+.nav-button {
+    float: right;
+}
+
 .checktitle-container {
     width: 95%;
     cursor: default;

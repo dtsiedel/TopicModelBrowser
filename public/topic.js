@@ -177,14 +177,14 @@ function find_best_excerpt_from_selection(title, doc_number, percent_similarity,
 // Given topic number, sets H2 in HTML to "TOPIC ###"
 function define_topicname_from_url(topic, page_n, page_max)
 {
-    var topic_words = reverse_topic_indices[topic].split("_").join();
+    var topic_words = reverse_topic_indices[topic].split("_").join(", ");
     d3.select("#chart-container").append("h2").attr("id", "topicname");
     document.getElementById("topicname").innerHTML = "Topic " + topic + " Summary (Page "+page_n+" of "+page_max+")<br/><h6>Sample words: " + topic_words + "</h6>";
     d3.select("#topicname").style("color", colors[topic]);
 }
 
 //parses our csv hosted on server
-//also does all of the one-time setup and calls our constructDonut function the first time
+//also does all of the one-time setup and calls our construct function the first time
 function setUpTopic(parameters, page)
 {
     addCorpusLink(pages.topic);
@@ -240,6 +240,7 @@ function constructTopic(topic, numDocs, page_n)
         {
             document.getElementById("sample").innerHTML += "<br><br><h3>((END OF RESULTS))</h3></br></br>"
         }
+        addFooter(topic, page_n);
     });
 }
 
@@ -273,8 +274,35 @@ function pageLast(topic, current_page)
 //put the next/past buttons into the header
 function addNavButtons(topic, current_page)
 {
-    d3.select("#header").append("button").attr("class", "nav-button last-button").text("Last Page").on("click", function() {pageLast(topic, current_page)});
     d3.select("#header").append("button").attr("class", "nav-button next-button").text("Next Page").on("click", function() {pageNext(topic, current_page)});
+    d3.select("#header").append("button").attr("class", "nav-button last-button").text("Last Page").on("click", function() {pageLast(topic, current_page)});
+}
+
+//get rid of the stuff in the footer
+function removeFooter()
+{
+    d3.selectAll("#footer").remove(); 
+}
+
+//put same buttons on bottom
+function addFooter(topic, current_page)
+{
+    var footer = d3.select("body")
+        .append("div")
+        .attr("id", "footer");
+    
+    footer.append("button").attr("class", "corpus-link").text("Back to Corpus!").on("click", function()
+    {
+        goTo(pages.topic, pages.corpus, [])
+    });
+
+    footer.append("button").attr("class", "back-button").text("Back to Previous View").on("click", function()
+    {
+        goBack(pages.topic);
+    });
+
+    footer.append("button").attr("class", "nav-button next-button").text("Next Page").on("click", function() {pageNext(topic, current_page)});
+    footer.append("button").attr("class", "nav-button last-button").text("Last Page").on("click", function() {pageLast(topic, current_page)});
 }
 
 //remove all stuff we put on there
@@ -282,6 +310,7 @@ function topicCleanup()
 {
     removeCorpusButton();
     removeOtherButtons();
+    removeFooter();
     d3.select("#chart-container").remove();
     d3.select("#container").append("div").attr("id", "chart-container");
 }
