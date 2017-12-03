@@ -126,8 +126,8 @@ function constructNodes(links, nodes){
   }
   getDocumentData([docs], function()
   {
-      var width = 750 //1000;
-      var height = 750 //1000;
+      var width = 1000; //750;
+      var height = 1000; //750;
 
       var color = d3.scale.category20();
 
@@ -141,8 +141,7 @@ function constructNodes(links, nodes){
         .attr("width", width)
         .attr("height", height);
 
-      //align in the center of the graph
-      //d3.select("#chart").attr("align","center");
+      window.scrollTo(0, 500);
 
       //console.log(links);
       force.nodes(nodes)
@@ -232,4 +231,5 @@ function nodesCleanup()
     d3.select(".tooltip").style("visibility", "hidden");
     removeCorpusButton();
     d3.select(".nodes-svg").remove();    
+    window.scrollTo(0, 0); 
 }

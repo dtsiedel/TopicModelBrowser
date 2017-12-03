@@ -130,6 +130,7 @@ function constructDonut(n)
                             });
                         
                         addLegend(chart, filteredData, 18, 12);
+                        //addExcerpt(chart, document_text[n]["text"]);
                 }
         });
 

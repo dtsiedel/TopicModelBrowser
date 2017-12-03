@@ -108,6 +108,23 @@ function clip(text, n)
     return text
 }
 
+//add document excerpt to donut view
+function addExcerpt(chart, text)
+{
+    var excerpt = chart.selectAll(".excerpt")
+        .data(text)
+        .enter()
+        .append("text")
+        .attr("class", "excerpt")
+        .style("fill", "white")
+        .text(conditional_clip(text, 50))
+        .attr('transform', function(d, i) {
+            var horz = 200;
+            var vert = 150; 
+            return 'translate(' + horz + ',' + vert + ')';
+        });
+}
+
 //put a legend onto chart
 function addLegend(chart, data, legendRectSize, legendSpacing)
 {
@@ -122,7 +139,7 @@ function addLegend(chart, data, legendRectSize, legendSpacing)
         var height = legendRectSize + legendSpacing;
         var offset =  height * 10 / 2;
         var horz = -2 * legendRectSize + 1.5*radius;
-        var vert = i * height - offset;
+        var vert = i * height - offset * 1.15;
         return 'translate(' + horz + ',' + vert + ')';
       });
 
