@@ -22,8 +22,8 @@
 -return to view goes to page you were on
 
 (NODES)
--figure out location issue
--node colors are topic that the document is most about?
+-try to fix rectangle within svg (for large networks)
+-make node colors topic that the document is most about?
 -make click mark them (show info w/ link) instead of immediately linking
 
 (LONGTERM)

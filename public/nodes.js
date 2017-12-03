@@ -126,8 +126,8 @@ function constructNodes(links, nodes){
   }
   getDocumentData([docs], function()
   {
-      var width = 1000;
-      var height = 1000;
+      var width = 750 //1000;
+      var height = 750 //1000;
 
       var color = d3.scale.category20();
 
