@@ -1,6 +1,6 @@
 (GENERAL)
 -help button/page
--fragments for page control
+-cross-browser support (Firefox wtf)
 -prevent all pages from scrolling? (besides single topic)
 
 (BARS)
@@ -26,8 +26,9 @@
 -make click mark them (show info w/ link) instead of immediately linking
 
 (LONGTERM)
+-fragments for page control
 -figure out improved way to represent nodes (scaling?)
 -introduce other metadata (i.e. aggregate by blog, or anything else given)
 -use browser back button
 -user setting names of topics
--https
+-https ('tell node we want to use ssh?')
