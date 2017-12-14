@@ -1,5 +1,6 @@
 (GENERAL)
 -help button/page
+-improved excerpt system (precompute excerpts for each doc-topic pair, and for document in general. Then put all into spectrum)
 -cross-browser support (Firefox wtf)
 -prevent all pages from scrolling? (besides single topic)
 
