@@ -126,6 +126,7 @@ function process(matrix)
     var maxRow = matrix.map(function(row){ return Math.max.apply(Math, row); });
     var max = Math.max.apply(null, maxRow);
     
+    /*
     for(var i = 0; i < matrix.length; i++)
     {
         var current = matrix[i];
@@ -135,15 +136,47 @@ function process(matrix)
             {
                 current[j] = 0;
             }
-            current[j] /= (max/5); //scale so it renders appropriately
+            current[j] /= max; //scale so it renders appropriately
         }
-    } 
+    }
+    */
+
+    var d = csv_data.length;
+    sum = 0;
+    for(var i = 0; i < matrix.length; i++)
+    {
+        var current = matrix[i];
+        var r = current[i]; //matrix[i][i] should be total number of topics about topic i
+        var s = 0; //row sum
+        for(var j = 0; j < current.length; j++)
+        {  
+            if(i !== j)
+            {
+                s += parseInt(current[j]);
+            }
+        }
+        console.log(r);
+        console.log(s);
+        for(var j = 0; j < current.length; j++)
+        {
+            if(current[j] <= corpus_threshold)
+            {
+                current[j] = 0;
+            }  
+            else
+            {
+                current[j] = current[j] * (r / s);
+            }
+            current[j] /= max;  //scale so it renders appropriately
+        }
+    }
 }
 
 //make the corpus view, incuding arcs and ribbons
 function constructCorpus(csv)
 {
     //var processed = processData(csv);   //don't do this anymore, since it is done offline
+
     var matrix = ribbon_counts; 
     var n_topics = matrix.length;
     process(matrix); 
@@ -180,7 +213,7 @@ function constructCorpus(csv)
         .attr("class", "info-box")
         .attr("width", "500px")
         .attr("height", "500px")
-        .text("Click a chord to see the documents joining those two documents!");
+        .text("Click a chord to see the documents joining those two topics!");
          
     svg.append("circle")
         .attr("r", outerRadius);
