@@ -37,7 +37,7 @@ function read_in_document_text()
 //ajax endpoint to get the document text we parsed
 app.get("/document_text", function(req, res) {
     var doc = req.query.doc;
-    console.log("Serving document " + doc);
+    //console.log("Serving document " + doc);
     if(document_text[doc])
     {
         res.send(document_text[doc]);
@@ -48,8 +48,8 @@ app.get("/document_text", function(req, res) {
     }
 });
 
-app.listen(3000, function() {
+app.listen(8000, function() {
     read_in_document_text();
-    console.log("App started on http://localhost:3000/");
+    console.log("App started on http://localhost:8000/");
 });
 

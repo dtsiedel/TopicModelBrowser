@@ -1,6 +1,9 @@
 (GENERAL)
+-replace 'no representative excerpt' with top N
+-introduce other metadata (i.e. aggregate by blog, or anything else given)
 -help button/page
--improved excerpt system (precompute excerpts for each doc-topic pair, and for document in general. Then put all into spectrum)
+-user setting names of topics
+-Search vs. Browse
 -cross-browser support (Firefox wtf)
 -prevent all pages from scrolling? (besides single topic)
 
@@ -8,6 +11,7 @@
 
 (DONUT)
 -move excerpt from on hover to bottom right (and annotate all words in it)
+-improved excerpt system (precompute excerpts for each doc-topic pair, and for document in general. Then put all into spectrum)
 
 (CORPUS)
 -devise new way to do the sizes, etc
@@ -23,13 +27,11 @@
 -return to view goes to page you were on
 
 (NODES)
--make node colors topic that the document is most about?
+-make nodes small pie charts of the document
 -make click mark them (show info w/ link) instead of immediately linking
 
 (LONGTERM)
 -fragments for page control
 -figure out improved way to represent nodes (scaling?)
--introduce other metadata (i.e. aggregate by blog, or anything else given)
 -use browser back button
--user setting names of topics
 -https ('tell node we want to use ssh?')
