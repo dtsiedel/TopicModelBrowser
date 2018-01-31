@@ -1,5 +1,4 @@
 (GENERAL)
--replace 'no representative excerpt' with top N
 -introduce other metadata (i.e. aggregate by blog, or anything else given)
 -help button/page
 -user setting names of topics

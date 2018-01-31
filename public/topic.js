@@ -83,11 +83,14 @@ function find_best_excerpt_from_selection(title, doc_number, percent_similarity,
     if (best_sentence_index == -1)  // this would mean nothing was found with > 0 unique / total words: handle with
                                     // explanatory output to HTML (note: in long term, we'd just ignore this case)
     {
+        /*
         best_sentence_index = 0;
         all_annotated_sentences[0] = "<p><i>No representative samples found.</i></p>";
         all_annotated_sentences[1] = null;
         all_annotated_sentences[2] = null;
-        //return
+        */
+
+        best_sentence_index = 1;
     }
 
     var first = -1, second = -1, last = -1;
@@ -320,7 +323,7 @@ function addFooter(topic, current_page)
 
     footer.append("button").attr("class", "nav-button final-button").text("Final Page").on("click", function() {pageFinal(topic)});  
     footer.append("button").attr("class", "nav-button next-button").text("Next Page").on("click", function() {pageNext(topic, current_page)});
-    footer.append("button").attr("class", "nav-button last-button").text("Last Page").on("click", function() {pagePrevious(topic, current_page)});
+    footer.append("button").attr("class", "nav-button last-button").text("Previous Page").on("click", function() {pagePrevious(topic, current_page)});
     footer.append("button").attr("class", "nav-button first-button").text("First Page").on("click", function() {pageFirst(topic)});  
 }
 
