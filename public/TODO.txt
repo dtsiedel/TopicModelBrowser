@@ -13,7 +13,6 @@
 -improved excerpt system (precompute excerpts for each doc-topic pair, and for document in general. Then put all into spectrum)
 
 (CORPUS)
--Make corpus_threshold adapt to include all topics
 -ribbon select stays until you mark another one
 -persistent word labels on topics
 
