@@ -17,8 +17,6 @@
 -persistent word labels on topics
 
 (SPECTRUM)
--consider transparency of some sort to indicate selected documents in spectrum
--or have fewer docs in it for legibility
 
 (TOPIC)
 -return to view goes to page you were on

@@ -141,9 +141,8 @@ function constructNodes(links, nodes){
         .attr("width", width)
         .attr("height", height);
 
-      window.scrollTo(0, 500);
+      window.scrollTo(0, 500); //disgusting hack
 
-      //console.log(links);
       force.nodes(nodes)
         .links(links)
         .start();
@@ -184,7 +183,7 @@ function constructNodes(links, nodes){
             goTo(pages.nodes, pages.donut, d.id)
         });
 
-      node.append("circle")
+      var circles = node.append("circle")
         .attr("class", "nodes-circle")
         .attr("r", function(d,i){ return i%2==0?7:5 })
         .style("fill", function(d) {
@@ -198,7 +197,28 @@ function constructNodes(links, nodes){
         .on("mouseout", function(){return tooltip.style("visibility", "hidden");});
 
 
-      force.on("tick", function() {
+    //make the nodes each look like a tiny pie chart
+    circles.each(function(d) {
+        var current = d3.select(this);
+        var chosenDocument = csv_data[d.id];
+        var filteredData = filter(chosenDocument);
+        var max = -1;
+        var max_index = -1;
+        for(var i = 0; i < filteredData.length; i++)
+        {
+            if(filteredData[i].value > max)
+            {
+                max = filteredData[i].value;
+                max_index = i;
+            } 
+        }
+        
+        current.style("fill", colors[filteredData[max_index].index]);
+    });
+
+
+
+    force.on("tick", function() {
         link.attr("x1", function(d) {
             return d.source.x;
           })
