@@ -13,10 +13,9 @@
 -improved excerpt system (precompute excerpts for each doc-topic pair, and for document in general. Then put all into spectrum)
 
 (CORPUS)
--devise new way to do the sizes, etc
+-Make corpus_threshold adapt to include all topics
 -ribbon select stays until you mark another one
--representation of topics that aren't linked to anything
--persistent word labels on topics? With just a few
+-persistent word labels on topics
 
 (SPECTRUM)
 -consider transparency of some sort to indicate selected documents in spectrum

@@ -148,6 +148,7 @@ function process(matrix)
         var current = matrix[i];
         var r = current[i]; //matrix[i][i] should be total number of topics about topic i
         var s = 0; //row sum
+
         for(var j = 0; j < current.length; j++)
         {  
             if(i !== j)
@@ -155,8 +156,7 @@ function process(matrix)
                 s += parseInt(current[j]);
             }
         }
-        console.log(r);
-        console.log(s);
+
         for(var j = 0; j < current.length; j++)
         {
             if(current[j] <= corpus_threshold)
