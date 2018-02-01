@@ -141,8 +141,6 @@ function process(matrix)
     }
     */
 
-    var d = csv_data.length;
-    sum = 0;
     for(var i = 0; i < matrix.length; i++)
     {
         var current = matrix[i];
@@ -159,7 +157,7 @@ function process(matrix)
 
         for(var j = 0; j < current.length; j++)
         {
-            if(current[j] <= corpus_threshold)
+            if((current[j] <= corpus_threshold) && (i !== j)) //show all topics at least once (don't apply thresh to self links)
             {
                 current[j] = 0;
             }  
