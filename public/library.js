@@ -412,7 +412,7 @@ function rectify_csv_data(csv_data)
 }
 
 //create the html element that the tooltip resides in
-function generate_document_tooltip(id, callback)
+function generate_document_tooltip(id)
 {
     var data = document_text[id];
     var result = "<div>";

@@ -21,7 +21,6 @@
 (TOPIC)
 
 (NODES)
--make nodes small pie charts of the document
 -make click mark them (show info w/ link) instead of immediately linking
 
 (LONGTERM)

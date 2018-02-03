@@ -150,9 +150,10 @@ function constructNodes(links, nodes){
       var link = svg.selectAll(".link")
         .data(links)
         .enter().append("line")
+        .call(force.drag())
         .attr("class", "link")
         .style("stroke-width", function(d) {
-          return Math.sqrt(d.value);
+            return 1; 
         });
 
       var node = svg.selectAll(".node")
@@ -161,61 +162,74 @@ function constructNodes(links, nodes){
         .attr("class", "node")
         .call(force.drag)
         .on("mouseover", function(d) {
-          //change node outline
-          node.style('stroke', function(l) {
-          });
           //change edge width
           link.style('stroke-width', function(l) {
-            return d === l.source || d === l.target ? 5 : Math.sqrt(d.value);
-          });
-          //change edge color
-          link.style('stroke', function(l) {
-            return d === l.source || d === l.target ? "#C7E1F3" : "white";
+            return d === l.source || d === l.target ? 2 : 1; 
           });
 
         })
         .on('mouseout', function() {
           link.style('stroke-width', .4);
           link.style('stroke', "white")
-          node.style('stroke', "#1F77B4")
         })
         .on("click", function(d) {
             goTo(pages.nodes, pages.donut, d.id)
         });
 
-      var circles = node.append("circle")
-        .attr("class", "nodes-circle")
-        .attr("r", function(d,i){ return i%2==0?7:5 })
-        .style("fill", function(d) {
-          return color(d.group);
-        })
-        .on("mouseover", function(){return tooltip.style("visibility", "visible");}) //bind tooltip to when mouse goes over arc
-        .on("mousemove", function(d)
-        {
-            return tooltip.style("top", (event.pageY-10)+"px").style("left",(event.pageX+10)+"px").html(generate_document_tooltip(d.id)).style("background-color", "white").style("color", "black").on("mouseout", function(){return tooltip.style("visibility", "hidden")});
-        })
-        .on("mouseout", function(){return tooltip.style("visibility", "hidden");});
+    var pieRadius = 20; 
+    function arcTween(d) {
+        arc = d3.svg.arc().outerpieRadius(pieRadius*1.1).innerpieRadius(pieRadius*.5).cornerpieRadius(3);
+        return arc(d);
+    }
 
+    var arc = d3.svg.arc()
+        .outerRadius(pieRadius)
+        .innerRadius(pieRadius*.5)
+        .cornerRadius(1);
+
+    var pie = d3.layout.pie()
+        .sort(null)
+        .startAngle(0)
+        .endAngle(2*Math.PI)
+        .value(function(d) { return d.value; });
 
     //make the nodes each look like a tiny pie chart
-    circles.each(function(d) {
-        var current = d3.select(this);
-        var chosenDocument = csv_data[d.id];
-        var filteredData = filter(chosenDocument);
-        var max = -1;
-        var max_index = -1;
-        for(var i = 0; i < filteredData.length; i++)
-        {
-            if(filteredData[i].value > max)
-            {
-                max = filteredData[i].value;
-                max_index = i;
-            } 
-        }
-        
-        current.style("fill", colors[filteredData[max_index].index]);
-    });
+    var pies = node.append("g")
+        .attr("class", "nodes-pie")
 
+    pies.each(function(d)
+    {
+        var doc_n = d.id;
+        var chosenDocument = csv_data[doc_n];
+        var filteredData = filter(chosenDocument);
+
+
+        var g = d3.select(this).selectAll(".arc")
+            .data(pie(filteredData))
+            .enter().append("g")
+            .attr("class", "arc");
+
+        getDocumentData([chosenDocument,0], function()
+        {
+            g.append("path")
+                .on("mouseover", function(){return tooltip.style("visibility", "visible");}) //bind tooltip to when mouse goes over arc
+                .on("mousemove", function(d){
+                    var topic_text = d3.select(this).data()[0]["data"]["topic"];
+                    var index = d3.select(this).data()[0]["data"]["index"];
+                    return tooltip.style("top", (event.pageY-10)+"px").style("left",(event.pageX+10)+"px").html(generate_document_tooltip(doc_n)).style("background-color", gray).style("color", "white");})
+                .on("mouseout", function(){return tooltip.style("visibility", "hidden");})
+                .style("fill", function(d,i) { return d.data.color; })
+                .transition().duration(5)
+                .attr("id", function(d,i) { return "arc_"+i; })
+                .attrTween('d', function(d) {
+                    var i = d3.interpolate(d.startAngle, d.endAngle-.01); //calculate the in between positions to draw in 
+                    return function(t) {
+                        d.endAngle = i(t);
+                        return arc(d);
+                    }
+                })
+        });
+    });
 
 
     force.on("tick", function() {
@@ -235,12 +249,7 @@ function constructNodes(links, nodes){
         node.attr("cx", function(d) { return d.x = Math.max(radius, Math.min(width - radius, d.x)); })
         .attr("cy", function(d) { return d.y = Math.max(radius, Math.min(height - radius, d.y)); });
 
-        d3.selectAll(".nodes-circle").attr("cx", function(d) {
-            return d.x;
-          })
-          .attr("cy", function(d) {
-            return d.y;
-          });
+        d3.selectAll(".nodes-pie").attr("transform", function(d){ return "translate(" + d.x + "," + d.y + ")"});
       });
     });
 }
