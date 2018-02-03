@@ -50,7 +50,7 @@ function generateBar(num, x, y, data, indexList, callback)
         .on("click", function(d) { 
             if(d.index !== "~")
             {
-                goTo(pages.bars, pages.topic, d.index); 
+                goTo(pages.bars, pages.topic, [d.index, 1]); 
             }
         })
         .on("mouseover", function(){return tooltip.style("visibility", "visible");}) //bind tooltip to when mouse goes over arc

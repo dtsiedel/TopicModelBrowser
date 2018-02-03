@@ -157,7 +157,7 @@ function addLegend(chart, data, legendRectSize, legendSpacing)
         .on("click", function(d,i) {
             if(d.index !== "~")
             {
-                goTo(pages.donut, pages.topic, d.index);
+                goTo(pages.donut, pages.topic, [d.index, 1]);
             }
         });
 

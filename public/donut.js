@@ -74,7 +74,7 @@ function constructDonut(n)
         .on("click", function(d) {
             if(d.data.index !== "~")
             {
-                goTo(pages.donut, pages.topic, d.data.index);
+                goTo(pages.donut, pages.topic, [d.data.index, 1]);
             }
         });
 

@@ -19,7 +19,6 @@
 (SPECTRUM)
 
 (TOPIC)
--return to view goes to page you were on
 
 (NODES)
 -make nodes small pie charts of the document

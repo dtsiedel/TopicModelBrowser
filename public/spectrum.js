@@ -70,7 +70,7 @@ function plotTopics(t1, t2, color_scale)
             return tooltip.style("top", (event.pageY-10)+"px").style("left",(event.pageX+10)+"px").html(generate_spectrum_tooltip(index, topic_text)).style("background-color", colors[index]).style("color", "white");})
         .on("mouseout", function(){return tooltip.style("visibility", "hidden");})    
         .on("click", function() {
-            goTo(pages.spectrum, pages.topic, t1);
+            goTo(pages.spectrum, pages.topic, [t1, 1]);
         });
 
     chart.append("text")
@@ -87,7 +87,7 @@ function plotTopics(t1, t2, color_scale)
             return tooltip.style("top", (event.pageY-10)+"px").style("left",(event.pageX+10)+"px").html(generate_spectrum_tooltip(index, topic_text)).style("background-color", colors[index]).style("color", "white");})
         .on("mouseout", function(){return tooltip.style("visibility", "hidden");})    
         .on("click", function() {
-            goTo(pages.spectrum, pages.topic, t2);
+            goTo(pages.spectrum, pages.topic, [t2, 1]);
         });
 }
 

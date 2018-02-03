@@ -8,7 +8,7 @@ var per_page = 20;
 
 // Finds most exemplary sentence from article for a given topic. Annotates as it processes each sentence, returns
 // an output that includes three sentence-excerpt from the article.
-function find_best_excerpt_from_selection(title, doc_number, percent_similarity, original_article, wordlist, link, topic, n)
+function find_best_excerpt_from_selection(title, doc_number, percent_similarity, original_article, wordlist, link, topic, n, page_n)
 {
     var split_list = original_article.match( /[^\.!\?]+[\.!\?]+/g )
     var kw_dict = {};
@@ -83,13 +83,6 @@ function find_best_excerpt_from_selection(title, doc_number, percent_similarity,
     if (best_sentence_index == -1)  // this would mean nothing was found with > 0 unique / total words: handle with
                                     // explanatory output to HTML (note: in long term, we'd just ignore this case)
     {
-        /*
-        best_sentence_index = 0;
-        all_annotated_sentences[0] = "<p><i>No representative samples found.</i></p>";
-        all_annotated_sentences[1] = null;
-        all_annotated_sentences[2] = null;
-        */
-
         best_sentence_index = 1;
     }
 
@@ -116,7 +109,7 @@ function find_best_excerpt_from_selection(title, doc_number, percent_similarity,
 
     // Edit display:
     d3.select("#chart-container").append("div").attr("id", "sample");
-    document.getElementById("sample").innerHTML += "<h3 class='topic-match'>"+n+". <span class='topic-doc-link' onclick='loadDoc(" + doc_number.toString() + ")'>" + title + "<br/></span>  <a class='outlink' target = '_blank' href='" + link + "'> ["+link+"] </a></h3>";
+    document.getElementById("sample").innerHTML += "<h3 class='topic-match'>"+n+". <span class='topic-doc-link' onclick='loadDoc(" + doc_number.toString() + ",[" + topic + "," + page_n + "]" + ")'>" + title + "<br/></span>  <a class='outlink' target = '_blank' href='" + link + "'> ["+link+"] </a></h3>";
     document.getElementById("sample").innerHTML += "<p class='topic-match current'></p>";
 
     var max_width = 200;
@@ -238,7 +231,7 @@ function constructTopic(topic, numDocs, page_n)
         for(var i = start; i < start+numDocs; i++)
         {
             var this_doc = values[i];
-            find_best_excerpt_from_selection(conditional_clip(document_text[this_doc[0]]["title"], 70), this_doc[0], (this_doc[1] * 100).toFixed(2), document_text[this_doc[0]]["text"], word_list, document_text[this_doc[0]]["url"], topic, i+1);
+            find_best_excerpt_from_selection(conditional_clip(document_text[this_doc[0]]["title"], 70), this_doc[0], (this_doc[1] * 100).toFixed(2), document_text[this_doc[0]]["text"], word_list, document_text[this_doc[0]]["url"], topic, i+1, page_n);
         }
         addFooter(topic, page_n);
         if(end)
@@ -313,12 +306,12 @@ function addFooter(topic, current_page)
     
     footer.append("button").attr("class", "corpus-link").text("Back to Corpus!").on("click", function()
     {
-        goTo(pages.topic, pages.corpus, [])
+        goTo(pages.topic, pages.corpus, current_page)
     });
 
     footer.append("button").attr("class", "back-button").text("Back to Previous View").on("click", function()
     {
-        goBack(pages.topic);
+        goBack(pages.topic, current_page);
     });
 
     footer.append("button").attr("class", "nav-button final-button").text("Final Page").on("click", function() {pageFinal(topic)});  
@@ -344,14 +337,17 @@ function removeOtherButtons()
 }
 
 //go to given document number
-function loadDoc(n)
+function loadDoc(n, params) 
 {
+    current_params = params; 
     goTo(pages.topic, pages.donut, n);
 }
 
 //wrapper to call data load functions
-function topicMain(topic)
+function topicMain(parameters)
 {
-    setUpTopic(topic, 1); //eventually calling it just once will make it available to all views
+    var topic = parameters[0];
+    var page = parameters[1];
+    setUpTopic(topic, page); 
 }
 

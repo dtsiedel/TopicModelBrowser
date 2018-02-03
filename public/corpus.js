@@ -234,7 +234,7 @@ function constructCorpus(csv)
         .style("stroke", gray)
         .style("stroke-width", .05)
         .on("click", function(d,i) {
-            goTo(pages.corpus, pages.topic, d.index);
+            goTo(pages.corpus, pages.topic, [d.index, 1]);
         })
         .on("mouseover", function(){return tooltip.style("visibility", "visible");}) //bind tooltip to when mouse goes over arc
         .on("mousemove", function(d){
