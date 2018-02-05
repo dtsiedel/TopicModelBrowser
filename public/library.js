@@ -188,7 +188,7 @@ function generate_tooltip_html(topic_number, topic_name, percentage)
     {
         text += "T" + topic_number;
     }
-    text +=  " (" + (percentage*1000).toFixed(2) + "%)" + "<br>Sample Words:<br>";
+    text +=  " (" + (percentage*100).toFixed(2) + "%)" + "<br>Sample Words:<br>";
     for(var i = 0; i < topic_words.length; i++)
     {
         text += topic_words[i];

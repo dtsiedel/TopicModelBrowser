@@ -241,7 +241,7 @@ function constructCorpus(csv)
             var topic_text = reverse_topic_indices[d.index];
             var index = d.index; 
             var value = d.value / parseFloat(100); 
-            return tooltip.style("top", (event.pageY-10)+"px").style("left",(event.pageX+10)+"px").html(generate_tooltip_html(index, topic_text, value)).style("background-color", colors[index]).style("color", "white");})
+            return tooltip.style("top", (event.pageY-10)+"px").style("left",(event.pageX+10)+"px").html(generate_tooltip_html(index, topic_text, value*10.0)).style("background-color", colors[index]).style("color", "white");})
         .on("mouseout", function(){return tooltip.style("visibility", "hidden");})
         .style("fill", function(d) { return getColor(d.index % n_topics); });
  
