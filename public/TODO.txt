@@ -13,14 +13,16 @@
 -improved excerpt system (precompute excerpts for each doc-topic pair, and for document in general. Then put all into spectrum)
 
 (CORPUS)
+-persistent word labels on topics with concentric invisible shells
+-ribbon self-links? 
 -ribbon select stays until you mark another one
--persistent word labels on topics
 
 (SPECTRUM)
 
 (TOPIC)
 
 (NODES)
+-bugfix: all links highlight on hover
 -make click mark them (show info w/ link) instead of immediately linking
 
 (LONGTERM)
