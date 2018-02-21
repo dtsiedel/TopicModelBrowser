@@ -280,7 +280,7 @@ function constructCorpus(csv)
             var shell_n = get_shell(shell_count, i);
             
             running += d.value/10;
-            offset = offset * shell_circumferences[shell_n];
+            offset = offset * shell_circumferences[shell_n] + 5;
 
             return offset;
         })

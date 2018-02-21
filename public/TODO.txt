@@ -16,6 +16,7 @@
 -improved excerpt system (precompute excerpts for each doc-topic pair, and for document in general. Then put all into spectrum)
 
 (CORPUS)
+-fix end of corpus flags (wrapping)
 -ribbon select stays until you mark another one
 
 (SPECTRUM)
