@@ -125,22 +125,8 @@ function process(matrix)
 {
     var maxRow = matrix.map(function(row){ return Math.max.apply(Math, row); });
     var max = Math.max.apply(null, maxRow);
-    
-    /*
-    for(var i = 0; i < matrix.length; i++)
-    {
-        var current = matrix[i];
-        for(var j = 0; j < current.length; j++)
-        {
-            if((i === j) || (current[j] <= corpus_threshold))
-            {
-                current[j] = 0;
-            }
-            current[j] /= max; //scale so it renders appropriately
-        }
-    }
-    */
 
+    var total = 0.0;
     for(var i = 0; i < matrix.length; i++)
     {
         var current = matrix[i];
@@ -166,8 +152,25 @@ function process(matrix)
                 current[j] = current[j] * (r / s);
             }
             current[j] /= max;  //scale so it renders appropriately
+            total += current[j];
         }
     }
+
+    for(var i = 0; i < matrix.length; i++)
+    {
+        var current = matrix[i]; 
+        for(var j = 0; j < current.length; j++)
+        {
+            current[j] *= (10/total);
+        }
+    }
+}
+
+//determine what shell the ith
+//flag should be on
+function get_shell(shell_count, index)
+{
+    return shell_count - (index % shell_count) - 1; 
 }
 
 //make the corpus view, incuding arcs and ribbons
@@ -181,7 +184,7 @@ function constructCorpus(csv)
 
     var width = 600,
         height = 600,
-        outerRadius = Math.min(width, height) / 2 - 10,
+        outerRadius = Math.min(width, height) / 2 - 150,
         innerRadius = outerRadius - 24;
      
     var formatPercent = d3.format(".1%");
@@ -189,7 +192,8 @@ function constructCorpus(csv)
     var arc = d3.svg.arc()
         .innerRadius(innerRadius)
         .outerRadius(outerRadius);
-     
+    
+
     var layout = d3.layout.chord()
         .sortSubgroups(d3.descending)
         .sortChords(d3.ascending);
@@ -206,6 +210,24 @@ function constructCorpus(csv)
         .attr("transform", "translate(" + width / 2 + "," + height / 2 + ")");
 
     var defs = svg.append('defs');
+    
+    var shells = [];
+    var shell_circumferences = []; //needed for offset around circle, indices paired with shells indices
+    var offset = 5;
+    var shell_count = 6;
+    for(var i = 0; i < shell_count; i++)
+    {
+        var shell = d3.svg.arc()
+            .startAngle(0)
+            .endAngle(2*Math.PI-0.00001) //breaks if it's exactly 2pi
+            .innerRadius(outerRadius + offset)
+            .outerRadius(outerRadius + offset + 1);
+        var radius = outerRadius + offset; 
+
+        shell_circumferences[i] = 2 * Math.PI * radius;
+        shells[i] = svg.append("path").attr("d", shell).attr("fill", "none").attr("id", "shell" + i);
+        offset += 20;
+    }
 
     var info = d3.select("body").append("div")
         .attr("class", "info-box")
@@ -244,15 +266,29 @@ function constructCorpus(csv)
             return tooltip.style("top", (event.pageY-10)+"px").style("left",(event.pageX+10)+"px").html(generate_tooltip_html(index, topic_text, value*10.0)).style("background-color", colors[index]).style("color", "white");})
         .on("mouseout", function(){return tooltip.style("visibility", "hidden");})
         .style("fill", function(d) { return getColor(d.index % n_topics); });
- 
+
+
     // Add a text label.
-    var groupText = group.append("text")
-        .attr("x", 6)
-        .attr("dy", 15);
+    var groupText = group.append("text");
      
+    var running = 0.0;
     groupText.append("textPath")
-        .attr("xlink:href", function(d, i) { return "#group" + i; })
-        .text(function(d, i) { return ""; });
+        .attr("xlink:href", function(d, i) { return "#shell" + get_shell(shell_count, i); }) //compute shell to get cascade
+        .attr("class", "textpath")
+        .attr("startOffset", function(d,i) { 
+            var offset = running;
+            var shell_n = get_shell(shell_count, i);
+            
+            running += d.value/10;
+            offset = offset * shell_circumferences[shell_n];
+
+            return offset;
+        })
+        .text(function(d, i) {
+            var words = reverse_topic_indices[d.index];
+            words = words.split("_");
+            return conditional_clip(words.join(", "), 15); 
+        });
      
     // Add the chords.
     var chord = svg.selectAll(".chord")
@@ -326,6 +362,9 @@ function constructCorpus(csv)
                     goTo(pages.corpus, pages.donut, selected[0]);
                 }
             });
+            d3.select("#topic_single").on("click", function() {
+                goTo(pages.corpus, pages.topic, [d.source.index, 1]);
+            });
         });
     }
 
@@ -379,6 +418,35 @@ function toggle_check_box(id)
 //make the html element that goes on the right
 function generate_document_info(source, target, callback)
 {
+    if(source === target)
+    {
+        var result = "<span class='t1 title'>Topic " + source + "</span><br/>";
+        var words = reverse_topic_indices[source]
+	result += "<button class='corpus-button' id='document_compare' type='button'>Compare selected documents!</button>";
+    	result += "<button class='corpus-button' id='document_single' type='button'>View single document!</button><br/>";
+        result += "<button class='corpus-button' id='topic_single' type='button'>Learn about this topic!</button><br/>";
+        var docs = ribbon_data[source][source];
+
+	docs = sortRibbon(docs, source, source);
+	docs = docs.slice(0,100);
+	getDocumentData(docs, function()
+	{
+	    for(var i = 0; i < docs.length; i++)
+	    {
+		if(i > chord_threshold)
+		{
+		    break;
+		}   
+		var title = conditional_clip(document_text[docs[i]]["title"], 50);
+		result += "<input class='checkBox check"+docs[i]+"' data-id='"+docs[i]+"'type='checkbox'>" + "<div class='checktitle-container' data-id="+docs[i]+">" + conditional_clip(title, 30) + " (<span class='t1'>" + ((csv_data[docs[i]][reverse_topic_indices[source]])*100).toFixed(2) + "%</span>)</div>";
+	    }
+	    callback(result);
+	}); 
+
+        callback(result); //actually put it onto the DOM
+        return;
+    }
+
     var result = "<span class='t1 title'>Topic ";
     result += source + "</span> and <span class='t2 title'> Topic ";
     result += target + "</span> Shared Documents:<br>";

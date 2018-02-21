@@ -44,6 +44,10 @@ path.chord {
     background-color: #5492f7;
 }
 
+#topic_single {
+    background-color: #24b2b7;
+}
+
 #document_compare {
     background-color: #d3d3d3;
     cursor: not-allowed;

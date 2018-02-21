@@ -1,4 +1,7 @@
 (GENERAL)
+-data pipeline
+-alternate naming (termite)
+-fragments for page control
 -introduce other metadata (i.e. aggregate by blog, or anything else given)
 -help button/page
 -user setting names of topics
@@ -13,8 +16,6 @@
 -improved excerpt system (precompute excerpts for each doc-topic pair, and for document in general. Then put all into spectrum)
 
 (CORPUS)
--persistent word labels on topics with concentric invisible shells
--ribbon self-links? 
 -ribbon select stays until you mark another one
 
 (SPECTRUM)
@@ -22,11 +23,9 @@
 (TOPIC)
 
 (NODES)
--bugfix: all links highlight on hover
 -make click mark them (show info w/ link) instead of immediately linking
+-add legend
 
 (LONGTERM)
--fragments for page control
--figure out improved way to represent nodes (scaling?)
 -use browser back button
 -https ('tell node we want to use ssh?')
