@@ -271,10 +271,12 @@ function constructCorpus(csv)
     // Add a text label.
     var groupText = group.append("text");
      
+    //position appropriately around the circle
     var running = 0.0;
     groupText.append("textPath")
         .attr("xlink:href", function(d, i) { return "#shell" + get_shell(shell_count, i); }) //compute shell to get cascade
-        .attr("class", "textpath")
+        .attr("class", function(d, i) { return "textpath" + i; })
+        .style("fill", function(d, i) { return colors[d.index]; })
         .attr("startOffset", function(d,i) { 
             var offset = running;
             var shell_n = get_shell(shell_count, i);
@@ -286,8 +288,39 @@ function constructCorpus(csv)
         })
         .text(function(d, i) {
             var words = reverse_topic_indices[d.index];
-            words = words.split("_");
-            return conditional_clip(words.join(", "), 15); 
+            return conditional_clip(commas(words), 5); 
+        })
+        .on("mouseover", function(d, i)  //shade out the other flags, and extend this one
+        {
+            var current = d3.select(".textpath"+i);
+            var current_index = d.index;
+            current.text(function(d, i) 
+            {
+                var words = reverse_topic_indices[d.index];
+                words = commas(words);
+                return words; 
+            });
+            d3.selectAll("textPath").each(function(d) 
+            {
+                if(d.index !== current_index)
+                {
+                    d3.select(this).style("opacity", 0);         
+                }
+            });
+        })
+        .on("mouseout", function(d, i)  //reset all flags on mouseout
+        {
+            var current = d3.select(".textpath"+i);
+            current.text(function(d, i)
+            {
+                var words = reverse_topic_indices[d.index];
+                words = commas(words);
+                return conditional_clip(words, 5); 
+            });
+            d3.selectAll("textPath").each(function(d) 
+            {
+                d3.select(this).style("opacity", 1);
+            });
         });
      
     // Add the chords.

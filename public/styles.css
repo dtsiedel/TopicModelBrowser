@@ -179,3 +179,7 @@ h2#topicname {
 .results-end {
     text-align: center;
 }
+
+textpath {
+    user-select: none;
+}
