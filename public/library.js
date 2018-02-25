@@ -143,6 +143,7 @@ function addLegend(chart, data, legendRectSize, legendSpacing)
         return 'translate(' + horz + ',' + vert + ')';
       });
 
+      //add in colored rectangle
     legend.append('rect')
         .attr('width', legendRectSize)
         .attr('height', legendRectSize)
@@ -167,6 +168,9 @@ function addLegend(chart, data, legendRectSize, legendSpacing)
         .style("fill", "white")
         .text(function(d) { return clip(commas(d.topic),70); });
 }
+
+
+
 
 
 //replace all instances of _ with , for topic display
@@ -569,21 +573,45 @@ function goTo(source, target, parameters, returning=false)
     switch(target)
     {
         case pages.corpus:
+            //window.location.href.split('#')[0]
+            window.location.hash = '';
             main();
             break;
         case pages.donut:
+	        window.location.hash = '#d' + parameters;
             donutMain(parameters);
             break;
         case pages.topic:
+            //add the topic number and the page number (always will be 1 here when entering from another page)
+            window.location.hash = '#t' + parameters[0] + '#p' + '1';
             topicMain(parameters);
+            //console.log(parameters);
             break;
         case pages.bars:
+	        var hash = '#b';
+            for(i = 0; i < parameters.length; i++) {
+                hash +=parameters[i];
+                hash += "&";
+            }
+            window.location.hash = hash.slice(0, -1);
             barsMain(parameters);
             break;
         case pages.nodes:
+            var hash = '#n';
+            for (i = 0; i < parameters.length; i++) {
+                hash += parameters[i];
+                hash += "&";
+            }
+	        window.location.hash = hash.slice(0, -1);
             nodesMain(parameters);
             break;
         case pages.spectrum:
+	        var hash = '#s';
+            for(i = 0; i < parameters.length; i++) {
+                hash +=parameters[i];
+                hash += "&";
+            }
+            window.location.hash = hash.slice(0, -1);
             spectrumMain(parameters);
     } 
 }

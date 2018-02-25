@@ -1,7 +1,6 @@
 (GENERAL)
 -data pipeline
 -alternate naming (termite)
--fragments for page control
 -introduce other metadata (i.e. aggregate by blog, or anything else given)
 -help button/page
 -user setting names of topics
@@ -24,6 +23,7 @@
 (TOPIC)
 
 (NODES)
+-fix tooltip disappearing on reload
 -make click mark them (show info w/ link) instead of immediately linking
 -add legend
 

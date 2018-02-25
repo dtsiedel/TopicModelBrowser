@@ -124,15 +124,18 @@ function constructNodes(links, nodes){
   {
     docs.push(nodes[i].id);
   }
+
+  
+
   getDocumentData([docs], function()
   {
-      var width = 1000; //750;
-      var height = 1000; //750;
+      var width = 800; //750;
+      var height = 500; //750;
 
       var color = d3.scale.category20();
 
       var force = d3.layout.force()
-        .charge(-1500)
+        .charge(-2000)
         .linkDistance(80)
         .size([width, height]);
 
@@ -141,7 +144,8 @@ function constructNodes(links, nodes){
         .attr("width", width)
         .attr("height", height);
 
-      window.scrollTo(0, 500); //disgusting hack
+      
+      //window.scrollTo(0, 500); //disgusting hack
 
       force.nodes(nodes)
         .links(links)
@@ -164,7 +168,7 @@ function constructNodes(links, nodes){
         .on("mouseover", function(d) {
           //change edge width
           link.style('stroke-width', function(l) {
-            return d === l.source || d === l.target ? 2 : 1; 
+            return d === l.source || d === l.target ? 4 : .4; 
           });
 
         })
@@ -197,12 +201,35 @@ function constructNodes(links, nodes){
     var pies = node.append("g")
         .attr("class", "nodes-pie")
 
+    var allfilteredData = [];
+
     pies.each(function(d)
     {
         var doc_n = d.id;
         var chosenDocument = csv_data[doc_n];
-        var filteredData = filter(chosenDocument);
-
+        filteredData = filter(chosenDocument);
+        
+        //only add to filtered data what is new (gross way of doing it... but nothing else is working...)
+        for (var i = 0; i<filteredData.length; i ++){
+          var isIn = false;
+            for(var j = 0; j<allfilteredData.length; j++){
+              if(filteredData[i].index == allfilteredData[j].index) {
+                isIn = true;
+                break;
+              }
+            }  
+            //make sure other is put at the end of the list (change later.. because largest isnt at top of list now)
+            if(!isIn) {
+              if(filteredData[i].index != "~"){
+                allfilteredData.push(filteredData[i]);
+              }
+              else{
+                allfilteredData.unshift(filteredData[i]);
+              }
+            }  
+        }
+        
+       
 
         var g = d3.select(this).selectAll(".arc")
             .data(pie(filteredData))
@@ -227,13 +254,27 @@ function constructNodes(links, nodes){
                         d.endAngle = i(t);
                         return arc(d);
                     }
+		    
                 })
+    
+        
         });
+
     });
+
+    //addLegend(pies, allfilteredData, 18, 12);
+    //console.log(pies);
 
 
     force.on("tick", function() {
-        link.attr("x1", function(d) {
+      node 
+          .attr("cx", function(d) {
+          return d.x = Math.max(radius, Math.min(width - radius, d.x)); 
+          })
+          .attr("cy", function(d) { 
+            return d.y; 
+          });  
+      link.attr("x1", function(d) {
             return d.source.x;
           })
           .attr("y1", function(d) {
@@ -245,9 +286,7 @@ function constructNodes(links, nodes){
           .attr("y2", function(d) {
             return d.target.y;
           });
-
-        node.attr("cx", function(d) { return d.x = Math.max(radius, Math.min(width - radius, d.x)); })
-        .attr("cy", function(d) { return d.y = Math.max(radius, Math.min(height - radius, d.y)); });
+          
 
         d3.selectAll(".nodes-pie").attr("transform", function(d){ return "translate(" + d.x + "," + d.y + ")"});
       });

@@ -7,62 +7,6 @@ var tooltip;
 var selected = [];
 var dragSelecting = false;
 
-//parses our csv hosted on server
-//also does all of the one-time setup and calls our constructCorpus function the first time
-//needs to be split later so that we can not duplicate code
-function getData()
-{
-    //variables to control the graph result
-    margin = {top: 20, right: 20, bottom: 20, left: 20};
-    width = 600 - margin.left - margin.right;
-    height = width - margin.top - margin.bottom;
-    radius = Math.min(width, height) / 2;
-
-    if(d3.selectAll(".tooltip")[0].length === 0)
-    {
-        tooltip = d3.select("body")
-            .append("div")
-            .attr("class", "tooltip")
-            .style("position", "absolute")
-            .style("width", "225px")
-            .style("background-color", "white")
-            .style("padding-left", "5px")
-            .style("z-index", "10") //put it in front of the arcs
-            .style("border-radius", "10px")
-            .style("visibility", "hidden")
-            .style("border", "1px solid white")
-            .text(""); //bad to see this (obviously)
-    }
-
-    if(!loaded_data)
-    {    
-        d3.select("#chart-container").append("div").attr("class", "loader");
-        d3.select("#chart-container").append("div").attr("class", "load-text").html("<br/>Loading Data...");
-        d3.select(".loader").style("border-top", "16px solid " + randomColor()); 
-        getTopicIndices(function()
-        {
-            d3.select(".loader").style("border-top", "16px solid " + randomColor()); 
-            d3.csv("/topic_frame.csv", function(error, response) 
-            {
-                d3.select(".loader").style("border-top", "16px solid " + randomColor()); 
-                //get_document_full_texts(function()
-                //{
-                    csv_data = response;
-                    csv_data = rectify_csv_data(csv_data);
-                   
-                    d3.select(".loader").remove();
-                    d3.select(".load-text").remove();
-                    constructCorpus(csv_data);
-                //});
-            });
-        });
-        loaded_data = true;
-    }
-    else
-    {
-        getTopicIndices(function(){constructCorpus(csv_data)}); //should be just constructCorpus(csv_data) but it doesnt work
-    }
-}
 
 //get relevant data from CSV
 //result is a dictionary containing each of the topics as keys. The value of each 
@@ -519,15 +463,5 @@ function corpusCleanup()
     d3.select(".info-box").remove();
 }
 
-//wrapper to be called when page loads
-function main()
-{
-    getData(); 
-}
-
-//call main
-document.addEventListener("DOMContentLoaded", function(e) {
-    main();
-});
 
 

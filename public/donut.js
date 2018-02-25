@@ -109,7 +109,7 @@ function constructDonut(n)
                             .attr("x", 7) //Move the text from the start angle of the arc
                             .attr("dy", 18) //Move the text down
                             .attr("letter-spacing", "1px")
-                            .style("font-family", "sans-serif")
+                            .style("font-family", "helvetica")
                        .append("textPath")
                             .attr("xlink:href",function(d,i){return "#arc_"+i;}) //xlink seems to bind the text to the arc
                             .text(function(d){if(d.index === '~'){return "Other";} return "T" + d.index;}) 

@@ -7,9 +7,6 @@ body {
     pointer-events: all;
 }
  
-.group path {
-}
- 
 path.chord {
     stroke-width: .20px;
 }
@@ -21,6 +18,15 @@ path.chord {
 .info-box {
     float: right;
     width: 400px;
+    height: 500px;
+    color: white;
+    word-wrap: break-word;
+    overflow: scroll;
+}
+
+.nodes-legend {
+    float: right;
+    width: 300px;
     height: 500px;
     color: white;
     word-wrap: break-word;
@@ -42,10 +48,6 @@ path.chord {
 
 #topic_compare {
     background-color: #5492f7;
-}
-
-#topic_single {
-    background-color: #24b2b7;
 }
 
 #document_compare {
@@ -182,4 +184,9 @@ h2#topicname {
 
 textpath {
     user-select: none;
+}
+
+
+#topic_single {
+    background-color: #24b2b7;
 }

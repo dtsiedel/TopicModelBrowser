@@ -248,6 +248,7 @@ function pageNext(topic, current_page)
         return;
     var target = parseInt(current_page)+1;
     topicCleanup();
+    window.location.hash = '#t' + topic + '#p' + target;
     setUpTopic(topic, target);
 }
 
@@ -262,6 +263,7 @@ function maxPage(topic)
 function pageFinal(topic)
 {
     topicCleanup();
+    window.location.hash = '#t' + topic + '#p' + maxPage(topic);
     setUpTopic(topic, maxPage(topic));
 }
 
@@ -269,6 +271,7 @@ function pageFinal(topic)
 function pageFirst(topic)
 {
     topicCleanup();
+    window.location.hash = '#t' + topic + '#p' + 1;
     setUpTopic(topic, 1);
 }
 
@@ -279,6 +282,7 @@ function pagePrevious(topic, current_page)
         return;
     var target = parseInt(current_page)-1
     topicCleanup();
+    window.location.hash = '#t' + topic + '#p' + target;
     setUpTopic(topic, target);
 }
 
