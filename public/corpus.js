@@ -212,20 +212,17 @@ function constructCorpus(csv)
     var defs = svg.append('defs');
     
     var shells = [];
-    var shell_circumferences = []; //needed for offset around circle, indices paired with shells indices
-    var offset = 5;
+    var shell_circumferences = []; 
+    var shell_radii = [];
+    var offset = 5; //base offset
     var shell_count = 6;
+
     for(var i = 0; i < shell_count; i++)
     {
-        var shell = d3.svg.arc()
-            .startAngle(0)
-            .endAngle(2*Math.PI-0.00001) //breaks if it's exactly 2pi
-            .innerRadius(outerRadius + offset)
-            .outerRadius(outerRadius + offset + 1);
         var radius = outerRadius + offset; 
 
         shell_circumferences[i] = 2 * Math.PI * radius;
-        shells[i] = svg.append("path").attr("d", shell).attr("fill", "none").attr("id", "shell" + i);
+        shell_radii[i] = radius;
         offset += 20;
     }
 
@@ -274,18 +271,28 @@ function constructCorpus(csv)
     //position appropriately around the circle
     var running = 0.0;
     groupText.append("textPath")
-        .attr("xlink:href", function(d, i) { return "#shell" + get_shell(shell_count, i); }) //compute shell to get cascade
-        .attr("class", function(d, i) { return "textpath" + i; })
-        .style("fill", function(d, i) { return colors[d.index]; })
-        .attr("startOffset", function(d,i) { 
+        .attr("xlink:href", function(d, i) { 
             var offset = running;
             var shell_n = get_shell(shell_count, i);
-            
-            running += d.value/10;
-            offset = offset * shell_circumferences[shell_n] + 5;
 
-            return offset;
-        })
+            var r = shell_radii[shell_n];
+            var start = running * 2 * Math.PI;
+
+            var shell = d3.svg.arc()
+                .startAngle(start)
+                .endAngle(start + (2 * Math.PI) - .0001) 
+                .innerRadius(r)
+                .outerRadius(r + 1);
+
+            shells[i] = svg.append("path").attr("d", shell).attr("fill", "none").attr("id", "shell" + i);
+
+            running += d.value/10;
+            offset = offset * shell_circumferences[shell_n]; 
+
+            return "#shell" + i; 
+        }) 
+        .attr("class", function(d, i) { return "textpath" + i; })
+        .style("fill", function(d, i) { return colors[d.index]; })
         .text(function(d, i) {
             var words = reverse_topic_indices[d.index];
             return conditional_clip(commas(words), 5); 
