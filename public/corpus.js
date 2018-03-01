@@ -110,45 +110,6 @@ function process(matrix)
     }
 }
 
-//Ok I'll admit it, trig is actually useful in the real world. Happy?
-//circumference_percentage: 0-1 value of how far around the circle we are (circle percentage)
-//radius: radius of arc diagram
-//circumference: circumference of arc diagram
-//center: js object containing:
-//        x: true x coordinate of centroid of arc diagram
-//        y: true y coordinate of centroid of arc diagram
-//radius_offset: how much larger you want the radius of the label to be 
-function compute_x(circumference_percentage, radius, circumference, center, radius_offset)
-{
-    var arc_length = circumference_percentage * circumference;
-    var angle_degrees = circumference_percentage * 360;
-
-    var theta = 90 - angle_degrees;
-    var theta_radians = theta * (Math.PI / 180);
-    
-    var x = center.x + ((radius + radius_offset) * Math.cos(theta_radians));
-    return x; 
-}
-
-//circumference_percentage: 0-1 value of how far around the circle we are (circle percentage)
-//radius: radius of arc diagram
-//circumference: circumference of arc diagram
-//center: js object containing:
-//        x: true x coordinate of centroid of arc diagram
-//        y: true y coordinate of centroid of arc diagram
-//radius_offset: how much larger you want the radius of the label to be 
-function compute_y(circumference_percentage, radius, circumference, center, radius_offset)
-{
-    var arc_length = circumference_percentage * circumference;
-    var angle_degrees = circumference_percentage * 360;
-
-    var theta = 90 - angle_degrees;
-    var theta_radians = theta * (Math.PI / 180);
-    
-    var y = center.y - ((radius + radius_offset) * Math.sin(theta_radians));
-    return y;
-}
-
 //determine what shell the ith
 //flag should be on
 function get_shell(shell_count, index)
