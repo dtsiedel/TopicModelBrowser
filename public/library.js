@@ -179,11 +179,22 @@ function commas(text)
     return text.replace(/_/g, ", "); 
 }
 
+//text formatting for corpus flag tooltips
+function generate_flag_html(index)
+{
+    var topic_words = reverse_topic_indices[index].replace(/_/g, "<br>");
+    var text = "";
+    text += "Topic " + index;
+    text += "<br>";
+    text += topic_words;
+    return text;
+}
+
 //does all the text formatting for the tooltip
 function generate_tooltip_html(topic_number, topic_name, percentage)
 {
     topic_words = topic_name.split("_");
-    text = "<div>";
+    var text = "<div>";
     if(topic_number === "~") //other
     {
         text += "Other";

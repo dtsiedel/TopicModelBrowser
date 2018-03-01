@@ -110,6 +110,45 @@ function process(matrix)
     }
 }
 
+//Ok I'll admit it, trig is actually useful in the real world. Happy?
+//circumference_percentage: 0-1 value of how far around the circle we are (circle percentage)
+//radius: radius of arc diagram
+//circumference: circumference of arc diagram
+//center: js object containing:
+//        x: true x coordinate of centroid of arc diagram
+//        y: true y coordinate of centroid of arc diagram
+//radius_offset: how much larger you want the radius of the label to be 
+function compute_x(circumference_percentage, radius, circumference, center, radius_offset)
+{
+    var arc_length = circumference_percentage * circumference;
+    var angle_degrees = circumference_percentage * 360;
+
+    var theta = 90 - angle_degrees;
+    var theta_radians = theta * (Math.PI / 180);
+    
+    var x = center.x + ((radius + radius_offset) * Math.cos(theta_radians));
+    return x; 
+}
+
+//circumference_percentage: 0-1 value of how far around the circle we are (circle percentage)
+//radius: radius of arc diagram
+//circumference: circumference of arc diagram
+//center: js object containing:
+//        x: true x coordinate of centroid of arc diagram
+//        y: true y coordinate of centroid of arc diagram
+//radius_offset: how much larger you want the radius of the label to be 
+function compute_y(circumference_percentage, radius, circumference, center, radius_offset)
+{
+    var arc_length = circumference_percentage * circumference;
+    var angle_degrees = circumference_percentage * 360;
+
+    var theta = 90 - angle_degrees;
+    var theta_radians = theta * (Math.PI / 180);
+    
+    var y = center.y - ((radius + radius_offset) * Math.sin(theta_radians));
+    return y;
+}
+
 //determine what shell the ith
 //flag should be on
 function get_shell(shell_count, index)
@@ -126,9 +165,10 @@ function constructCorpus(csv)
     var n_topics = matrix.length;
     process(matrix); 
 
+    var corpus_shrink_factor = 100;
     var width = 600,
         height = 600,
-        outerRadius = Math.min(width, height) / 2 - 150,
+        outerRadius = Math.min(width, height) / 2 - corpus_shrink_factor,
         innerRadius = outerRadius - 24;
      
     var formatPercent = d3.format(".1%");
@@ -137,7 +177,6 @@ function constructCorpus(csv)
         .innerRadius(innerRadius)
         .outerRadius(outerRadius);
     
-
     var layout = d3.layout.chord()
         .sortSubgroups(d3.descending)
         .sortChords(d3.ascending);
@@ -158,7 +197,7 @@ function constructCorpus(csv)
     var shells = [];
     var shell_circumferences = []; 
     var shell_radii = [];
-    var offset = 5; //base offset
+    var offset = 5; //base offset (distance from the outer edge of corpus)
     var shell_count = 6;
 
     for(var i = 0; i < shell_count; i++)
@@ -207,15 +246,35 @@ function constructCorpus(csv)
             return tooltip.style("top", (event.pageY-10)+"px").style("left",(event.pageX+10)+"px").html(generate_tooltip_html(index, topic_text, value*10.0)).style("background-color", colors[index]).style("color", "white");})
         .on("mouseout", function(){return tooltip.style("visibility", "hidden");})
         .style("fill", function(d) { return getColor(d.index % n_topics); });
-
+        
 
     // Add a text label.
     var groupText = group.append("text");
      
     //position appropriately around the circle
+    var corpus_center = {"x": width/2, "y": height/2+corpus_shrink_factor/2}; //true center
+    var positions = [];
+    var box_height = 100;
+    var box_width = 100;
+    var box_diagonal = Math.sqrt(Math.pow(box_height, 2) + Math.pow(box_width, 2)) / 2;
+    positions.push({"x": corpus_center.x,"y": corpus_center.y - outerRadius - box_height});
+    positions.push({"x": corpus_center.x + outerRadius, "y": corpus_center.y - outerRadius});
+    positions.push({"x": corpus_center.x + outerRadius + box_width/3, "y": corpus_center.y});
+    positions.push({"x": corpus_center.x + outerRadius * .8, "y": corpus_center.y + outerRadius * .8});
+    positions.push({"x": corpus_center.x, "y": corpus_center.y + outerRadius * 1.1});
+    positions.push({"x": corpus_center.x - outerRadius * .95, "y": corpus_center.y + outerRadius * .95});
+    positions.push({"x": corpus_center.x - outerRadius - box_width, "y": corpus_center.y});
+    positions.push({"x": corpus_center.x - outerRadius * 1.2, "y": corpus_center.y - outerRadius * 1.2});
+
+    var desired = [0, 1.0/8, 2.0/8, 3.0/8, 4.0/8, 5.0/8, 6.0/8, 7.0/8];
+    var desired_index = 0;
+
+    var found = [];
+
     var running = 0.0;
     groupText.append("textPath")
-        .attr("xlink:href", function(d, i) { 
+        .attr("xlink:href", function(d, i) 
+        { 
             var offset = running;
             var shell_n = get_shell(shell_count, i);
 
@@ -228,7 +287,11 @@ function constructCorpus(csv)
                 .innerRadius(r)
                 .outerRadius(r + 1);
 
-            shells[i] = svg.append("path").attr("d", shell).attr("fill", "none").attr("id", "shell" + i);
+            if((running >= desired[desired_index]) || (running+d.value/10 >= desired[desired_index]))
+            {
+                found.push(d.index);
+                desired_index++;
+            }
 
             running += d.value/10;
             offset = offset * shell_circumferences[shell_n]; 
@@ -237,42 +300,62 @@ function constructCorpus(csv)
         }) 
         .attr("class", function(d, i) { return "textpath" + i; })
         .style("fill", function(d, i) { return colors[d.index]; })
-        .text(function(d, i) {
+        .text(function(d, i) 
+        {
             var words = reverse_topic_indices[d.index];
-            return conditional_clip(commas(words), 5); 
-        })
-        .on("mouseover", function(d, i)  //shade out the other flags, and extend this one
-        {
-            var current = d3.select(".textpath"+i);
-            var current_index = d.index;
-            current.text(function(d, i) 
-            {
-                var words = reverse_topic_indices[d.index];
-                words = commas(words);
-                return words; 
-            });
-            d3.selectAll("textPath").each(function(d) 
-            {
-                if(d.index !== current_index)
-                {
-                    d3.select(this).style("opacity", 0);         
-                }
-            });
-        })
-        .on("mouseout", function(d, i)  //reset all flags on mouseout
-        {
-            var current = d3.select(".textpath"+i);
-            current.text(function(d, i)
-            {
-                var words = reverse_topic_indices[d.index];
-                words = commas(words);
-                return conditional_clip(words, 5); 
-            });
-            d3.selectAll("textPath").each(function(d) 
-            {
-                d3.select(this).style("opacity", 1);
-            });
+            return "Topic " + d.index; 
         });
+
+    //put on each of the cardinal and semi-cardinal labels
+    for(var i = 0; i < positions.length; i++)
+    {
+        var topic_n = found[i];
+        var this_flag = d3.select("body")
+            .append("div")
+            .attr("class", "corpus-flag " + "flag"+topic_n)
+            .style("position", "absolute")
+            .style("width", box_width)
+            .style("height", box_height)
+            .style("background-color", colors[topic_n])
+            .style("padding-left", "5px")
+            .style("z-topic_n", "5") //put it in front of the arcs but behind regular tooltip
+            .style("border-radius", "10px")
+            .html(generate_flag_html(topic_n)); 
+        
+        this_flag.style("left", positions[i].x).style("top", positions[i].y);
+
+        var point1 = positions[i];
+        positions[i].x -= corpus_center.x
+        positions[i].y -= corpus_center.y
+        var selection = d3.select("#group"+topic_n).node();
+        var location2 = selection.getPointAtLength(selection.getTotalLength()/2);
+        var point2 = {"x": location2.x, "y": location2.y};
+
+        //draw the line
+        var lineData = [point1, point2];
+        var lineFunction = d3.svg.line()
+            .x(function (d) {
+                return d.x;
+            })
+            .y(function (d) {
+                return d.y;
+            })
+            .interpolate("linear");
+
+        svg.append("path")
+            .attr("d", lineFunction(lineData))
+            .style("stroke-width", 1)
+            .style("stroke", colors[topic_n])
+            .on("mouseover", function () 
+            {
+                d3.select(this).style("stroke-width", 2);
+            })
+            .on("mouseout", function () 
+            {
+                d3.select(this).style("stroke-width", 1);
+            });
+    } 
+
      
     // Add the chords.
     var chord = svg.selectAll(".chord")
@@ -357,6 +440,11 @@ function constructCorpus(csv)
             return p.source.index !== i && p.target.index !== i;
         });
     }
+}
+
+function apply_chord_fade(source, target, i)
+{
+    return source !== i && target !== i;
 }
 
 //change the appearance of checkbox when clicking title
@@ -459,6 +547,7 @@ function generate_document_info(source, target, callback)
 function corpusCleanup()
 {
     d3.select(".tooltip").style("visibility", "hidden");
+    d3.selectAll(".corpus-flag").remove();
     d3.select("#corpus-svg").remove();
     d3.select(".info-box").remove();
 }

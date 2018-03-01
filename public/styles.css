@@ -190,3 +190,8 @@ textpath {
 #topic_single {
     background-color: #24b2b7;
 }
+
+.corpus-flag {
+    user-select: none;
+    overflow-y: scroll;
+}
