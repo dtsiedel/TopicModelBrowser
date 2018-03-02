@@ -584,19 +584,17 @@ function goTo(source, target, parameters, returning=false)
     switch(target)
     {
         case pages.corpus:
-            //window.location.href.split('#')[0]
             window.location.hash = '';
-            main();
+            main(parameters);
             break;
         case pages.donut:
-	        window.location.hash = '#d' + parameters;
+	    window.location.hash = '#d' + parameters;
             donutMain(parameters);
             break;
         case pages.topic:
             //add the topic number and the page number (always will be 1 here when entering from another page)
             window.location.hash = '#t' + parameters[0] + '#p' + '1';
             topicMain(parameters);
-            //console.log(parameters);
             break;
         case pages.bars:
 	        var hash = '#b';
@@ -642,13 +640,12 @@ function addCorpusLink(source)
 {
     d3.select("#header").append("button").attr("class", "corpus-link").text("Back to Corpus!").on("click", function()
     {
-        goTo(source, pages.corpus, [])
+        goTo(source, pages.corpus, "regular")
     });
     d3.select("#header").append("button").attr("class", "back-button").text("Back to Previous View").on("click", function()
     {
         goBack(source);
     });
-    
 }
 
 //take off the button added by addCorpusLink

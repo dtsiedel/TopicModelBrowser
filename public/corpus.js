@@ -118,7 +118,8 @@ function get_shell(shell_count, index)
 }
 
 //make the corpus view, incuding arcs and ribbons
-function constructCorpus(csv)
+//mode = "simple" or "regular"
+function constructCorpus()
 {
     //var processed = processData(csv);   //don't do this anymore, since it is done offline
 
@@ -126,7 +127,12 @@ function constructCorpus(csv)
     var n_topics = matrix.length;
     process(matrix); 
 
-    var corpus_shrink_factor = 100;
+    var corpus_shrink_factor = 0;
+    if(corpus_style === "simple")
+    {
+        corpus_shrink_factor = 100;
+    }
+
     var width = 600,
         height = 600,
         outerRadius = Math.min(width, height) / 2 - corpus_shrink_factor,
@@ -267,56 +273,58 @@ function constructCorpus(csv)
             return "Topic " + d.index; 
         });
 
-    //put on each of the cardinal and semi-cardinal labels
-    for(var i = 0; i < positions.length; i++)
+    if(corpus_style === "simple")
     {
-        var topic_n = found[i];
-        var this_flag = d3.select("body")
-            .append("div")
-            .attr("class", "corpus-flag " + "flag"+topic_n)
-            .style("position", "absolute")
-            .style("width", box_width)
-            .style("height", box_height)
-            .style("background-color", colors[topic_n])
-            .style("padding-left", "5px")
-            .style("z-topic_n", "5") //put it in front of the arcs but behind regular tooltip
-            .style("border-radius", "10px")
-            .html(generate_flag_html(topic_n)); 
-        
-        this_flag.style("left", positions[i].x).style("top", positions[i].y);
+        //put on each of the cardinal and semi-cardinal labels
+        for(var i = 0; i < positions.length; i++)
+        {
+            var topic_n = found[i];
+            var this_flag = d3.select("body")
+                .append("div")
+                .attr("class", "corpus-flag " + "flag"+topic_n)
+                .style("position", "absolute")
+                .style("width", box_width)
+                .style("height", box_height)
+                .style("background-color", colors[topic_n])
+                .style("padding-left", "5px")
+                .style("z-topic_n", "5") //put it in front of the arcs but behind regular tooltip
+                .style("border-radius", "10px")
+                .html(generate_flag_html(topic_n)); 
+            
+            this_flag.style("left", positions[i].x).style("top", positions[i].y);
 
-        var point1 = positions[i];
-        positions[i].x -= corpus_center.x
-        positions[i].y -= corpus_center.y
-        var selection = d3.select("#group"+topic_n).node();
-        var location2 = selection.getPointAtLength(selection.getTotalLength()/2);
-        var point2 = {"x": location2.x, "y": location2.y};
+            var point1 = positions[i];
+            positions[i].x -= corpus_center.x
+            positions[i].y -= corpus_center.y
+            var selection = d3.select("#group"+topic_n).node();
+            var location2 = selection.getPointAtLength(selection.getTotalLength()/2);
+            var point2 = {"x": location2.x, "y": location2.y};
 
-        //draw the line
-        var lineData = [point1, point2];
-        var lineFunction = d3.svg.line()
-            .x(function (d) {
-                return d.x;
-            })
-            .y(function (d) {
-                return d.y;
-            })
-            .interpolate("linear");
+            //draw the line
+            var lineData = [point1, point2];
+            var lineFunction = d3.svg.line()
+                .x(function (d) {
+                    return d.x;
+                })
+                .y(function (d) {
+                    return d.y;
+                })
+                .interpolate("linear");
 
-        svg.append("path")
-            .attr("d", lineFunction(lineData))
-            .style("stroke-width", 1)
-            .style("stroke", colors[topic_n])
-            .on("mouseover", function () 
-            {
-                d3.select(this).style("stroke-width", 2);
-            })
-            .on("mouseout", function () 
-            {
-                d3.select(this).style("stroke-width", 1);
-            });
-    } 
-
+            svg.append("path")
+                .attr("d", lineFunction(lineData))
+                .style("stroke-width", 1)
+                .style("stroke", colors[topic_n])
+                .on("mouseover", function () 
+                {
+                    d3.select(this).style("stroke-width", 2);
+                })
+                .on("mouseout", function () 
+                {
+                    d3.select(this).style("stroke-width", 1);
+                });
+        } 
+    }
      
     // Add the chords.
     var chord = svg.selectAll(".chord")
@@ -401,6 +409,13 @@ function constructCorpus(csv)
             return p.source.index !== i && p.target.index !== i;
         });
     }
+    d3.select("#header").append("button").attr("id", "corpus-toggle").text("Toggle Corpus Flags").on("click", function() {
+        if(corpus_style === "simple")
+            corpus_style = "regular"; 
+        else
+            corpus_style = "simple";
+        goTo(pages.corpus, pages.corpus, []);
+    });
 }
 
 function apply_chord_fade(source, target, i)
@@ -502,6 +517,7 @@ function generate_document_info(source, target, callback)
         }
         callback(result);
     });
+
 }
 
 //remove all traces of the corpus view from existence
@@ -509,6 +525,7 @@ function corpusCleanup()
 {
     d3.select(".tooltip").style("visibility", "hidden");
     d3.selectAll(".corpus-flag").remove();
+    d3.select("#corpus-toggle").remove();
     d3.select("#corpus-svg").remove();
     d3.select(".info-box").remove();
 }

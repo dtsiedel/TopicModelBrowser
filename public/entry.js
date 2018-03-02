@@ -1,3 +1,5 @@
+var corpus_style = "simple";
+
 //parses our csv hosted on server
 //also does all of the one-time setup and calls our constructCorpus function the first time
 //needs to be split later so that we can not duplicate code
@@ -49,7 +51,7 @@ function getData()
                     var hash = window.location.hash.substr(1);
                     //if no hash, go to corpus
                     if(!hash){
-                        constructCorpus(csv_data);
+                        constructCorpus();
                     }
                     else{
                         var page = hash.charAt(0);
@@ -95,7 +97,6 @@ function getData()
                                     }
                                 }
                                 parameters.push(document);
-                                //console.log(parameters);
                                 barsMain(parameters);
                                 break;
                             //nodes
@@ -113,7 +114,6 @@ function getData()
                                     }
                                 }
                                 parameters.push(document);
-                                //console.log(parameters);
                                 nodesMain(parameters);
                                 break;
                             //spectrum
@@ -131,27 +131,24 @@ function getData()
                                     }
                                 }
                                 parameters.push(document);
-                                //console.log(parameters);
                                 spectrumMain(parameters);
                         }
                     }
                     
-                    //constructCorpus(csv_data);
-                //});
             });
         });
         loaded_data = true;
     }
     else
     {
-        getTopicIndices(function(){constructCorpus(csv_data)}); //should be just constructCorpus(csv_data) but it doesnt work
+        getTopicIndices(function(){constructCorpus()}); 
     }
 }
 
 //wrapper to be called when page loads
-function main()
+function main(parameters)
 {
-    getData(); 
+    getData(parameters); 
 }
 
 //call main
