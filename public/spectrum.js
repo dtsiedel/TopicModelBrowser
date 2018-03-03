@@ -16,9 +16,6 @@ Number.prototype.map = function (in_min, in_max, out_min, out_max) {
     return (this - in_min) * (out_max - out_min) / (in_max - in_min) + out_min;
 }
 
-//parses our csv hosted on server
-//also does all of the one-time setup and calls our constructSpectrum function the first time
-//needs to be split later so that we can not duplicate code
 function setUpSpectrum(parameters)
 {
     width = 800;
@@ -36,7 +33,6 @@ function setUpSpectrum(parameters)
 
     constructSpectrum(parameters[0], parameters[1]);
 }
-
 
 //make the spectrum view, including the two sides and the inner words
 function constructSpectrum(t1, t2)

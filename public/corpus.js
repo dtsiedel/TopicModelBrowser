@@ -161,20 +161,6 @@ function constructCorpus()
 
     var defs = svg.append('defs');
     
-    var shells = [];
-    var shell_circumferences = []; 
-    var shell_radii = [];
-    var offset = 5; //base offset (distance from the outer edge of corpus)
-    var shell_count = 6;
-
-    for(var i = 0; i < shell_count; i++)
-    {
-        var radius = outerRadius + offset; 
-
-        shell_circumferences[i] = 2 * Math.PI * radius;
-        shell_radii[i] = radius;
-        offset += 20;
-    }
 
     var info = d3.select("body").append("div")
         .attr("class", "info-box")
@@ -242,18 +228,6 @@ function constructCorpus()
     groupText.append("textPath")
         .attr("xlink:href", function(d, i) 
         { 
-            var offset = running;
-            var shell_n = get_shell(shell_count, i);
-
-            var r = shell_radii[shell_n];
-            var start = running * 2 * Math.PI;
-
-            var shell = d3.svg.arc()
-                .startAngle(start)
-                .endAngle(start + (2 * Math.PI) - .0001) 
-                .innerRadius(r)
-                .outerRadius(r + 1);
-
             if((running >= desired[desired_index]) || (running+d.value/10 >= desired[desired_index]))
             {
                 found.push(d.index);
@@ -261,17 +235,9 @@ function constructCorpus()
             }
 
             running += d.value/10;
-            offset = offset * shell_circumferences[shell_n]; 
 
             return "#shell" + i; 
         }) 
-        .attr("class", function(d, i) { return "textpath" + i; })
-        .style("fill", function(d, i) { return colors[d.index]; })
-        .text(function(d, i) 
-        {
-            var words = reverse_topic_indices[d.index];
-            return "Topic " + d.index; 
-        });
 
     if(corpus_style === "simple")
     {
