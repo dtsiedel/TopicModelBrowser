@@ -409,13 +409,18 @@ function constructCorpus()
             return p.source.index !== i && p.target.index !== i;
         });
     }
-    d3.select("#header").append("button").attr("id", "corpus-toggle").text("Toggle Corpus Flags").on("click", function() {
+    var toggle_corpus = d3.select("#header").append("button").attr("id", "corpus-toggle").on("click", function() {
         if(corpus_style === "simple")
             corpus_style = "regular"; 
         else
             corpus_style = "simple";
         goTo(pages.corpus, pages.corpus, []);
     });
+    if(corpus_style === "simple")
+        toggle_corpus.text("Switch to Advanced View");
+    else
+        toggle_corpus.text("Switch to Simplified View");
+        
 }
 
 function apply_chord_fade(source, target, i)
