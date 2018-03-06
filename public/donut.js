@@ -48,6 +48,7 @@ function compare_value(a,b)
 //main work of making donut chart
 function constructDonut(n)
 {
+    document.title = "Document " + n;
     var chosenDocument = csv_data[n];
     var filteredData = filter(chosenDocument);
 

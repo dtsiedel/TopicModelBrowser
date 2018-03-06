@@ -120,6 +120,7 @@ function get_shell(shell_count, index)
 //make the corpus view, incuding arcs and ribbons
 function constructCorpus(csv)
 {
+    document.title = "Corpus Overview";
     //var processed = processData(csv);   //don't do this anymore, since it is done offline
 
     var matrix = ribbon_counts; 
@@ -462,6 +463,14 @@ function corpusCleanup()
     d3.select("#corpus-svg").remove();
     d3.select(".info-box").remove();
 }
+
+
+window.addEventListener( "pageshow", function ( event ) {
+    if(!!window.performance && window.performance.navigation.type == 2)
+    {
+        window.location.reload();
+    }
+  });
 
 
 

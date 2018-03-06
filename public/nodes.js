@@ -119,6 +119,7 @@ function cosineDistance(a, b) {
 
 //make node diagram
 function constructNodes(links, nodes){
+  document.title = "Multi-Documents";
   var docs = [];
   for(var i = 0; i < nodes.length; i++)
   {
@@ -129,7 +130,7 @@ function constructNodes(links, nodes){
 
   getDocumentData([docs], function()
   {
-      var width = 800; //750;
+      var width = 1000; //750;
       var height = 500; //750;
 
       var color = d3.scale.category20();
@@ -142,11 +143,13 @@ function constructNodes(links, nodes){
       var svg = d3.select("#chart-container").append("svg")
         .attr("class", "nodes-svg")
         .attr("width", width)
-        .attr("height", height);
+        .attr("height", height)
+        .call(d3.behavior.zoom().on("zoom", function () {
+          svg.attr("transform", "translate(" + d3.event.translate + ")" + " scale(" + d3.event.scale + ")")
+        }))
+        .append("g");
 
       
-      //window.scrollTo(0, 500); //disgusting hack
-
       force.nodes(nodes)
         .links(links)
         .start();
@@ -201,6 +204,8 @@ function constructNodes(links, nodes){
     var pies = node.append("g")
         .attr("class", "nodes-pie")
 
+    
+
     var allfilteredData = [];
 
     pies.each(function(d)
@@ -228,8 +233,6 @@ function constructNodes(links, nodes){
               }
             }  
         }
-        
-       
 
         var g = d3.select(this).selectAll(".arc")
             .data(pie(filteredData))
@@ -263,13 +266,13 @@ function constructNodes(links, nodes){
     });
 
     //addLegend(pies, allfilteredData, 18, 12);
-    //console.log(pies);
-
+    //console.log(pies);    
 
     force.on("tick", function() {
       node 
           .attr("cx", function(d) {
-          return d.x = Math.max(radius, Math.min(width - radius, d.x)); 
+          //return d.x = Math.max(radius, Math.min(width - radius, d.x)); 
+          return d.y;
           })
           .attr("cy", function(d) { 
             return d.y; 

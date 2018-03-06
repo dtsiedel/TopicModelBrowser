@@ -355,3 +355,9 @@ function topicMain(parameters)
     setUpTopic(topic, page); 
 }
 
+window.addEventListener( "pageshow", function ( event ) {
+    if(!!window.performance && window.performance.navigation.type == 2)
+    {
+        window.location.reload();
+    }
+  });

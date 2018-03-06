@@ -573,7 +573,6 @@ function goTo(source, target, parameters, returning=false)
     switch(target)
     {
         case pages.corpus:
-            //window.location.href.split('#')[0]
             window.location.hash = '';
             main();
             break;
@@ -583,7 +582,7 @@ function goTo(source, target, parameters, returning=false)
             break;
         case pages.topic:
             //add the topic number and the page number (always will be 1 here when entering from another page)
-            window.location.hash = '#t' + parameters[0] + '#p' + '1';
+            window.location.hash = '#t' + parameters[0] + '&p' + '1';
             topicMain(parameters);
             //console.log(parameters);
             break;
@@ -671,3 +670,10 @@ function getDocumentData(docs, callback, parameters)
         callback(parameters);
     });
 }
+
+window.addEventListener( "pageshow", function ( event ) {
+    if(!!window.performance && window.performance.navigation.type == 2)
+    {
+        window.location.reload();
+    }
+  });

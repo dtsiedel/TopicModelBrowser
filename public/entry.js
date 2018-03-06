@@ -65,7 +65,7 @@ function getData()
                                 var tmp = '';
                                 hash = hash.substr(1);
                                 for (i = 0; i < hash.length; i++) {
-                                    if(hash[i] != '#'){
+                                    if(hash[i] != '&'){
                                         tmp += hash[i];
                                     }
                                     else {
@@ -158,3 +158,10 @@ function main()
 document.addEventListener("DOMContentLoaded", function(e) {
     main();
 });
+
+window.addEventListener( "pageshow", function ( event ) {
+    if(!!window.performance && window.performance.navigation.type == 2)
+    {
+        window.location.reload();
+    }
+  });
