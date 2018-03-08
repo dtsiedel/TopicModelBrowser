@@ -171,12 +171,43 @@ function addLegend(chart, data, legendRectSize, legendSpacing)
 
 
 
-
-
 //replace all instances of _ with , for topic display
 function commas(text)
 {
     return text.replace(/_/g, ", "); 
+}
+
+//create the html element that the tooltip resides in
+function generate_document_tooltip(id)
+{
+    var data = document_text[id];
+    var result = "<div>";
+    result += conditional_clip(data["title"], 30) + "<br/>";
+    result += "Excerpt: </br>";
+    result += clip(data["text"], 350);
+
+    result += "</div>";
+
+    return result;
+}
+
+//make the sidebar with the list of topics
+function generate_topic_checkboxes(topics, selected)
+{
+    result = "Topic Selector: </br>";
+    for(var i = 0; i < topics.length; i++)
+    {
+        var current = topics[i];
+        result += "<input type='checkbox' class='topic_check t_check" + i + "' data-id='" + i + "'";
+        if(selected.includes(i.toString())) result += "checked";
+        result += "></input>";
+        result += "<span class='t_checktitle_container' data-id='" + i + "'>";
+        result += "<span class='t_span' style='color: " + colors[i] + "'>"
+        result += "Topic " + i;
+        result += "</span></span><br/>";
+    }
+
+    return result;
 }
 
 //text formatting for corpus flag tooltips
@@ -424,20 +455,6 @@ function rectify_csv_data(csv_data)
         csv_data[i][""] = csv_data[i][""] - 1;
     }
     return csv_data;
-}
-
-//create the html element that the tooltip resides in
-function generate_document_tooltip(id)
-{
-    var data = document_text[id];
-    var result = "<div>";
-    result += conditional_clip(data["title"], 30) + "<br/>";
-    result += "Excerpt: </br>";
-    result += clip(data["text"], 350);
-
-    result += "</div>";
-
-    return result;
 }
 
 //clip for use when you need to fit a certain amount of space

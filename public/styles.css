@@ -1,5 +1,12 @@
+html {
+    overflow: hidden;
+    height: 100%;
+}
+
 body {
-    background-color: black; /*#d3d3d3;*/
+    background-color: black; 
+    height: 100%;
+    overflow: auto;
 }
 
 #circle circle {
@@ -15,14 +22,37 @@ path.chord {
     display: none;
 }
 
-.info-box {
+path.partial-fade {
+    opacity: .075;
+}
+
+.sidebar {
     float: right;
     width: 400px;
-    height: 500px;
+    height: 600px;
     color: white;
     word-wrap: break-word;
     overflow: scroll;
 }
+
+.topic-selector {
+    float: right;
+    width: 100%; 
+    height: 40%;
+    color: white;
+    word-wrap: break-word;
+    overflow: scroll;
+}
+
+.info-box {
+    float: right;
+    width: 100%;
+    height: 60%;
+    color: white;
+    word-wrap: break-word;
+    overflow: scroll;
+}
+
 
 .nodes-legend {
     float: right;
@@ -186,7 +216,6 @@ textpath {
     user-select: none;
 }
 
-
 #topic_single {
     background-color: #24b2b7;
 }
@@ -194,4 +223,8 @@ textpath {
 .corpus-flag {
     user-select: none;
     overflow-y: scroll;
+}
+
+.t_span {
+    user-select: none;
 }

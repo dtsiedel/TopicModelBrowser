@@ -5,6 +5,7 @@ var height;
 var radius;
 var tooltip;
 var selected = [];
+var selected_topics = ["0","5","7","11","13","23","29","36"];
 var dragSelecting = false;
 
 
@@ -110,12 +111,9 @@ function process(matrix)
     }
 }
 
-//determine what shell the ith
-//flag should be on
-function get_shell(shell_count, index)
-{
-    return shell_count - (index % shell_count) - 1; 
-}
+Array.prototype.diff = function(a) {
+    return this.filter(function(i) {return a.indexOf(i) < 0;});
+};
 
 //make the corpus view, incuding arcs and ribbons
 //mode = "simple" or "regular"
@@ -159,14 +157,27 @@ function constructCorpus()
         .attr("id", "circle")
         .attr("transform", "translate(" + width / 2 + "," + height / 2 + ")");
 
-    var defs = svg.append('defs');
+    var defs = svg.append('defs'); //holds attributes of corpus, including the color gradients for the chords
     
+    var sidebar = d3.select("body").append("div")
+        .attr("class", "sidebar");
+    
+    var topic_selector = d3.select(".sidebar").append("div")
+        .attr("class", "topic-selector")
+        .text("Check which topics you want to see.");
 
-    var info = d3.select("body").append("div")
+    topic_selector.html(generate_topic_checkboxes(Object.keys(topic_indices), selected_topics));
+    d3.selectAll(".topic_check").on("click", function() { toggle_topic_checkbox(d3.select(this).attr("data-id")); });
+    d3.selectAll(".t_checktitle_container").on("click", function(d,i) {
+        var id = d3.select(this).attr("data-id");
+        visually_toggle_t(id);
+        toggle_topic_checkbox(id);  
+    });
+
+
+    var info = d3.select(".sidebar").append("div")
         .attr("class", "info-box")
-        .attr("width", "500px")
-        .attr("height", "500px")
-        .text("Click a chord to see the documents joining those two topics!");
+        .html("</br>Click a chord to see the documents joining those two topics!");
          
     svg.append("circle")
         .attr("r", outerRadius);
@@ -182,9 +193,17 @@ function constructCorpus()
         .style("fill",  "white")
         .on("mouseover", mouseover);
      
-    // Add the group arc.
+    // The physical representation of each "group"
     var groupPath = group.append("path")
         .attr("id", function(d, i) { return "group" + i; })
+        .attr("class", function(d,i) 
+        { 
+            if(!(selected_topics.includes(i.toString()))) 
+            {
+                return "path partial-fade"; 
+            }
+            return "path";
+        })
         .attr("d", arc)
         .style("stroke", gray)
         .style("stroke-width", .05)
@@ -210,6 +229,8 @@ function constructCorpus()
     var box_height = 100;
     var box_width = 100;
     var box_diagonal = Math.sqrt(Math.pow(box_height, 2) + Math.pow(box_width, 2)) / 2;
+
+    //corpus flag locations for simple view. Not really a clean way to hard code these 8 values
     positions.push({"x": corpus_center.x,"y": corpus_center.y - outerRadius - box_height});
     positions.push({"x": corpus_center.x + outerRadius, "y": corpus_center.y - outerRadius});
     positions.push({"x": corpus_center.x + outerRadius + box_width/3, "y": corpus_center.y});
@@ -315,7 +336,11 @@ function constructCorpus()
                 .attr("offset", "100%")   
                 .attr("stop-color", getColor(d.source.index)); 
         })
-        .attr("class", "chord")
+        .attr("class", function(d, i) { 
+            if(!(selected_topics.includes(d.source.index.toString()) && selected_topics.includes(d.target.index.toString())))
+                return "partial-fade chord";
+            return "chord";
+        })
         .style("stroke", "white") 
         .style("fill", function(d) { return "url(#linear-gradient" + d.source.index + "-" + d.target.index + ")";})
         .on("click", chordselected)
@@ -324,21 +349,21 @@ function constructCorpus()
     function chordselected(d) {
         generate_document_info(d.source.index, d.target.index, function(result)
         {
-            text=result;
+            text = "<br/>"+result;
             selected = []; //need to reset this between chord clicks
             info.html(text);
-            d3.selectAll(".checkbox").on("click", function() { toggle_check_box(d3.select(this).attr("data-id")); });
+            d3.selectAll(".checkbox").on("click", function() { toggle_corpus_checkbox(d3.select(this).attr("data-id")); });
             d3.selectAll(".checktitle-container").on("mousedown", function() {
                 dragSelecting = true;
                 var current = d3.select(this).attr("data-id");
                 visually_toggle(current); 
-                toggle_check_box(current);
+                toggle_corpus_checkbox(current);
             });
             d3.selectAll(".checktitle-container").on("mouseover", function() {
                 if(dragSelecting){
                     var current = d3.select(this).attr("data-id");
                     visually_toggle(current);
-                    toggle_check_box(current);
+                    toggle_corpus_checkbox(current);
                 }
             });
             d3.selectAll("html").on("mouseup", function() {
@@ -397,18 +422,55 @@ function apply_chord_fade(source, target, i)
 //change the appearance of checkbox when clicking title
 function visually_toggle(index)
 {
-    var element = d3.selectAll(".check"+index);
+    var element = d3.selectAll(".c_check"+index);
     if(element.property("checked"))
         element.property("checked",false);
     else
         element.property("checked",true);
 }
 
-//handle checkbox state
-function toggle_check_box(id)
+//change the appearance of checkbox when clicking topic
+function visually_toggle_t(index)
+{
+    var element = d3.selectAll(".t_check"+index);
+    if(element.property("checked"))
+        element.property("checked",false);
+    else
+        element.property("checked",true);
+}
+
+//handle checkbox state for topic checkboxes
+function toggle_topic_checkbox(id)
+{
+    if(selected_topics.includes(id))
+    {
+        selected_topics.splice(selected_topics.indexOf(id), 1);
+    }
+    else
+    {
+        selected_topics.push(id);
+    }
+
+    d3.selectAll(".path").attr("class", function(d, i) {
+        if(selected_topics.includes(i.toString())) return "path";
+        return "path partial-fade";
+    });
+    d3.selectAll(".chord").attr("class", function(d, i) 
+    {
+        if((selected_topics.includes(d.source.index.toString())) && (selected_topics.includes(d.target.index.toString())))
+        {
+            return "chord";
+        }
+        return "chord partial-fade";
+    }).style("stroke", gray).style("stroke-width", .05);
+}
+
+
+//handle checkbox state for corpus checkboxes
+function toggle_corpus_checkbox(id)
 {
     //to translate javascript: if the id is in the list, remove it. Else add it. AKA toggle existence in list
-    if(selected.indexOf(id) > -1)
+    if(selected.includes(id))
     {
         selected.splice(selected.indexOf(id), 1);
     }
@@ -457,7 +519,7 @@ function generate_document_info(source, target, callback)
 		    break;
 		}   
 		var title = conditional_clip(document_text[docs[i]]["title"], 50);
-		result += "<input class='checkBox check"+docs[i]+"' data-id='"+docs[i]+"'type='checkbox'>" + "<div class='checktitle-container' data-id="+docs[i]+">" + conditional_clip(title, 30) + " (<span class='t1'>" + ((csv_data[docs[i]][reverse_topic_indices[source]])*100).toFixed(2) + "%</span>)</div>";
+		result += "<input class='checkBox c_check"+docs[i]+"' data-id='"+docs[i]+"'type='checkbox'>" + "<div class='checktitle-container' data-id="+docs[i]+">" + conditional_clip(title, 30) + " (<span class='t1'>" + ((csv_data[docs[i]][reverse_topic_indices[source]])*100).toFixed(2) + "%</span>)</div>";
 	    }
 	    callback(result);
 	}); 
@@ -484,7 +546,7 @@ function generate_document_info(source, target, callback)
                 break;
             }
             var title = conditional_clip(document_text[docs[i]]["title"], 50);
-            result += "<input class='checkBox check"+docs[i]+"' data-id='"+docs[i]+"'type='checkbox'>" + "<div class='checktitle-container' data-id="+docs[i]+">" + conditional_clip(title, 30) + " (<span class='t1'>" + ((csv_data[docs[i]][reverse_topic_indices[source]])*100).toFixed(2) + "%</span> and <span class='t2'>" + ((csv_data[docs[i]][reverse_topic_indices[target]])*100).toFixed(2) + "%</span>)</div>";
+            result += "<input class='checkBox c_check"+docs[i]+"' data-id='"+docs[i]+"'type='checkbox'>" + "<div class='checktitle-container' data-id="+docs[i]+">" + conditional_clip(title, 30) + " (<span class='t1'>" + ((csv_data[docs[i]][reverse_topic_indices[source]])*100).toFixed(2) + "%</span> and <span class='t2'>" + ((csv_data[docs[i]][reverse_topic_indices[target]])*100).toFixed(2) + "%</span>)</div>";
         }
         callback(result);
     });
@@ -498,7 +560,7 @@ function corpusCleanup()
     d3.selectAll(".corpus-flag").remove();
     d3.select("#corpus-toggle").remove();
     d3.select("#corpus-svg").remove();
-    d3.select(".info-box").remove();
+    d3.select(".sidebar").remove();
 }
 
 
