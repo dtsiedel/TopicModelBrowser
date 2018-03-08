@@ -111,9 +111,36 @@ function process(matrix)
     }
 }
 
+//array subtraction
 Array.prototype.diff = function(a) {
     return this.filter(function(i) {return a.indexOf(i) < 0;});
 };
+
+//add all topics to the seletion
+function toggle_all_topics_on()
+{
+    for(var i = 0; i < n_topics; i++)
+    {
+        if(!(selected_topics.includes(i.toString())))
+        {
+            toggle_topic_checkbox(i.toString());
+            visually_toggle_t(i.toString()); 
+        }
+    }
+}
+
+//remove all topics from the selection
+function toggle_all_topics_off()
+{
+    for(var i = 0; i < n_topics; i++)
+    {
+        if(selected_topics.includes(i.toString()))
+        {
+            toggle_topic_checkbox(i.toString());
+            visually_toggle_t(i.toString()); 
+        }
+    }
+}
 
 //make the corpus view, incuding arcs and ribbons
 //mode = "simple" or "regular"
@@ -122,7 +149,7 @@ function constructCorpus()
     //var processed = processData(csv);   //don't do this anymore, since it is done offline
 
     var matrix = ribbon_counts; 
-    var n_topics = matrix.length;
+    n_topics = matrix.length;
     process(matrix); 
 
     var corpus_shrink_factor = 0;
@@ -170,8 +197,15 @@ function constructCorpus()
     d3.selectAll(".topic_check").on("click", function() { toggle_topic_checkbox(d3.select(this).attr("data-id")); });
     d3.selectAll(".t_checktitle_container").on("click", function(d,i) {
         var id = d3.select(this).attr("data-id");
-        visually_toggle_t(id);
-        toggle_topic_checkbox(id);  
+        visually_toggle_t(id.toString());
+        toggle_topic_checkbox(id.toString());  
+    });
+    d3.select(".topic_check_all").on("click", function() 
+    {
+        if(selected_topics.length != n_topics) //not all are toggled on
+            toggle_all_topics_on();
+        else
+            toggle_all_topics_off();
     });
 
 
@@ -437,6 +471,7 @@ function visually_toggle_t(index)
         element.property("checked",false);
     else
         element.property("checked",true);
+
 }
 
 //handle checkbox state for topic checkboxes
@@ -448,7 +483,7 @@ function toggle_topic_checkbox(id)
     }
     else
     {
-        selected_topics.push(id);
+        selected_topics.push(id.toString());
     }
 
     d3.selectAll(".path").attr("class", function(d, i) {
@@ -463,6 +498,13 @@ function toggle_topic_checkbox(id)
         }
         return "chord partial-fade";
     }).style("stroke", gray).style("stroke-width", .05);
+
+    //also have to update the "select all" checkbox
+    var toggle_all = d3.select(".topic_check_all");
+    if(selected_topics.length !== n_topics)
+        toggle_all.property("checked", false);
+    else
+        toggle_all.property("checked", true);
 }
 
 

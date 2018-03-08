@@ -32,6 +32,7 @@ var reverse_topic_indices = {};
 var gray = "#d3d3d3";
 var ribbon_data;
 var ribbon_counts;
+var n_topics;
 var document_text = {};
 var call_stack = [];
 var current_params = [];
@@ -192,9 +193,12 @@ function generate_document_tooltip(id)
 }
 
 //make the sidebar with the list of topics
-function generate_topic_checkboxes(topics, selected)
+function generate_topic_checkboxes(topics, selected, n_topics)
 {
-    result = "Topic Selector: </br>";
+    var result = "Topic Selector (Toggle All <input type='checkbox' class='topic_check_all";
+    if(selected.length == n_topics)
+        result += " checked";
+    result += "'></input>): </br>";
     for(var i = 0; i < topics.length; i++)
     {
         var current = topics[i];
