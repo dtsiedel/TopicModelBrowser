@@ -15,7 +15,8 @@
 -improved excerpt system (precompute excerpts for each doc-topic pair, and for document in general. Then put all into spectrum)
 
 (CORPUS)
--ribbon select stays until you mark another one
+-make ribbon select stay until you mark another one
+-make sure "toggle all" stays in sync when switching to/from simple
 
 (SPECTRUM)
 

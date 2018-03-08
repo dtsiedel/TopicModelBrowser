@@ -5,7 +5,8 @@ var height;
 var radius;
 var tooltip;
 var selected = [];
-var selected_topics = ["0","5","7","11","13","23","29","36"];
+var selected_topics = "~"; //sentinel value
+var cardinal_topics = {}; //state of all cardinal flags (map to true = visible)
 var dragSelecting = false;
 
 
@@ -193,20 +194,6 @@ function constructCorpus()
         .attr("class", "topic-selector")
         .text("Check which topics you want to see.");
 
-    topic_selector.html(generate_topic_checkboxes(Object.keys(topic_indices), selected_topics));
-    d3.selectAll(".topic_check").on("click", function() { toggle_topic_checkbox(d3.select(this).attr("data-id")); });
-    d3.selectAll(".t_checktitle_container").on("click", function(d,i) {
-        var id = d3.select(this).attr("data-id");
-        visually_toggle_t(id.toString());
-        toggle_topic_checkbox(id.toString());  
-    });
-    d3.select(".topic_check_all").on("click", function() 
-    {
-        if(selected_topics.length != n_topics) //not all are toggled on
-            toggle_all_topics_on();
-        else
-            toggle_all_topics_off();
-    });
 
 
     var info = d3.select(".sidebar").append("div")
@@ -230,14 +217,6 @@ function constructCorpus()
     // The physical representation of each "group"
     var groupPath = group.append("path")
         .attr("id", function(d, i) { return "group" + i; })
-        .attr("class", function(d,i) 
-        { 
-            if(!(selected_topics.includes(i.toString()))) 
-            {
-                return "path partial-fade"; 
-            }
-            return "path";
-        })
         .attr("d", arc)
         .style("stroke", gray)
         .style("stroke-width", .05)
@@ -264,7 +243,7 @@ function constructCorpus()
     var box_width = 100;
     var box_diagonal = Math.sqrt(Math.pow(box_height, 2) + Math.pow(box_width, 2)) / 2;
 
-    //corpus flag locations for simple view. Not really a clean way to hard code these 8 values
+    //corpus flag locations for simple view. There isn't really a clean way to hard code these 8 values
     positions.push({"x": corpus_center.x,"y": corpus_center.y - outerRadius - box_height});
     positions.push({"x": corpus_center.x + outerRadius, "y": corpus_center.y - outerRadius});
     positions.push({"x": corpus_center.x + outerRadius + box_width/3, "y": corpus_center.y});
@@ -280,19 +259,53 @@ function constructCorpus()
     var found = [];
 
     var running = 0.0;
-    groupText.append("textPath")
-        .attr("xlink:href", function(d, i) 
-        { 
-            if((running >= desired[desired_index]) || (running+d.value/10 >= desired[desired_index]))
-            {
-                found.push(d.index);
-                desired_index++;
-            }
+    groupText.append("textPath").attr("xlink:href", function(d, i) 
+    { 
+        if((running >= desired[desired_index]) || (running+d.value/10 >= desired[desired_index]))
+        {
+            found.push(d.index);
+            desired_index++;
+        }
 
-            running += d.value/10;
+        running += d.value/10;
 
-            return "#shell" + i; 
-        }) 
+        return "#shell" + i; 
+    }) 
+
+    if(selected_topics === "~")
+    {
+        selected_topics = found.slice().map(function(e) { return e.toString() });
+        var temp = selected_topics.slice();
+        for(var i = 0; i < temp.length; i++)
+        {
+            cardinal_topics[temp[i]] = true;
+        }
+    }
+
+    topic_selector.html(generate_topic_checkboxes(Object.keys(topic_indices), selected_topics));
+    d3.selectAll(".topic_check").on("click", function() { toggle_topic_checkbox(d3.select(this).attr("data-id")); });
+    d3.selectAll(".t_checktitle_container").on("click", function(d,i) 
+    {
+        var id = d3.select(this).attr("data-id");
+        visually_toggle_t(id.toString());
+        toggle_topic_checkbox(id.toString());  
+    });
+    groupPath.attr("class", function(d,i) 
+    { 
+        if(!(selected_topics.includes(i.toString()))) 
+        {
+            return "path partial-fade"; 
+        }
+        return "path";
+    })
+
+    d3.select(".topic_check_all").on("click", function() 
+    {
+        if(selected_topics.length != n_topics) //not all are toggled on
+            toggle_all_topics_on();
+        else
+            toggle_all_topics_off();
+    });
 
     if(corpus_style === "simple")
     {
@@ -310,6 +323,11 @@ function constructCorpus()
                 .style("padding-left", "5px")
                 .style("z-topic_n", "5") //put it in front of the arcs but behind regular tooltip
                 .style("border-radius", "10px")
+                .style("opacity", function() 
+                { 
+                    if(cardinal_topics[topic_n]) { return 1; }
+                    else                   { return 0; }
+                })
                 .html(generate_flag_html(topic_n)); 
             
             this_flag.style("left", positions[i].x).style("top", positions[i].y);
@@ -334,8 +352,14 @@ function constructCorpus()
 
             svg.append("path")
                 .attr("d", lineFunction(lineData))
+                .attr("class", "line"+topic_n)
                 .style("stroke-width", 1)
                 .style("stroke", colors[topic_n])
+                .style("opacity", function() 
+                { 
+                    if(cardinal_topics[topic_n]) return 1;
+                    else                   return 0;
+                })
                 .on("mouseover", function () 
                 {
                     d3.select(this).style("stroke-width", 2);
@@ -379,7 +403,8 @@ function constructCorpus()
         .style("fill", function(d) { return "url(#linear-gradient" + d.source.index + "-" + d.target.index + ")";})
         .on("click", chordselected)
         .attr("d", path);
-         
+        
+    //hide all chords besides those that belong to hovered 
     function chordselected(d) {
         generate_document_info(d.source.index, d.target.index, function(result)
         {
@@ -497,7 +522,7 @@ function toggle_topic_checkbox(id)
             return "chord";
         }
         return "chord partial-fade";
-    }).style("stroke", gray).style("stroke-width", .05);
+    }).style("stroke", gray).style("stroke-width", .05); //unsure why we have to reset the style
 
     //also have to update the "select all" checkbox
     var toggle_all = d3.select(".topic_check_all");
@@ -505,6 +530,22 @@ function toggle_topic_checkbox(id)
         toggle_all.property("checked", false);
     else
         toggle_all.property("checked", true);
+
+    //and check if you toggled a cardinal element (to toggle its flag)
+    if(Object.keys(cardinal_topics).includes(id.toString()))
+    {
+        cardinal_topics[id.toString()] = !cardinal_topics[id.toString()];
+        if(!cardinal_topics[id.toString()]) //toggle to off
+        {
+            d3.select(".flag"+id).style("opacity", 0);
+            d3.select(".line"+id).style("opacity", 0);
+        }
+        else
+        {
+            d3.select(".flag"+id).style("opacity", 1);
+            d3.select(".line"+id).style("opacity", 1);
+        }
+    }
 }
 
 
