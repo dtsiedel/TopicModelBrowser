@@ -283,6 +283,7 @@ function constructCorpus()
     }
 
     topic_selector.html(generate_topic_checkboxes(Object.keys(topic_indices), selected_topics));
+    if(selected_topics.length === n_topics) { d3.select(".topic_check_all").property("checked", true); }
     d3.selectAll(".topic_check").on("click", function() { toggle_topic_checkbox(d3.select(this).attr("data-id")); });
     d3.selectAll(".t_checktitle_container").on("click", function(d,i) 
     {
@@ -459,6 +460,7 @@ function constructCorpus()
             return p.source.index !== i && p.target.index !== i;
         });
     }
+
     var toggle_corpus = d3.select("#header").append("button").attr("id", "corpus-toggle").on("click", function() {
         if(corpus_style === "simple")
             corpus_style = "regular"; 

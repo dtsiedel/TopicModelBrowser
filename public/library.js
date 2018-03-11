@@ -195,12 +195,7 @@ function generate_document_tooltip(id)
 //make the sidebar with the list of topics
 function generate_topic_checkboxes(topics, selected)
 {
-    var result = "Topic Selector (Toggle All <input type='checkbox' class='topic_check_all";
-    if(selected.length === n_topics)
-    {
-        result += " checked";
-    }
-    result += "'></input>): </br>";
+    var result = "Topic Selector (Toggle All <input type='checkbox' class='topic_check_all'></input>): </br>";
     for(var i = 0; i < topics.length; i++)
     {
         var current = topics[i];

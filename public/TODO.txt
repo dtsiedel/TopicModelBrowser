@@ -16,7 +16,7 @@
 
 (CORPUS)
 -make ribbon select stay until you mark another one
--make sure "toggle all" stays in sync when switching to/from simple
+-persist ribbon select between simple and advanced views?
 
 (SPECTRUM)
 
