@@ -300,13 +300,26 @@ function constructCorpus()
         return "path";
     })
 
-    d3.select(".topic_check_all").on("click", function() 
+    //set up button listeners
+    d3.select(".show_all_button").on("click", function() 
     {
-        if(selected_topics.length != n_topics) //not all are toggled on
-            toggle_all_topics_on();
-        else
-            toggle_all_topics_off();
+        toggle_all_topics_on();
     });
+    d3.select(".show_none_button").on("click", function() 
+    {
+        toggle_all_topics_off();
+    });
+    d3.select(".show_cardinal_button").on("click", function()
+    {
+        toggle_all_topics_off();
+        var indices = Object.keys(cardinal_topics).map(x => parseInt(x));
+        for(var i = 0; i < indices.length; i++)
+        {
+            toggle_topic_checkbox(indices[i]);
+            visually_toggle_t(indices[i]); 
+        }
+    });
+
 
     if(corpus_style === "simple")
     {
@@ -526,12 +539,6 @@ function toggle_topic_checkbox(id)
         return "chord partial-fade";
     }).style("stroke", gray).style("stroke-width", .05); //unsure why we have to reset the style
 
-    //also have to update the "select all" checkbox
-    var toggle_all = d3.select(".topic_check_all");
-    if(selected_topics.length !== n_topics)
-        toggle_all.property("checked", false);
-    else
-        toggle_all.property("checked", true);
 
     //and check if you toggled a cardinal element (to toggle its flag)
     if(Object.keys(cardinal_topics).includes(id.toString()))

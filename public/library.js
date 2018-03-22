@@ -195,7 +195,12 @@ function generate_document_tooltip(id)
 //make the sidebar with the list of topics
 function generate_topic_checkboxes(topics, selected)
 {
-    var result = "Topic Selector (Toggle All <input type='checkbox' class='topic_check_all'></input>): </br>";
+    var result = "<span class='flag_title'>Topic Selector</span><br/>"
+    result += "<button class='show_all_button'>Show All</button>";
+    result += "<button class='show_none_button'>Show None</button>";
+    result += "<button class='show_cardinal_button'>Show Cardinal</button>";
+
+    result += "<br/>";
     for(var i = 0; i < topics.length; i++)
     {
         var current = topics[i];
@@ -204,8 +209,9 @@ function generate_topic_checkboxes(topics, selected)
         result += "></input>";
         result += "<span class='t_checktitle_container' data-id='" + i + "'>";
         result += "<span class='t_span' style='color: " + colors[i] + "'>"
-        result += "Topic " + i;
-        result += "</span></span><br/>";
+        result += "Topic " + i + " (";
+        result += conditional_clip(reverse_topic_indices[i].replace(/_/g, ", "), 45);
+        result += ")</span></span><br/>";
     }
 
     return result;
@@ -216,8 +222,8 @@ function generate_flag_html(index)
 {
     var topic_words = reverse_topic_indices[index].replace(/_/g, "<br>");
     var text = "";
-    text += "Topic " + index;
-    text += "<br>";
+    text += "<span class='flag_title'>Topic " + index + ": ";
+    text += "<br></span>";
     text += topic_words;
     return text;
 }

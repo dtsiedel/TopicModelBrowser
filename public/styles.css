@@ -15,7 +15,7 @@ body {
 }
  
 path.chord {
-    stroke-width: .20px;
+    stroke-width: .05px;
 }
  
 #circle:hover path.fade {
@@ -23,7 +23,7 @@ path.chord {
 }
 
 path.partial-fade {
-    opacity: .075;
+    opacity: .20;
 }
 
 .sidebar {
@@ -223,8 +223,14 @@ textpath {
 .corpus-flag {
     user-select: none;
     overflow-y: scroll;
+    color: white; 
 }
 
 .t_span {
     user-select: none;
+}
+
+.flag_title {
+    font-size: 17px;
+    text-decoration: underline;
 }

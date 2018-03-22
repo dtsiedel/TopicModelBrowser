@@ -16,10 +16,6 @@
 -improved excerpt system (precompute excerpts for each doc-topic pair, and for document in general. Then put all into spectrum)
 
 (CORPUS)
--opacity higher on hidden ribbons
--include top n words on topic selector on right
--topic n should be more clearly a title on flag (size?)
--add options for all/none/cardinal instead of single toggle - maybe radio boxes
 -For right pane:
     -need to differentiate the two panes in some way
     -need to remove clutter (fold up top one when bottom is open?)
