@@ -10,6 +10,7 @@ var cardinal_topics = {}; //state of all cardinal flags (map to true = visible)
 var dragSelecting = false;
 //what does the topic selector look like when hidden? 
 var compressed_topic_selector_html = "<div class='compressed_topic_selector'><span class='flag_title'>Topic Selector (Click to Expand)</span></div>"; 
+var selector_is_compressed = false;
 
 //get relevant data from CSV
 //result is a dictionary containing each of the topics as keys. The value of each 
@@ -147,10 +148,14 @@ function toggle_all_topics_off()
 //compresses the topic selector to be a short, wide clickable
 function compress_topic_selector(new_html)
 {
-    var stored_selector = d3.select(".topic_selector").html();
-    d3.select(".topic_selector").html(new_html).style("height", "5%");
-    d3.select(".compressed_topic_selector").on("click", function() { expand_topic_selector(stored_selector); });
-    d3.select(".ribbon_selector").style("height", "95%");
+    if(!selector_is_compressed) //don't compress it twice
+    {
+        var stored_selector = d3.select(".topic_selector").html();
+        d3.select(".topic_selector").html(new_html).style("height", "5%");
+        d3.select(".compressed_topic_selector").on("click", function() { expand_topic_selector(stored_selector); });
+        d3.select(".ribbon_selector").style("height", "95%");
+        selector_is_compressed = true;
+    }
 }
 
 //un-compress the topic selector to the stored html
@@ -159,6 +164,7 @@ function expand_topic_selector(stored)
     d3.select(".topic_selector").html(stored).style("height", "40%");
     d3.select(".ribbon_selector").style("height", "60%");
     set_topic_selector_handlers();
+    selector_is_compressed = false;
 }
 
 //need to be able to reset all of these when the html of the topic selector changes
