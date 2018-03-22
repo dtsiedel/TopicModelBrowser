@@ -8,7 +8,8 @@ var selected = [];
 var selected_topics = "~"; //sentinel value
 var cardinal_topics = {}; //state of all cardinal flags (map to true = visible)
 var dragSelecting = false;
-
+//what does the topic selector look like when hidden? 
+var compressed_topic_selector_html = "<div class='compressed_topic_selector'><span class='flag_title'>Topic Selector (Click to Expand)</span></div>"; 
 
 //get relevant data from CSV
 //result is a dictionary containing each of the topics as keys. The value of each 
@@ -143,6 +144,55 @@ function toggle_all_topics_off()
     }
 }
 
+//compresses the topic selector to be a short, wide clickable
+function compress_topic_selector(new_html)
+{
+    var stored_selector = d3.select(".topic_selector").html();
+    d3.select(".topic_selector").html(new_html).style("height", "5%");
+    d3.select(".compressed_topic_selector").on("click", function() { expand_topic_selector(stored_selector); });
+    d3.select(".ribbon_selector").style("height", "95%");
+}
+
+//un-compress the topic selector to the stored html
+function expand_topic_selector(stored)
+{
+    d3.select(".topic_selector").html(stored).style("height", "40%");
+    d3.select(".ribbon_selector").style("height", "60%");
+    set_topic_selector_handlers();
+}
+
+//need to be able to reset all of these when the html of the topic selector changes
+function set_topic_selector_handlers()
+{
+    d3.selectAll(".topic_check").on("click", function() { toggle_topic_checkbox(d3.select(this).attr("data-id")); });
+    d3.selectAll(".t_checktitle_container").on("click", function(d,i) 
+    {
+        var id = d3.select(this).attr("data-id");
+        visually_toggle_t(id.toString());
+        toggle_topic_checkbox(id.toString());  
+    });
+
+    //set up button listeners
+    d3.select(".show_all_button").on("click", function() 
+    {
+        toggle_all_topics_on();
+    });
+    d3.select(".show_none_button").on("click", function() 
+    {
+        toggle_all_topics_off();
+    });
+    d3.select(".show_cardinal_button").on("click", function()
+    {
+        toggle_all_topics_off();
+        var indices = Object.keys(cardinal_topics).map(x => parseInt(x));
+        for(var i = 0; i < indices.length; i++)
+        {
+            toggle_topic_checkbox(indices[i]);
+            visually_toggle_t(indices[i]); 
+        }
+    });
+}
+
 //make the corpus view, incuding arcs and ribbons
 //mode = "simple" or "regular"
 function constructCorpus()
@@ -191,13 +241,13 @@ function constructCorpus()
         .attr("class", "sidebar");
     
     var topic_selector = d3.select(".sidebar").append("div")
-        .attr("class", "topic-selector")
+        .attr("class", "topic_selector")
         .text("Check which topics you want to see.");
 
 
 
     var info = d3.select(".sidebar").append("div")
-        .attr("class", "info-box")
+        .attr("class", "ribbon_selector")
         .html("</br>Click a chord to see the documents joining those two topics!");
          
     svg.append("circle")
@@ -232,7 +282,6 @@ function constructCorpus()
         .on("mouseout", function(){return tooltip.style("visibility", "hidden");})
         .style("fill", function(d) { return getColor(d.index % n_topics); });
         
-
     // Add a text label.
     var groupText = group.append("text");
      
@@ -272,7 +321,7 @@ function constructCorpus()
         return "#shell" + i; 
     }) 
 
-    if(selected_topics === "~")
+    if(selected_topics === "~") //indicates nothing has been selected
     {
         selected_topics = found.slice().map(function(e) { return e.toString() });
         var temp = selected_topics.slice();
@@ -283,14 +332,8 @@ function constructCorpus()
     }
 
     topic_selector.html(generate_topic_checkboxes(Object.keys(topic_indices), selected_topics));
-    if(selected_topics.length === n_topics) { d3.select(".topic_check_all").property("checked", true); }
-    d3.selectAll(".topic_check").on("click", function() { toggle_topic_checkbox(d3.select(this).attr("data-id")); });
-    d3.selectAll(".t_checktitle_container").on("click", function(d,i) 
-    {
-        var id = d3.select(this).attr("data-id");
-        visually_toggle_t(id.toString());
-        toggle_topic_checkbox(id.toString());  
-    });
+    set_topic_selector_handlers();
+
     groupPath.attr("class", function(d,i) 
     { 
         if(!(selected_topics.includes(i.toString()))) 
@@ -300,25 +343,7 @@ function constructCorpus()
         return "path";
     })
 
-    //set up button listeners
-    d3.select(".show_all_button").on("click", function() 
-    {
-        toggle_all_topics_on();
-    });
-    d3.select(".show_none_button").on("click", function() 
-    {
-        toggle_all_topics_off();
-    });
-    d3.select(".show_cardinal_button").on("click", function()
-    {
-        toggle_all_topics_off();
-        var indices = Object.keys(cardinal_topics).map(x => parseInt(x));
-        for(var i = 0; i < indices.length; i++)
-        {
-            toggle_topic_checkbox(indices[i]);
-            visually_toggle_t(indices[i]); 
-        }
-    });
+    
 
 
     if(corpus_style === "simple")
@@ -466,6 +491,7 @@ function constructCorpus()
                 goTo(pages.corpus, pages.topic, [d.source.index, 1]);
             });
         });
+        compress_topic_selector(compressed_topic_selector_html);
     }
 
     function mouseover(d, i) {

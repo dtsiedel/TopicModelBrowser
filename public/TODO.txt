@@ -17,9 +17,8 @@
 
 (CORPUS)
 -For right pane:
-    -need to differentiate the two panes in some way
-    -need to remove clutter (fold up top one when bottom is open?)
-    -bottom pane buttons should follow scroll?
+    -need to differentiate the two panes with some kind of styling
+    -each pane's buttons should follow scroll?
 -simple/advanced and selected topics should be fragment parameters, and the particular ribbon selected for the bottom pane
 -make ribbon select stay until you mark another one
 
