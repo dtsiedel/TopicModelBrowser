@@ -1,4 +1,3 @@
-// Alex Van Heest
 // Single Topic View
 
 // Designed to display unary topic view of data.
@@ -239,6 +238,8 @@ function constructTopic(topic, numDocs, page_n)
             d3.select("#footer").insert("div", ":first-child").attr("class", "results-end").html("((END OF RESULTS))<br/>").style("color", "red");
         }       
     });
+
+    make_clickable("button");
 }
 
 //control next page logic

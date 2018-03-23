@@ -256,14 +256,12 @@ function constructNodes(links, nodes){
                     }
 		    
                 })
+            make_clickable("path");
     
         
         });
 
     });
-
-    //addLegend(pies, allfilteredData, 18, 12);
-    //console.log(pies);
 
 
     force.on("tick", function() {
@@ -290,6 +288,8 @@ function constructNodes(links, nodes){
 
         d3.selectAll(".nodes-pie").attr("transform", function(d){ return "translate(" + d.x + "," + d.y + ")"});
       });
+
+        make_clickable("button");
     });
 }
 

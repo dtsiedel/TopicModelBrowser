@@ -177,7 +177,8 @@ h2#topicname {
 }
 
 .topic-name {
-    cursor: default;
+    user-select: none;
+    cursor: pointer;
 }
 
 .loader {

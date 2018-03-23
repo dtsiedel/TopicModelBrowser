@@ -1,5 +1,4 @@
 (GENERAL)
--clicky hands (topic, nodes, spectrum)
 -still some kind of oddness with data disappearing on linked pages (donut, nodes)
 -data pipeline
 -introduce other metadata (i.e. aggregate by blog, or anything else given)
@@ -26,6 +25,7 @@
 (NODES)
 -make click mark them (show info w/ link) instead of immediately linking
 -add legend
+-hide them for the first n ticks (to prevent them from flying around)
 
 (LONGTERM)
 -use browser back button
