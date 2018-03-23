@@ -143,7 +143,6 @@ function constructDonut(n)
 
         make_clickable("path");
         make_clickable(".arc_text");
-        make_clickable(".donut_title");
     });
 
     make_clickable("button");
