@@ -262,3 +262,7 @@ textpath {
     user-select: none;
     cursor: pointer;
 }
+
+.donut_title {
+    user-select: none;
+}
