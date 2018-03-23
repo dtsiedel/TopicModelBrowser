@@ -253,3 +253,12 @@ textpath {
 .click_indicator {
     font-size: 25px;
 }
+
+.donut_legend_text {
+    user-select: none;
+}
+
+.donut_url {
+    user-select: none;
+    cursor: pointer;
+}

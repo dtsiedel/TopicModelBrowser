@@ -164,10 +164,13 @@ function addLegend(chart, data, legendRectSize, legendSpacing)
         });
 
     legend.append('text')
+        .attr("class", "donut_legend_text")
         .attr('x', legendRectSize + legendSpacing)
         .attr('y', legendRectSize - legendSpacing + offset)
         .style("fill", "white")
         .text(function(d) { return clip(commas(d.topic),70); });
+   
+    make_clickable("rect");
 }
 
 

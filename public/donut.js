@@ -117,7 +117,7 @@ function constructDonut(n)
                         
                         chart.append("text")
                             .attr("text-anchor", "middle")
-                            .attr("class", "title")
+                            .attr("class", "donut_url")
                             .text(conditional_clip(document_text[n].url, 30))
                             .style("fill", "white")
                             .on("mouseover", function(){return tooltip.style("visibility", "visible");}) 
@@ -130,17 +130,23 @@ function constructDonut(n)
                             });
                         
                         addLegend(chart, filteredData, 18, 12);
-                        //addExcerpt(chart, document_text[n]["text"]);
                 }
         });
 
         chart.append("text")
+            .attr("class", "donut_title")
             .attr("x", -90)
             .attr("y", -200)
             .style("font-size", "35px")
             .style("fill", "white")
             .text(conditional_clip(document_text[n]["title"], 30));
+
+        make_clickable("path");
+        make_clickable(".arc_text");
+        make_clickable(".donut_title");
     });
+
+    make_clickable("button");
 }
 
 //cleanup all things created by donut
