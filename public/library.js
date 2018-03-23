@@ -703,3 +703,15 @@ function getDocumentData(docs, callback, parameters)
         callback(parameters);
     });
 }
+
+//make the cursor indicate that the attribute selected by *selector* is clickable
+function make_clickable(selector)
+{
+    d3.selectAll(selector).classed("clickable", true);
+} 
+
+//opposite of above
+function make_nonclickable(selector)
+{
+    d3.selectAll(selector).classed("clickable", false);
+} 

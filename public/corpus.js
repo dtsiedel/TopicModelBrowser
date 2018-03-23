@@ -155,6 +155,7 @@ function compress_topic_selector(new_html)
         d3.select(".compressed_topic_selector").on("click", function() { expand_topic_selector(stored_selector); });
         d3.select(".ribbon_selector").style("height", "95%");
         selector_is_compressed = true;
+        make_clickable(".compressed_topic_selector");
     }
 }
 
@@ -249,8 +250,6 @@ function constructCorpus()
     var topic_selector = d3.select(".sidebar").append("div")
         .attr("class", "topic_selector")
         .text("Check which topics you want to see.");
-
-
 
     var info = d3.select(".sidebar").append("div")
         .attr("class", "ribbon_selector")
@@ -501,6 +500,9 @@ function constructCorpus()
             d3.select("#topic_single").on("click", function() {
                 goTo(pages.corpus, pages.topic, [d.source.index, 1]);
             });
+            make_clickable("button");
+            make_clickable(".checkbox");
+            make_clickable(".checktext");
         });
         compress_topic_selector(compressed_topic_selector_html);
     }
@@ -523,6 +525,12 @@ function constructCorpus()
     else
         toggle_corpus.text("Switch to Simplified View");
         
+    
+    //make the "clicky hand" appear when hovering 
+    make_clickable("path");
+    make_clickable(".t_span");
+    make_clickable(".topic_check");
+    make_clickable("button");
 }
 
 function apply_chord_fade(source, target, i)
@@ -563,12 +571,12 @@ function toggle_topic_checkbox(id)
     }
 
     d3.selectAll(".path").attr("class", function(d, i) {
-        if(selected_topics.includes(i.toString())) return "path";
-        return "path partial-fade";
+        if(selected_topics.includes(i.toString())) return "clickable path";
+        return "clickable path partial-fade";
     });
     d3.selectAll(".chord").attr("class", function(d, i) 
     {
-        var c = "chord";
+        var c = "clickable chord";
         if(!((selected_topics.includes(d.source.index.toString())) && (selected_topics.includes(d.target.index.toString()))))
         {
             c += " partial-fade"; 
@@ -632,7 +640,7 @@ function toggle_corpus_checkbox(id)
 //make the html element that goes on the right
 function generate_document_info(source, target, callback)
 {
-    if(source === target)
+    if(source === target) //should never be called anymore but it's here just in case
     {
         var result = "<span class='t1 title'>Topic " + source + "</span><br/>";
         var words = reverse_topic_indices[source]
@@ -652,7 +660,7 @@ function generate_document_info(source, target, callback)
 		    break;
 		}   
 		var title = conditional_clip(document_text[docs[i]]["title"], 50);
-		result += "<input class='checkBox c_check"+docs[i]+"' data-id='"+docs[i]+"'type='checkbox'>" + "<div class='checktitle-container' data-id="+docs[i]+">" + conditional_clip(title, 30) + " (<span class='t1'>" + ((csv_data[docs[i]][reverse_topic_indices[source]])*100).toFixed(2) + "%</span>)</div>";
+		result += "<input class='checkBox c_check"+docs[i]+"' data-id='"+docs[i]+"'type='checkbox'>" + "<div class='checktitle-container' data-id="+docs[i]+"><span class='checktext'>" + conditional_clip(title, 30) + " (<span class='t1'>" + ((csv_data[docs[i]][reverse_topic_indices[source]])*100).toFixed(2) + "%</span>)</span></div>";
 	    }
 	    callback(result);
 	}); 
@@ -679,7 +687,7 @@ function generate_document_info(source, target, callback)
                 break;
             }
             var title = conditional_clip(document_text[docs[i]]["title"], 50);
-            result += "<input class='checkBox c_check"+docs[i]+"' data-id='"+docs[i]+"'type='checkbox'>" + "<div class='checktitle-container' data-id="+docs[i]+">" + conditional_clip(title, 30) + " (<span class='t1'>" + ((csv_data[docs[i]][reverse_topic_indices[source]])*100).toFixed(2) + "%</span> and <span class='t2'>" + ((csv_data[docs[i]][reverse_topic_indices[target]])*100).toFixed(2) + "%</span>)</div>";
+            result += "<input class='checkBox c_check"+docs[i]+"' data-id='"+docs[i]+"'type='checkbox'>" + "<div class='checktitle-container' data-id="+docs[i]+"><span class='checktext'>" + conditional_clip(title, 30) + " (<span class='t1'>" + ((csv_data[docs[i]][reverse_topic_indices[source]])*100).toFixed(2) + "%</span> and <span class='t2'>" + ((csv_data[docs[i]][reverse_topic_indices[target]])*100).toFixed(2) + "%</span>)</span></div>";
         }
         callback(result);
     });

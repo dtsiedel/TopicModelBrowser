@@ -9,6 +9,10 @@ body {
     overflow: auto;
 }
 
+.clickable {
+    cursor: pointer;
+}
+
 #circle circle {
     fill: none;
     pointer-events: all;
@@ -100,16 +104,13 @@ path.full-fade {
 
 #document_single {
     background-color: #d3d3d3;
-    cursor: not-allowed;
+    cursor : not-allowed;
 }
 
 .checktitle {
-    cursor:default;
+    cursor : default;
 }
 
-.title {
-    cursor: alias; 
-}
 
 h2#topicname {
     width: 50%;
