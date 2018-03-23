@@ -153,7 +153,13 @@ h2#topicname {
 }
 
 .document_text {
-    cursor: default;
+    user-select: none;
+    cursor: pointer;
+}
+
+.bar_text {
+    user-select: none;
+    cursor: pointer;
 }
 
 .link {

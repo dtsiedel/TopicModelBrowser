@@ -160,6 +160,9 @@ function drawShape(t1, t2, i)
             .attr("fill",fetchColor(t1))
             .attr("stroke-width",2)
         .attr("opacity", .4);
+
+    make_clickable("button");
+    make_clickable("rect");
 }
 
 //essentially randint in range (-max,max)
