@@ -119,7 +119,7 @@ Array.prototype.diff = function(a) {
     return this.filter(function(i) {return a.indexOf(i) < 0;});
 };
 
-//add all topics to the seletion
+//add all topics to the selection
 function toggle_all_topics_on()
 {
     for(var i = 0; i < n_topics; i++)
@@ -254,7 +254,7 @@ function constructCorpus()
 
     var info = d3.select(".sidebar").append("div")
         .attr("class", "ribbon_selector")
-        .html("</br>Click a chord to see the documents joining those two topics!");
+        .html("</br><span class='click_indicator'>Click a chord to see the documents joining those two topics!</span>");
          
     svg.append("circle")
         .attr("r", outerRadius);
@@ -349,8 +349,6 @@ function constructCorpus()
         return "path";
     })
 
-    
-
 
     if(corpus_style === "simple")
     {
@@ -416,7 +414,7 @@ function constructCorpus()
         } 
     }
      
-    // Add the chords.
+    // Add the chords
     var chord = svg.selectAll(".chord")
         .data(layout.chords)
         .enter().append("path")
@@ -440,9 +438,16 @@ function constructCorpus()
                 .attr("stop-color", getColor(d.source.index)); 
         })
         .attr("class", function(d, i) { 
+            var c = "chord";
             if(!(selected_topics.includes(d.source.index.toString()) && selected_topics.includes(d.target.index.toString())))
-                return "partial-fade chord";
-            return "chord";
+            {
+                c += " partial-fade";
+            }
+            if(d.source.index === d.target.index)
+            {
+                c += " full-fade";
+            }
+            return c;
         })
         .style("stroke", "white") 
         .style("fill", function(d) { return "url(#linear-gradient" + d.source.index + "-" + d.target.index + ")";})
@@ -543,7 +548,6 @@ function visually_toggle_t(index)
         element.property("checked",false);
     else
         element.property("checked",true);
-
 }
 
 //handle checkbox state for topic checkboxes
@@ -564,11 +568,16 @@ function toggle_topic_checkbox(id)
     });
     d3.selectAll(".chord").attr("class", function(d, i) 
     {
-        if((selected_topics.includes(d.source.index.toString())) && (selected_topics.includes(d.target.index.toString())))
+        var c = "chord";
+        if(!((selected_topics.includes(d.source.index.toString())) && (selected_topics.includes(d.target.index.toString()))))
         {
-            return "chord";
+            c += " partial-fade"; 
         }
-        return "chord partial-fade";
+        if(d.source.index === d.target.index)
+        {
+            c += " full-fade";
+        }
+        return c;
     }).style("stroke", gray).style("stroke-width", .05); //unsure why we have to reset the style
 
 

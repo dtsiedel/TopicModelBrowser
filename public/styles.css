@@ -13,9 +13,14 @@ body {
     fill: none;
     pointer-events: all;
 }
+
+path {
+    transition: all .25s;
+}
  
 path.chord {
     stroke-width: .05px;
+    transition: all .25s;
 }
  
 #circle:hover path.fade {
@@ -24,6 +29,11 @@ path.chord {
 
 path.partial-fade {
     opacity: .20;
+}
+
+path.full-fade {
+    visibility: hidden;
+    pointer-events: none;
 }
 
 .sidebar {
@@ -43,6 +53,7 @@ path.partial-fade {
     color: white;
     word-wrap: break-word;
     overflow: scroll;
+    transition: all .25s linear;
 }
 
 .ribbon_selector {
@@ -52,6 +63,7 @@ path.partial-fade {
     color: white;
     word-wrap: break-word;
     overflow: scroll;
+    transition: all .25s linear;
 }
 
 
@@ -223,9 +235,14 @@ textpath {
     user-select: none;
     overflow-y: scroll;
     color: white; 
+    transition: all .25s;
 }
 
 .flag_title {
     font-size: 17px;
     text-decoration: underline;
+}
+
+.click_indicator {
+    font-size: 25px;
 }

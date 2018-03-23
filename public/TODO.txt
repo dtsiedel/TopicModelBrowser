@@ -17,12 +17,8 @@
 -improved excerpt system (precompute excerpts for each doc-topic pair, and for document in general. Then put all into spectrum)
 
 (CORPUS)
--larger indicator that chords are clickable
--opacity-0 the self-links, consider if we want to remove and re-scale
 -differentiate the two panes with some kind of styling
--animate compression of topic selector
 -simple/advanced and selected topics should be fragment parameters, and the particular ribbon selected for the bottom pane
--make ribbon select stay until you mark another one
 
 (SPECTRUM)
 
