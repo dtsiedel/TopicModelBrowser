@@ -1,4 +1,5 @@
 (GENERAL)
+-clicky hands
 -data pipeline
 -introduce other metadata (i.e. aggregate by blog, or anything else given)
 -alternate naming (termite)
@@ -16,9 +17,10 @@
 -improved excerpt system (precompute excerpts for each doc-topic pair, and for document in general. Then put all into spectrum)
 
 (CORPUS)
--For right pane:
-    -need to differentiate the two panes with some kind of styling
-    -each pane's buttons should follow scroll?
+-larger indicator that chords are clickable
+-opacity-0 the self-links, consider if we want to remove and re-scale
+-differentiate the two panes with some kind of styling
+-animate compression of topic selector
 -simple/advanced and selected topics should be fragment parameters, and the particular ribbon selected for the bottom pane
 -make ribbon select stay until you mark another one
 
