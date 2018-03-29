@@ -118,6 +118,7 @@ h2#topicname {
     margin-right: auto;
     text-align: center;
     vertical-align: middle;
+    user-select: none;
 }
 
 .outlink {
