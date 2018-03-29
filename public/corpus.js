@@ -337,6 +337,7 @@ function constructCorpus()
     }
 
     topic_selector.html(generate_topic_checkboxes(Object.keys(topic_indices), selected_topics));
+    selector_is_compressed = false;
     set_topic_selector_handlers();
 
     groupPath.attr("class", function(d,i) 

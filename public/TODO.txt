@@ -15,7 +15,6 @@
 -improved excerpt system (precompute excerpts for each doc-topic pair, and for document in general. Then put all into spectrum)
 
 (CORPUS)
--fix bug where document pane only maximizes sometimes
 -change text of "compare selected documents" based on how many are selected
 -differentiate the two panes with some kind of styling
 -simple/advanced and selected topics should be fragment parameters, and the particular ribbon selected for the bottom pane
