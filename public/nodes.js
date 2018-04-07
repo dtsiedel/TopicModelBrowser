@@ -264,7 +264,24 @@ function constructNodes(links, nodes){
     });
 
 
+    var count = 0;
+    var count_threshold = 50;
+    var counting = true;
+
     force.on("tick", function() {
+        console.log(count);
+        if((count < count_threshold) && counting)
+        {
+            d3.selectAll(".nodes-pie").style("opacity", 0);
+            d3.selectAll(".link").style("opacity", 0);
+        }
+        else
+        {
+            d3.selectAll(".nodes-pie").style("opacity", 1);
+            d3.selectAll(".link").style("opacity", 1);
+            counting = false;
+        }
+    
       node 
           .attr("cx", function(d) {
           return d.x = Math.max(radius, Math.min(width - radius, d.x)); 
@@ -285,7 +302,10 @@ function constructNodes(links, nodes){
             return d.target.y;
           });
           
-
+        if(counting)
+        {
+            count++;
+        }
         d3.selectAll(".nodes-pie").attr("transform", function(d){ return "translate(" + d.x + "," + d.y + ")"});
       });
 
