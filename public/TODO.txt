@@ -24,7 +24,6 @@
 (NODES)
 -add legend
 -make click mark them (show info w/ link) instead of immediately linking
--hide them for the first n ticks (to prevent them from flying around)
 
 (LONGTERM)
 -use browser back button
