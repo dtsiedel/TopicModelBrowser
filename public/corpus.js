@@ -624,17 +624,27 @@ function toggle_corpus_checkbox(id)
     if(selected.length === 1)
     {
         d3.select("#document_single").style("background-color", "red").style("cursor", "default");
-        d3.select("#document_compare").style("background-color", "green").style("cursor", "default");
+        d3.select("#document_compare").style("background-color", "#d3d3d3").style("cursor", "not-allowed");
+        d3.select("#document_compare").text("Select documents to learn more about them!");
     }
     else if(selected.length > 0)
     {
         d3.select("#document_single").style("background-color", "#d3d3d3").style("cursor", "not-allowed");
         d3.select("#document_compare").style("background-color", "green").style("cursor", "default");
+        if(selected.length === 2)
+        {
+            d3.select("#document_compare").text("Compare these two documents!");
+        }
+        else
+        {
+            d3.select("#document_compare").text("Compare all selected documents!");
+        }
     }
     else
     {
         d3.select("#document_single").style("background-color", "#d3d3d3").style("cursor", "not-allowed");
         d3.select("#document_compare").style("background-color", "#d3d3d3").style("cursor", "not-allowed");
+        d3.select("#document_compare").text("Select documents to learn more about them!");
     }
 }
 
@@ -645,7 +655,7 @@ function generate_document_info(source, target, callback)
     {
         var result = "<span class='t1 title'>Topic " + source + "</span><br/>";
         var words = reverse_topic_indices[source]
-	result += "<button class='corpus-button' id='document_compare' type='button'>Compare selected documents!</button>";
+	result += "<button class='corpus-button' id='document_compare' type='button'>Select documents to learn more about them!</button>";
     	result += "<button class='corpus-button' id='document_single' type='button'>View single document!</button><br/>";
         result += "<button class='corpus-button' id='topic_single' type='button'>Learn about this topic!</button><br/>";
         var docs = ribbon_data[source][source];
@@ -674,7 +684,7 @@ function generate_document_info(source, target, callback)
     result += source + "</span> and <span class='t2 title'> Topic ";
     result += target + "</span> Shared Documents:<br>";
     result += "<button class='corpus-button' id='topic_compare' type='button'>Compare these topics!</button><br/>";
-    result += "<button class='corpus-button' id='document_compare' type='button'>Compare selected documents!</button>";
+    result += "<button class='corpus-button' id='document_compare' type='button'>Select documents to learn more about them!</button>";
     result += "<button class='corpus-button' id='document_single' type='button'>View single document!</button><br/>";
     var docs = ribbon_data[source][target]; 
     docs = sortRibbon(docs, source, target);

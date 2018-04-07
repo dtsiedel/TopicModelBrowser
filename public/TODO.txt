@@ -1,12 +1,11 @@
 (GENERAL)
--still some kind of oddness with data disappearing on linked pages (donut, nodes)
--data pipeline
+-bugfix oddness with data disappearing on linked pages (donut, nodes), and breaking back button
 -introduce other metadata (i.e. aggregate by blog, or anything else given)
+-data pipeline
 -help button/page
 -topic numbering starting from 1?
 -Search vs. Browse
 -cross-browser support (Firefox wtf)
--prevent all pages from scrolling? (besides single topic)
 
 (BARS)
 
@@ -15,8 +14,7 @@
 -improved excerpt system (precompute excerpts for each doc-topic pair, and for document in general. Then put all into spectrum)
 
 (CORPUS)
--change text of "compare selected documents" based on how many are selected
--differentiate the two panes with some kind of styling
+-differentiate the two panes with some more styling
 -simple/advanced and selected topics should be fragment parameters, and the particular ribbon selected for the bottom pane
 
 (SPECTRUM)
