@@ -265,7 +265,7 @@ function constructNodes(links, nodes){
 
 
     var count = 0;
-    var count_threshold = 40;
+    var count_threshold = 50;
     var counting = true;
 
     force.on("tick", function() {
