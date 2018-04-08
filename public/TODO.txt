@@ -1,5 +1,4 @@
 (GENERAL)
--bugfix oddness with data disappearing on linked pages (donut, nodes), and breaking back button
 -introduce other metadata (i.e. aggregate by blog, or anything else given)
 -data pipeline
 -help button/page

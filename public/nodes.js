@@ -236,7 +236,7 @@ function constructNodes(links, nodes){
             .enter().append("g")
             .attr("class", "arc");
 
-        getDocumentData([chosenDocument,0], function()
+        getDocumentData([doc_n,0], function()
         {
             g.append("path")
                 .on("mouseover", function(){return tooltip.style("visibility", "visible");}) //bind tooltip to when mouse goes over arc
@@ -265,11 +265,10 @@ function constructNodes(links, nodes){
 
 
     var count = 0;
-    var count_threshold = 50;
+    var count_threshold = 40;
     var counting = true;
 
     force.on("tick", function() {
-        console.log(count);
         if((count < count_threshold) && counting)
         {
             d3.selectAll(".nodes-pie").style("opacity", 0);
