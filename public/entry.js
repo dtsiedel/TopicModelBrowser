@@ -46,7 +46,6 @@ function getData()
                     d3.select(".loader").remove();
                     d3.select(".load-text").remove();
 
-
                     //Read URL hash fragment and then based on fragment go to certain page and load in that data 
                     var hash = window.location.hash.substr(1);
                     //if no hash, go to corpus
@@ -56,13 +55,12 @@ function getData()
                     else{
                         var page = hash.charAt(0);
                         switch(page){
-                            //donut
-                            case "d":
-                                donutMain(hash.substr(1));
+                            case "d": //donut
+                                current_params = hash.substr(1);
+                                goTo(pages.corpus, pages.donut, current_params);
                                 break;
-                            //topic
-                            case "t":
-                                //need to add page number
+
+                            case "t": //topic
                                 var parameters = [];
                                 var tmp = '';
                                 hash = hash.substr(1);
@@ -78,60 +76,59 @@ function getData()
                                         tmp = "";
                                     }
                                 }
-                                //second var is page page number
                                 parameters.push(tmp);
-                                topicMain(parameters);
+                                goTo(pages.corpus, pages.topic, parameters);
                                 break;
-                            //bars
-                            case "b":
+
+                            case "b": //bars
                                 var parameters = [];
-                                var document = "";
+                                var doc = "";
                                 hash = hash.substr(1);
                                 for (i = 0; i < hash.length; i++) {
                                     if(hash[i] != '&'){
-                                        document += hash[i];
+                                        doc += hash[i];
                                     }
                                     else {
-                                        parameters.push(document);
-                                        document = "";
+                                        parameters.push(doc);
+                                        doc = "";
                                     }
                                 }
-                                parameters.push(document);
-                                barsMain(parameters);
+                                parameters.push(doc);
+                                goTo(pages.corpus, pages.bars, parameters);
                                 break;
-                            //nodes
-                            case "n":
+
+                            case "n": //nodes
                                 var parameters = [];
-                                var document = "";
+                                var doc = "";
                                 hash = hash.substr(1);
                                 for (i = 0; i < hash.length; i++) {
                                     if(hash[i] != '&'){
-                                        document += hash[i];
+                                        doc += hash[i];
                                     }
                                     else {
-                                        parameters.push(document);
-                                        document = "";
+                                        parameters.push(doc);
+                                        doc = "";
                                     }
                                 }
-                                parameters.push(document);
-                                nodesMain(parameters);
+                                parameters.push(doc);
+                                goTo(pages.corpus, pages.nodes, parameters);
                                 break;
-                            //spectrum
-                            case "s":
+
+                            case "s": //spectrum
                                 var parameters = [];
-                                var document = "";
+                                var doc = "";
                                 hash = hash.substr(1);
                                 for (i = 0; i < hash.length; i++) {
                                     if(hash[i] != '&'){
-                                        document += hash[i];
+                                        doc += hash[i];
                                     }
                                     else {
-                                        parameters.push(document);
-                                        document = "";
+                                        parameters.push(doc);
+                                        doc = "";
                                     }
                                 }
-                                parameters.push(document);
-                                spectrumMain(parameters);
+                                parameters.push(doc);
+                                goTo(pages.corpus, pages.spectrum, parameters);
                         }
                     }
                     

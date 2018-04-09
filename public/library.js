@@ -541,17 +541,6 @@ function get_stopwords(callback)
     });
 }
 
-//return an array of n random numbers between start and stop
-function nRandRange(n, start, stop)
-{
-    var result = [];
-    for(var i = 0; i < n; i++)
-    {
-        result.push(Math.floor(Math.random() * (stop - start + 1)) + start);
-    }
-    return result;
-}
-
 //for the back button
 function returnToCorpus()
 {

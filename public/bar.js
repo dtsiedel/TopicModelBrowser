@@ -165,14 +165,6 @@ function drawShape(t1, t2, i)
     make_clickable("rect");
 }
 
-//essentially randint in range (-max,max)
-function randomOffset(max)
-{
-    var num = Math.floor(Math.random()*max+1); 
-    num *= Math.floor(Math.random()*2) > 1 ? 1 : -1; 
-    return num;
-}
-
 //this is the worst thing. Curse you Brendan Eich
 function fetchX(svgrect)
 {
