@@ -36,6 +36,7 @@ var n_topics;
 var document_text = {};
 var call_stack = [];
 var current_params = [];
+var dropdown;
 
 document.addEventListener("DOMContentLoaded", function(e) {
     console.log("loaded libary");
@@ -229,6 +230,82 @@ function generate_flag_html(index)
     text += "<br></span>";
     text += topic_words;
     return text;
+}
+
+//lookup to get a pretty string for an enum number
+function prettify_one_entry(entry)
+{
+    var num = entry[0];
+    var second_part = entry[1];    
+
+    var result = "";
+
+    switch(num)
+    {
+        case 1: 
+            result += "Single Doc: ";
+            result += second_part; 
+            break;
+        case 2: 
+            result += "Single Topic: ";
+            result += second_part[0] + " Page " + second_part[1];
+            break;
+        case 3:
+            result += "Two Docs: ";
+            result += second_part[0] + " and " + second_part[1];
+            break;
+        case 4:
+            result += "Multiple Docs: ";
+            for(var i = 0; i < second_part.length; i++)
+            {
+                result += second_part[i] + ", ";
+            }
+            result = result.substring(0, result.length - 2);
+            break;
+        case 5:
+            result += "Two Topics: ";
+            result += second_part[0] + " and " + second_part[1];
+
+            break;
+        default:
+            result += "Error Page: ";
+
+            break;
+    }
+
+    return conditional_clip(result, 45);
+}
+
+//prettify a call stack entry into a string
+function prettify_call_stack_entry(entry)
+{
+    var result = "";
+    if(entry[0] === 0)
+    {
+        return "Corpus View";
+    }
+
+    if(entry.length === 2)
+    {
+        result += prettify_one_entry(entry);
+        result += "<br>";
+    }
+
+    return result;
+}
+
+//convert the call stack into a visual representation
+function generate_dropdown_html()
+{
+    var result = "";
+    for(var i = 0; i < call_stack.length; i++)
+    {
+        result += "<div class='dropdown-element'>";
+        var current = call_stack[i];
+        result += prettify_call_stack_entry(current);
+        result += "</div>";
+    } 
+    return result;
 }
 
 //does all the text formatting for the tooltip
@@ -574,6 +651,8 @@ function goTo(source, target, parameters, returning=false)
         call_stack.push([source, current_params]);
     } 
 
+    d3.select(".dropdown").style("visibility", "hidden"); 
+
     current_params = parameters;
     switch(source)
     {
@@ -613,7 +692,7 @@ function goTo(source, target, parameters, returning=false)
             topicMain(parameters);
             break;
         case pages.bars:
-	        var hash = '#b';
+	    var hash = '#b';
             for(i = 0; i < parameters.length; i++) {
                 hash +=parameters[i];
                 hash += "&";
@@ -627,11 +706,11 @@ function goTo(source, target, parameters, returning=false)
                 hash += parameters[i];
                 hash += "&";
             }
-	        window.location.hash = hash.slice(0, -1);
+	    window.location.hash = hash.slice(0, -1);
             nodesMain(parameters);
             break;
         case pages.spectrum:
-	        var hash = '#s';
+	    var hash = '#s';
             for(i = 0; i < parameters.length; i++) {
                 hash +=parameters[i];
                 hash += "&";
@@ -652,16 +731,46 @@ function goBack(current)
 }
 
 //add a back to corpus button
+//as well as our fancy new back selector
 function addCorpusLink(source)
 {
+    var timer;
+    var should_go_back = true; //need to not trigger regular click if we mean to long click
+
     d3.select("#header").append("button").attr("class", "corpus-link").text("Back to Corpus!").on("click", function()
     {
         goTo(source, pages.corpus, "regular")
     });
-    d3.select("#header").append("button").attr("class", "back-button").text("Back to Previous View").on("click", function()
+
+    d3.select("#header").append("button").attr("class", "back-button").html("Back to Previous View&darr;").on("mouseup", function()
     {
-        goBack(source);
-    });
+        clearTimeout(pressTimer);
+        if(should_go_back)
+        {
+            goBack(source);
+        }
+        should_go_back = true;
+    }).on("mousedown", (function() {
+        pressTimer = window.setTimeout(function() 
+        { 
+            should_go_back = false;
+            var back_x = $(".back-button").offset().left + 3;
+            var back_y = $(".back-button").offset().top + 20;
+            d3.select(".dropdown").style("visibility","visible").style("top", back_y+"px").style("left",back_x+"px")
+            d3.select(".dropdown").html(generate_dropdown_html());
+            d3.selectAll(".dropdown-element").on("mouseover", function() { d3.select(this).style("background-color", "#72a6f9"); });
+            d3.selectAll(".dropdown-element").on("mouseout", function() { d3.select(this).style("background-color", "white"); });
+        },500);
+    }));
+
+    window.onclick = function(event) 
+    {
+        if(!event.target.matches(".back-button"))
+        {
+            d3.select(".dropdown").style("visibility","hidden"); 
+        }
+    }
+
 }
 
 //take off the button added by addCorpusLink

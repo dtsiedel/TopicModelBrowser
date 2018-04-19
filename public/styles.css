@@ -268,3 +268,18 @@ textpath {
 .donut_title {
     user-select: none;
 }
+
+.dropdown-element {
+    overflow: hidden;
+    height: 18px;
+    user-select: none;
+    background-color: white;
+    user-select: none;
+}
+
+.back-button { 
+    user-select: none;
+}
+
+
+
