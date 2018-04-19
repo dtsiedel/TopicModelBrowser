@@ -298,9 +298,9 @@ function prettify_call_stack_entry(entry)
 function generate_dropdown_html()
 {
     var result = "";
-    for(var i = 0; i < call_stack.length; i++)
+    for(var i = call_stack.length - 1; i >= 0; i--)
     {
-        result += "<div class='dropdown-element'>";
+        result += "<div class='dropdown-element' data-number='" + (call_stack.length - i) + "'>";
         var current = call_stack[i];
         result += prettify_call_stack_entry(current);
         result += "</div>";
@@ -730,6 +730,12 @@ function goBack(current)
     goTo(current, previous[0], previous[1], true);
 }
 
+//handles call stack updating when you use the fancy back button
+function handle_dropdown_click(element)
+{
+    console.log(d3.select(element).attr("data-number"));
+}
+
 //add a back to corpus button
 //as well as our fancy new back selector
 function addCorpusLink(source)
@@ -760,6 +766,7 @@ function addCorpusLink(source)
             d3.select(".dropdown").html(generate_dropdown_html());
             d3.selectAll(".dropdown-element").on("mouseover", function() { d3.select(this).style("background-color", "#72a6f9"); });
             d3.selectAll(".dropdown-element").on("mouseout", function() { d3.select(this).style("background-color", "white"); });
+            d3.selectAll(".dropdown-element").on("click", function() { handle_dropdown_click(this); });
         },500);
     }));
 

@@ -39,7 +39,7 @@ function getData()
             .style("z-index", "10") 
             .style("visibility", "hidden")
             .style("border", "1px solid white")
-            .text("fooby"); //bad to see this (obviously)
+            .text(""); //bad to see this (obviously)
     }
 
     if(!loaded_data)
