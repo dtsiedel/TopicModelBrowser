@@ -300,7 +300,8 @@ function generate_dropdown_html()
     var result = "";
     for(var i = call_stack.length - 1; i >= 0; i--)
     {
-        result += "<div class='dropdown-element' data-number='" + (call_stack.length - i) + "'>";
+        result += "<div class='dropdown-element' data-number='" + (call_stack.length - i);
+        result += "' data-one='" + call_stack[i][0] + "' data-two='" + call_stack[i][1] + "'>";
         var current = call_stack[i];
         result += prettify_call_stack_entry(current);
         result += "</div>";
@@ -731,9 +732,16 @@ function goBack(current)
 }
 
 //handles call stack updating when you use the fancy back button
-function handle_dropdown_click(element)
+function handle_dropdown_click(element, source)
 {
-    console.log(d3.select(element).attr("data-number"));
+    var number_to_pop = d3.select(element).attr("data-number") - 1;
+    var target = call_stack[call_stack.length - 1 - number_to_pop]; 
+
+    for(var i = 0; i < number_to_pop+1; i++)
+    {
+        call_stack.pop();
+    }
+    goTo(source, target[0], target[1], true);
 }
 
 //add a back to corpus button
@@ -766,7 +774,7 @@ function addCorpusLink(source)
             d3.select(".dropdown").html(generate_dropdown_html());
             d3.selectAll(".dropdown-element").on("mouseover", function() { d3.select(this).style("background-color", "#72a6f9"); });
             d3.selectAll(".dropdown-element").on("mouseout", function() { d3.select(this).style("background-color", "white"); });
-            d3.selectAll(".dropdown-element").on("click", function() { handle_dropdown_click(this); });
+            d3.selectAll(".dropdown-element").on("click", function() { handle_dropdown_click(this,source); });
         },500);
     }));
 
