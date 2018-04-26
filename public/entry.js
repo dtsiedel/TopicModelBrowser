@@ -52,100 +52,110 @@ function getData()
             d3.select(".loader").style("border-top", "16px solid " + randomColor()); 
             d3.csv("/topic_frame.csv", function(error, response) 
             {
-                d3.select(".loader").style("border-top", "16px solid " + randomColor()); 
-                //get_document_full_texts(function()
-                //{
-                    csv_data = response;
-                    csv_data = rectify_csv_data(csv_data);
-                   
-                    d3.select(".loader").remove();
-                    d3.select(".load-text").remove();
+                d3.csv("/aggdata_blog.csv", function(agg_error, agg_response)
+                {
+                    aggregate_data = agg_response;
+                    d3.select(".loader").style("border-top", "16px solid " + randomColor()); 
+                    //get_document_full_texts(function()
+                    //{
+                        csv_data = response;
+                        csv_data = rectify_csv_data(csv_data);
+                       
+                        d3.select(".loader").remove();
+                        d3.select(".load-text").remove();
 
-                    //Read URL hash fragment and then based on fragment go to certain page and load in that data 
-                    var hash = window.location.hash.substr(1);
-                    //if no hash, go to corpus
-                    if(!hash){
-                        constructCorpus();
-                    }
-                    else{
-                        var page = hash.charAt(0);
-                        switch(page){
-                            case "d": //donut
-                                current_params = hash.substr(1);
-                                goTo(pages.corpus, pages.donut, current_params);
-                                break;
-
-                            case "t": //topic
-                                var parameters = [];
-                                var tmp = '';
-                                hash = hash.substr(1);
-                                for (i = 0; i < hash.length; i++) {
-                                    if(hash[i] != '#'){
-                                        tmp += hash[i];
-                                    }
-                                    else {
-                                        //get past the p in the #p to designate start of page part
-                                        i++;
-                                        //first var is topic number
-                                        parameters.push(tmp);
-                                        tmp = "";
-                                    }
-                                }
-                                parameters.push(tmp);
-                                goTo(pages.corpus, pages.topic, parameters);
-                                break;
-
-                            case "b": //bars
-                                var parameters = [];
-                                var doc = "";
-                                hash = hash.substr(1);
-                                for (i = 0; i < hash.length; i++) {
-                                    if(hash[i] != '&'){
-                                        doc += hash[i];
-                                    }
-                                    else {
-                                        parameters.push(doc);
-                                        doc = "";
-                                    }
-                                }
-                                parameters.push(doc);
-                                goTo(pages.corpus, pages.bars, parameters);
-                                break;
-
-                            case "n": //nodes
-                                var parameters = [];
-                                var doc = "";
-                                hash = hash.substr(1);
-                                for (i = 0; i < hash.length; i++) {
-                                    if(hash[i] != '&'){
-                                        doc += hash[i];
-                                    }
-                                    else {
-                                        parameters.push(doc);
-                                        doc = "";
-                                    }
-                                }
-                                parameters.push(doc);
-                                goTo(pages.corpus, pages.nodes, parameters);
-                                break;
-
-                            case "s": //spectrum
-                                var parameters = [];
-                                var doc = "";
-                                hash = hash.substr(1);
-                                for (i = 0; i < hash.length; i++) {
-                                    if(hash[i] != '&'){
-                                        doc += hash[i];
-                                    }
-                                    else {
-                                        parameters.push(doc);
-                                        doc = "";
-                                    }
-                                }
-                                parameters.push(doc);
-                                goTo(pages.corpus, pages.spectrum, parameters);
+                        //Read URL hash fragment and then based on fragment go to certain page and load in that data 
+                        var hash = window.location.hash.substr(1);
+                        //if no hash, go to corpus
+                        if(!hash){
+                            constructCorpus();
                         }
-                    }
+                        else{
+                            var page = hash.charAt(0);
+                            switch(page){
+                                case "d": //donut
+                                    current_params = hash.substr(1);
+                                    goTo(pages.corpus, pages.donut, current_params);
+                                    break;
+
+                                case "t": //topic
+                                    var parameters = [];
+                                    var tmp = '';
+                                    hash = hash.substr(1);
+                                    for (i = 0; i < hash.length; i++) {
+                                        if(hash[i] != '#'){
+                                            tmp += hash[i];
+                                        }
+                                        else {
+                                            //get past the p in the #p to designate start of page part
+                                            i++;
+                                            //first var is topic number
+                                            parameters.push(tmp);
+                                            tmp = "";
+                                        }
+                                    }
+                                    parameters.push(tmp);
+                                    goTo(pages.corpus, pages.topic, parameters);
+                                    break;
+
+                                case "b": //bars
+                                    var parameters = [];
+                                    var doc = "";
+                                    hash = hash.substr(1);
+                                    for (i = 0; i < hash.length; i++) {
+                                        if(hash[i] != '&'){
+                                            doc += hash[i];
+                                        }
+                                        else {
+                                            parameters.push(doc);
+                                            doc = "";
+                                        }
+                                    }
+                                    parameters.push(doc);
+                                    goTo(pages.corpus, pages.bars, parameters);
+                                    break;
+
+                                case "n": //nodes
+                                    var parameters = [];
+                                    var doc = "";
+                                    hash = hash.substr(1);
+                                    for (i = 0; i < hash.length; i++) {
+                                        if(hash[i] != '&'){
+                                            doc += hash[i];
+                                        }
+                                        else {
+                                            parameters.push(doc);
+                                            doc = "";
+                                        }
+                                    }
+                                    parameters.push(doc);
+                                    goTo(pages.corpus, pages.nodes, parameters);
+                                    break;
+
+                                case "s": //spectrum
+                                    var parameters = [];
+                                    var doc = "";
+                                    hash = hash.substr(1);
+                                    for (i = 0; i < hash.length; i++) {
+                                        if(hash[i] != '&'){
+                                            doc += hash[i];
+                                        }
+                                        else {
+                                            parameters.push(doc);
+                                            doc = "";
+                                        }
+                                    }
+                                    parameters.push(doc);
+                                    goTo(pages.corpus, pages.spectrum, parameters);
+                                    break;
+
+                                case "a": //single aggregate
+                                    current_params = hash.substr(1);
+                                    goTo(pages.corpus, pages.agg_single, current_params);
+                                    break;
+                            }
+                        }
+                });
             });
         });
         loaded_data = true;

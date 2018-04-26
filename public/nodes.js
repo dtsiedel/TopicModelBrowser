@@ -15,6 +15,40 @@ function nodesMain(parameters)
     setUpNodes(parameters);
 }
 
+//I think I wrote this function before in this project lul
+function random_sample(array, num)
+{
+    var result = [];
+    for(var i = 0; i < num; i++)
+    {
+        result.push([Math.floor(Math.random() * array.length)]);
+    }
+    return result;
+}
+
+//force in that big data
+function garbage_temporary_shim()
+{
+    var result = [];
+
+    for(var i = 0; i < the_shit.length; i++)
+    {
+        var temp = [];
+        temp.push(i);
+            
+        var current = the_shit[i];
+        for(var j = 0; j < current.length; j++)
+        {
+            temp.push(current[j].toString());
+        }
+        result.push(temp);
+    }
+
+    result = random_sample(result, 50);
+
+    return result;
+}
+
 //parses our csv hosted on server
 //also does all of the one-time setup and calls our constructNodes function the first time
 function setUpNodes(parameters)
@@ -32,6 +66,8 @@ function setUpNodes(parameters)
         documents[i] = Object.values(documents[i])
     }
 
+    documents = garbage_temporary_shim();
+    
     calculateDistance(documents);
 }
 
