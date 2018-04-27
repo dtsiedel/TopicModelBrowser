@@ -67,10 +67,15 @@ function filter(topic_array)
     var filtered = [];
     var total = 0; //total should add to one, need this to see total of "other"
     var count = 1;
+    
+    var not_topics = [0, "", "Group.1", "X", "link", "blog_domain"];
+
     for(key in topic_array)
     {
-        if(key.length === 0 || key === "blog")
+        if(not_topics.indexOf(key) > 0) //TODO: bit of a hack, needs to be sorted out for other metadata
+        {
             continue
+        }
         if(topic_array[key] < threshold)
         {
             count++; //still increment count since we want absolute index in csv, not just in this list
@@ -129,7 +134,7 @@ function addExcerpt(chart, text)
 }
 
 //put a legend onto chart
-function addLegend(chart, data, legendRectSize, legendSpacing)
+function addLegend(chart, data, legendRectSize, legendSpacing, current_page)
 {
     var offset = 6; //need to shift text down a little
 
@@ -161,7 +166,7 @@ function addLegend(chart, data, legendRectSize, legendSpacing)
         .on("click", function(d,i) {
             if(d.index !== "~")
             {
-                goTo(pages.donut, pages.topic, [d.index, 1]);
+                goTo(current_page, pages.topic, [d.index, 1]);
             }
         });
 
@@ -266,7 +271,10 @@ function prettify_one_entry(entry)
         case 5:
             result += "Two Topics: ";
             result += second_part[0] + " and " + second_part[1];
-
+            break;
+        case 6:
+            result += "Aggregate: ";
+            //TODO: call stack setup for this isn't done yet
             break;
         default:
             result += "Error Page: ";

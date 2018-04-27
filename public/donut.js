@@ -129,7 +129,7 @@ function constructDonut(n)
                                 window.open(url, "_blank");
                             });
                         
-                        addLegend(chart, filteredData, 18, 12);
+                        addLegend(chart, filteredData, 18, 12, pages.donut);
                 }
         });
 

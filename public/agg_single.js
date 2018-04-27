@@ -48,11 +48,23 @@ function compare_value(a,b)
     return (a.value < b.value) ? 1 : -1;
 }
 
+//adding scala-like filter to js (except it's reversed)
+Array.prototype.filter = function(callback) {
+    var i = this.length;
+    while (i--) {
+        if (callback(this[i], i)) {
+            this.splice(i, 1);
+        }
+    }
+};
+
 //main work of making donut chart
 function constructagg_single(n)
 {
     var chosenAgg = aggregate_data[n];
     var filteredData = filter(chosenAgg);
+
+    filteredData.filter(function(d,i) { return d.index === "~"; }); //no need for other here
 
     function arcTween(d) {
         arc = d3.svg.arc().outerRadius(radius*1.1).innerRadius(radius-50).cornerRadius(5);
@@ -77,7 +89,7 @@ function constructagg_single(n)
         .on("click", function(d) {
             if(d.data.index !== "~")
             {
-                goTo(pages.donut, pages.topic, [d.data.index, 1]);
+                goTo(pages.agg_single, pages.topic, [d.data.index, 1]);
             }
         });
 
@@ -129,7 +141,7 @@ function constructagg_single(n)
                             window.open(url, "_blank");
                         });
                     
-                addLegend(chart, filteredData, 18, 12);
+                addLegend(chart, filteredData, 18, 12, pages.agg_single);
             }
     });
 
@@ -139,7 +151,7 @@ function constructagg_single(n)
         .attr("y", -200)
         .style("font-size", "35px")
         .style("fill", "white")
-        .text() //working on this
+        .text(aggregate_data[n]["Group.1"]) 
 
     make_clickable("path");
     make_clickable(".arc_text");
