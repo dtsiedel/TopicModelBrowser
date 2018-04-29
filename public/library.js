@@ -38,6 +38,7 @@ var aggregate_data = [];
 var call_stack = [];
 var current_params = [];
 var dropdown;
+var dropdown_agg;
 
 document.addEventListener("DOMContentLoaded", function(e) {
     console.log("loaded libary");
@@ -273,16 +274,14 @@ function prettify_one_entry(entry)
             result += second_part[0] + " and " + second_part[1];
             break;
         case 6:
-            result += "Aggregate: ";
-            //TODO: call stack setup for this isn't done yet
+            result += "Aggregate: " + aggregate_data[second_part]["Group.1"];
             break;
         default:
             result += "Error Page: ";
-
             break;
     }
 
-    return conditional_clip(result, 45);
+    return conditional_clip(result, 35);
 }
 
 //prettify a call stack entry into a string
@@ -313,6 +312,20 @@ function generate_dropdown_html()
         result += "' data-one='" + call_stack[i][0] + "' data-two='" + call_stack[i][1] + "'>";
         var current = call_stack[i];
         result += prettify_call_stack_entry(current);
+        result += "</div>";
+    } 
+    return result;
+}
+
+//make a list of all available aggregates
+function generate_dropdown_aggregate_html()
+{
+    var result = "";
+    for(var i = 0; i < aggregate_data.length; i++)
+    {
+        result += "<div class='dropdown-element' data-number='" + i;
+        result += "'>";
+        result += conditional_clip(aggregate_data[i]["Group.1"], 35);
         result += "</div>";
     } 
     return result;
@@ -661,7 +674,8 @@ function goTo(source, target, parameters, returning=false)
         call_stack.push([source, current_params]);
     } 
 
-    d3.select(".dropdown").style("visibility", "hidden"); 
+    d3.select(".dropdown-back").style("visibility", "hidden"); 
+    d3.select(".dropdown-agg").style("visibility", "hidden"); 
 
     current_params = parameters;
     switch(source)
@@ -761,11 +775,18 @@ function handle_dropdown_click(element, source)
     goTo(source, target[0], target[1], true);
 }
 
+//handles call stack updating when you use the fancy back button
+function handle_dropdown_agg_click(element, source)
+{
+    goTo(source, pages.agg_single, d3.select(element).attr("data-number"), false);
+}
+
 //add a back to corpus button
 //as well as our fancy new back selector
 function addCorpusLink(source)
 {
-    var timer;
+    var pressTimer;
+    var agg_timer;
     var should_go_back = true; //need to not trigger regular click if we mean to long click
 
     d3.select("#header").append("button").attr("class", "corpus-link").text("Back to Corpus!").on("click", function()
@@ -781,28 +802,49 @@ function addCorpusLink(source)
             goBack(source);
         }
         should_go_back = true;
-    }).on("mousedown", (function() {
+    }).on("mousedown", (function() 
+    {
         pressTimer = window.setTimeout(function() 
         { 
             should_go_back = false;
             var back_x = $(".back-button").offset().left + 3;
             var back_y = $(".back-button").offset().top + 20;
-            d3.select(".dropdown").style("visibility","visible").style("top", back_y+"px").style("left",back_x+"px")
-            d3.select(".dropdown").html(generate_dropdown_html());
+            d3.select(".dropdown-back").style("visibility","visible").style("top", back_y+"px").style("left",back_x+"px")
+            d3.select(".dropdown-back").html(generate_dropdown_html());
             d3.selectAll(".dropdown-element").on("mouseover", function() { d3.select(this).style("background-color", "#72a6f9"); });
             d3.selectAll(".dropdown-element").on("mouseout", function() { d3.select(this).style("background-color", "white"); });
             d3.selectAll(".dropdown-element").on("click", function() { handle_dropdown_click(this,source); });
         },500);
     }));
 
+    d3.select("#header").append("button").attr("class", "aggregate-button").html("See aggregates&darr;").on("mouseup", function() 
+    {
+           clearTimeout(agg_timer); 
+    }).on("mousedown", function() 
+    {
+        agg_timer = window.setTimeout(function() 
+        {
+            var back_x = $(".aggregate-button").offset().left + 3;
+            var back_y = $(".aggregate-button").offset().top + 20;
+            d3.select(".dropdown-agg").style("visibility","visible").style("top", back_y+"px").style("left",back_x+"px")
+            d3.select(".dropdown-agg").html(generate_dropdown_aggregate_html());
+            d3.selectAll(".dropdown-element").on("mouseover", function() { d3.select(this).style("background-color", "#72a6f9"); });
+            d3.selectAll(".dropdown-element").on("mouseout", function() { d3.select(this).style("background-color", "white"); });
+            d3.selectAll(".dropdown-element").on("click", function() { handle_dropdown_agg_click(this, source); });
+        },500); 
+    });
+
     window.onclick = function(event) 
     {
         if(!event.target.matches(".back-button"))
         {
-            d3.select(".dropdown").style("visibility","hidden"); 
+            d3.select(".dropdown-back").style("visibility","hidden"); 
+        }
+        if(!event.target.matches(".aggregate-button"))
+        {
+            d3.select(".dropdown-agg").style("visibility","hidden"); 
         }
     }
-
 }
 
 //take off the button added by addCorpusLink
@@ -810,6 +852,7 @@ function removeCorpusButton()
 {
     d3.select(".corpus-link").remove();
     d3.select(".back-button").remove();
+    d3.select(".aggregate-button").remove();
 }
 
 //get a given document from the server

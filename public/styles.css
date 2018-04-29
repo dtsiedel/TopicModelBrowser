@@ -281,5 +281,10 @@ textpath {
     user-select: none;
 }
 
+.dropdown-back {
+    overflow-y: scroll;
+}
 
-
+.dropdown-agg {
+    overflow-y: scroll;
+}

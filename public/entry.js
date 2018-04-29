@@ -27,11 +27,26 @@ function getData()
             .text(""); //bad to see this (obviously)
     }
 
-    if(d3.selectAll(".dropdown")[0].length === 0)
+    if(d3.selectAll(".dropdown-back")[0].length === 0)
     {
         dropdown = d3.select("body")
             .append("div")
-            .attr("class", "dropdown")
+            .attr("class", "dropdown-back")
+            .style("position", "absolute")
+            .style("width", "250px")
+            .style("background-color", "white")
+            .style("padding-left", "5px")
+            .style("z-index", "10") 
+            .style("visibility", "hidden")
+            .style("border", "1px solid white")
+            .text(""); //bad to see this (obviously)
+    }
+
+    if(d3.selectAll(".dropdown-agg")[0].length === 0)
+    {
+        dropdown = d3.select("body")
+            .append("div")
+            .attr("class", "dropdown-agg")
             .style("position", "absolute")
             .style("width", "250px")
             .style("background-color", "white")

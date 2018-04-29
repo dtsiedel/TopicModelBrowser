@@ -28,7 +28,7 @@ function setUpagg_single(agg)
     height = width - margin.top - margin.bottom - 500;
     radius = Math.min(width, height) / 2.5;
 
-    addCorpusLink(pages.agg_singleMain);
+    addCorpusLink(pages.agg_single);
 
     // add the canvas to the DOM 
     chart = d3.select("#chart-container")
