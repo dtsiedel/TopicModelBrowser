@@ -282,9 +282,11 @@ textpath {
 }
 
 .dropdown-back {
+    max-height: 500px;
     overflow-y: scroll;
 }
 
 .dropdown-agg {
+    max-height: 500px;
     overflow-y: scroll;
 }
