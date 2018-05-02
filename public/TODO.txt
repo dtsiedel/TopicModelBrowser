@@ -25,7 +25,6 @@
 -make click mark them (show info w/ link) instead of immediately linking
 
 (LONGTERM)
--use browser back button
 -https 
 -alternate naming (termite)
 -user setting names of topics
