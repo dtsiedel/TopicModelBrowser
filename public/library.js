@@ -794,7 +794,7 @@ function addCorpusLink(source)
         goTo(source, pages.corpus, "regular")
     });
 
-    d3.select("#header").append("button").attr("class", "back-button").html("Back to Previous View&darr;").on("mouseup", function()
+    d3.select("#header").append("button").attr("class", "back-button").html("Back to Previous View ▼").on("mouseup", function()
     {
         clearTimeout(pressTimer);
         if(should_go_back)
@@ -817,7 +817,7 @@ function addCorpusLink(source)
         },500);
     }));
 
-    d3.select("#header").append("button").attr("class", "aggregate-button").html("See aggregates&darr;").on("mouseup", function() 
+    d3.select("#header").append("button").attr("class", "aggregate-button").html("See aggregates ▼").on("mouseup", function() 
     {
            clearTimeout(agg_timer); 
     }).on("mousedown", function() 
