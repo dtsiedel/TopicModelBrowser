@@ -20,7 +20,7 @@ var colors = ["#1CE6FF", "#FF34FF", "#FF4A46", "#008941", "#006FA6", "#A30059",
         "#83AB58", "#001C1E", "#004B28", "#C8D0F6", "#A3A489", "#806C66", "#222800",
         "#BF5650", "#E83000", "#66796D", "#DA007C", "#FF1A59", "#8ADBB4", "#1E0200", "#5B4E51",
         "#C895C5", "#320033", "#FF6832", "#66E1D3", "#CFCDAC", "#D0AC94", "#7ED379", "#012C58"];
-var pages = {"corpus":0, "donut":1, "topic":2, "bars":3, "nodes":4, "spectrum":5, "agg_single":6}; //enum for which page to go to
+var pages = {"corpus":0, "donut":1, "topic":2, "bars":3, "nodes":4, "spectrum":5, "agg_single":6, "agg_multiple":7}; //enum for pages 
 var loaded_data = false; //flag to prevent reload on corpus reload
 var total_t_d_links = 0; //need this to compute proportions of topic relevance
 var color_map = {};
@@ -103,6 +103,20 @@ function filter(topic_array)
     other["color"] = gray;
     filtered.push(other);
     return filtered;
+}
+
+//return the index of the aggregate with the given
+//agg_type and agg_value
+function get_aggregate(type, agg_name)
+{
+    for(var i = 0; i < aggregate_data.length; i++)
+    {
+        if(aggregate_data[i]["agg_type"] === type && aggregate_data[i]["agg_name"] === agg_name)
+        {
+            return i;
+        }
+    }
+    return -1;
 }
 
 //take in the agg_data csv and make it usable to our application
@@ -270,19 +284,19 @@ function prettify_one_entry(entry)
 
     switch(num)
     {
-        case 1: 
+        case pages.donut: 
             result += "Single Doc: ";
             result += second_part; 
             break;
-        case 2: 
+        case pages.topic: 
             result += "Single Topic: ";
             result += second_part[0] + " Page " + second_part[1];
             break;
-        case 3:
+        case pages.bars:
             result += "Two Docs: ";
             result += second_part[0] + " and " + second_part[1];
             break;
-        case 4:
+        case pages.nodes:
             result += "Multiple Docs: ";
             for(var i = 0; i < second_part.length; i++)
             {
@@ -290,12 +304,15 @@ function prettify_one_entry(entry)
             }
             result = result.substring(0, result.length - 2);
             break;
-        case 5:
+        case pages.spectrum:
             result += "Two Topics: ";
             result += second_part[0] + " and " + second_part[1];
             break;
-        case 6:
+        case pages.agg_single:
             result += "Aggregate: " + aggregate_data[second_part[1]]["agg_name"];
+            break;
+        case pages.agg_multiple:
+            result += "Aggregate Force Directed (" + second_part[0] + ")";
             break;
         default:
             result += "Error Page: ";
@@ -374,6 +391,21 @@ function generate_tooltip_html(topic_number, topic_name, percentage)
     text += "</div>";
     return text;
 }
+
+//the tooltip for each node in the aggregate correlate to the nodes view
+function generate_multiblog_tooltip(agg_num)
+{
+    var text = "<div>";
+
+    var entry = aggregate_data[agg_num];
+    text += entry["agg_type"];
+    text += ": ";
+    text += entry["agg_name"]; 
+
+    text += "</div>";
+    return text;
+}
+    
 
 //initialize mapping of topic names to index
 //by just assigning them in a row
@@ -722,6 +754,9 @@ function goTo(source, target, parameters, returning=false)
         case pages.agg_single:
             agg_singleCleanup();
             break;
+        case pages.agg_multiple:
+            agg_multipleCleanup();
+            break;
     }
 
     switch(target)
@@ -770,6 +805,10 @@ function goTo(source, target, parameters, returning=false)
             window.location.hash = '#a' + parameters;
             agg_singleMain(parameters);
             break;
+        case pages.agg_multiple:
+            window.location.hash = "#m" + parameters;
+            agg_multipleMain(parameters);
+            break;
     } 
 }
 
@@ -794,12 +833,6 @@ function handle_dropdown_click(element, source)
         call_stack.pop();
     }
     goTo(source, target[0], target[1], true);
-}
-
-//handles call stack updating when you use the fancy back button
-function handle_dropdown_agg_click(element, source)
-{
-    goTo(source, pages.agg_single, d3.select(element).attr("data-number"), false);
 }
 
 //add a back to corpus button

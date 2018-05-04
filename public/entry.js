@@ -172,6 +172,18 @@ function getData()
                                     parameters[1] = parseInt(parameters[1]);
                                     goTo(pages.corpus, pages.agg_single, parameters);
                                     break;
+
+                                case "m": //multi-aggregate (nodes 2, electric boogaloo)
+                                    var temp = hash.substring(1).split(","); 
+                                    var parameters = [temp[0]]; //should be format [type, [list of vals]] by the time we call goTo
+                                    var second = [];
+                                    for(var i = 1; i < temp.length; i++)
+                                    {
+                                        second.push(temp[i]);
+                                    }
+                                    parameters.push(second);
+                                    goTo(pages.corpus, pages.agg_multiple, parameters);
+                                    
                             }
                         }
                 });
@@ -179,7 +191,7 @@ function getData()
         });
         loaded_data = true;
     }
-    else
+    else //no hash = go to corpus
     {
         getTopicIndices(function(){constructCorpus()}); 
     }

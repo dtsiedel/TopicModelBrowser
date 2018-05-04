@@ -43,19 +43,6 @@ function compare_value(a,b)
     return (a.value < b.value) ? 1 : -1;
 }
 
-//a reverse index into the aggregate data
-function find_our_value(type, agg_name)
-{
-    for(var i = 0; i < aggregate_data.length; i++)
-    {
-        if(aggregate_data[i]["agg_type"] === type && aggregate_data[i]["agg_name"] === agg_name)
-        {
-            return i;
-        } 
-    }
-    return -1;
-}
-
 //passed to addCorpusLink
 function donut_agg_link(doc)
 {
@@ -68,7 +55,7 @@ function donut_agg_link(doc)
     d3.selectAll(".dropdown-element").on("click", function() 
     { 
         var type = d3.select(this).text();
-        goTo(pages.donut, pages.agg_single, [type, find_our_value(type, csv_data[doc][type])], false);
+        goTo(pages.donut, pages.agg_single, [type, get_aggregate(type, csv_data[doc][type])], false);
     });
 }
 

@@ -10,19 +10,19 @@ var size = d3.scale.pow().exponent(1)
   .range([8,24]);
 
 //main
-function nodesMain(parameters)
+function agg_multipleMain(parameters)
 {
-    setUpNodes(parameters);
+    setUpAgg_multiple(parameters);
 }
 
 //feels like this is duplicating what filter() is doing
 //but slightly differently
-function removeAggregates(entry)
+function removeAggregatesMulti(entry)
 {
     var result = [];
     for(x in entry)
     {
-        if(all_available_aggs.indexOf(x) < 0)
+        if(all_available_aggs.indexOf(x) < 0 && x !== "agg_type" && x !== "agg_name")
         {
             result.push(entry[x]);
         }
@@ -30,47 +30,45 @@ function removeAggregates(entry)
     return result;
 }
 
-//parses our csv hosted on server
-//also does all of the one-time setup and calls our constructNodes function the first time
-function setUpNodes(parameters)
+//also does all of the one-time setup and calls our constructAgg_multiple function the first time
+function setUpAgg_multiple(parameters)
 {
-    addCorpusLink(pages.nodes, null, null);
+    addCorpusLink(pages.agg_multiple, null, null);
 
-    documents = [];
-    var desired_documents = parameters;
-
-    for (var i = 0; i < desired_documents.length; i++) {
-        //isolate values (first value is doc num)
-        var curDoc = desired_documents[i];
-        var filtered_entry = removeAggregates(csv_data[curDoc]);
-
-        documents.push(filtered_entry);
-        documents[i] = Object.values(documents[i])
-    }
+    blogs = [];
+    var agg_type = parameters[0];
+    var desired_blogs = parameters[1];
     
-    calculateDistance(documents);
+    for (var i = 0; i < desired_blogs.length; i++) {
+        var curBlog = desired_blogs[i];
+        var filtered_entry = removeAggregatesMulti(aggregate_data[curBlog]);
+
+        blogs.push(filtered_entry);
+        blogs[i] = Object.values(blogs[i])
+    }
+
+    calculateDistanceMulti(blogs, agg_type);
 }
 
 
 //This needs to change to have the key be distance measures between each of the topics
-function calculateDistance(documents)
+function calculateDistanceMulti(blogs, agg_type)
 {
-    console.log(documents);
     results = [];
-    for(var i = 0; i < documents.length; i++) {
+    for(var i = 0; i < blogs.length; i++) {
       var current = [];
 
-      for(var j = i+1; j < documents.length; j++) {
-        current[j] = cosineDistance(documents[i], documents[j]);
+      for(var j = i+1; j < blogs.length; j++) {
+        current[j] = cosineDistance(blogs[i], blogs[j]);
       }
       results.push(current);
     }
 
-    constructNodes(defineLinks(results, documents), defineNodes(documents));
+    constructAgg_multiple(defineLinksMulti(results, blogs), defineNodesMulti(blogs), agg_type);
 }
 
 
-function defineLinks(results, documents) {
+function defineLinksMulti(results, blogs) {
   links = [];
   for(var i = 0; i < results.length; i++) {
     for(var j = i; j < results.length; j++) {
@@ -87,11 +85,11 @@ function defineLinks(results, documents) {
 
 }
 
-function defineNodes(documents) {
+function defineNodesMulti(blogs) {
   nodes = [];
-  for(var i = 0; i < documents.length; i++) {
+  for(var i = 0; i < blogs.length; i++) {
     var obj = new Object();
-    obj.id = documents[i][0];
+    obj.id = blogs[i][0];
     if(typeof obj.id === 'undefined'){
       continue;
     }
@@ -133,65 +131,62 @@ function cosineDistance(a, b) {
   return dot(a, b)/(magnitude(a) * magnitude(b));
 }
 
-
 //make node diagram
-function constructNodes(links, nodes){
-  var docs = [];
+function constructAgg_multiple(links, nodes, agg_type){
+  var blogs = [];
   for(var i = 0; i < nodes.length; i++)
   {
-    docs.push(nodes[i].id);
+    blogs.push(nodes[i].id-1);
   }
 
-  getDocumentData([docs], function()
-  {
-      var width = 800; //750;
-      var height = 500; //750;
+  var width = 800; //750;
+  var height = 500; //750;
 
-      var color = d3.scale.category20();
+  var color = d3.scale.category20();
 
-      var force = d3.layout.force()
-        .charge(-2000)
-        .linkDistance(80)
-        .size([width, height]);
+  var force = d3.layout.force()
+    .charge(-2000)
+    .linkDistance(80)
+    .size([width, height]);
 
-      var svg = d3.select("#chart-container").append("svg")
-        .attr("class", "nodes-svg")
-        .attr("width", width)
-        .attr("height", height);
+  var svg = d3.select("#chart-container").append("svg")
+    .attr("class", "nodes-svg")
+    .attr("width", width)
+    .attr("height", height);
 
-      
-      force.nodes(nodes)
-        .links(links)
-        .start();
 
-      var link = svg.selectAll(".link")
-        .data(links)
-        .enter().append("line")
-        .call(force.drag())
-        .attr("class", "link")
-        .style("stroke-width", function(d) {
-            return 1; 
-        });
+  force.nodes(nodes)
+    .links(links)
+    .start();
 
-      var node = svg.selectAll(".node")
-        .data(nodes)
-        .enter().append("g")
-        .attr("class", "node")
-        .call(force.drag)
-        .on("mouseover", function(d) {
-          //change edge width
-          link.style('stroke-width', function(l) {
-            return d === l.source || d === l.target ? 4 : .4; 
-          });
+  var link = svg.selectAll(".link")
+    .data(links)
+    .enter().append("line")
+    .call(force.drag())
+    .attr("class", "link")
+    .style("stroke-width", function(d) {
+        return 1; 
+    });
 
-        })
-        .on('mouseout', function() {
-          link.style('stroke-width', .4);
-          link.style('stroke', "white")
-        })
-        .on("click", function(d) {
-            goTo(pages.nodes, pages.donut, d.id)
-        });
+  var node = svg.selectAll(".node")
+    .data(nodes)
+    .enter().append("g")
+    .attr("class", "node")
+    .call(force.drag)
+    .on("mouseover", function(d) {
+      //change edge width
+      link.style('stroke-width', function(l) {
+        return d === l.source || d === l.target ? 4 : .4; 
+      });
+
+    })
+    .on('mouseout', function() {
+      link.style('stroke-width', .4);
+      link.style('stroke', "white")
+    })
+    .on("click", function(d) {
+        goTo(pages.agg_multiple, pages.agg_single, [agg_type,d.id-1])
+    });
 
     var pieRadius = 20; 
     function arcTween(d) {
@@ -218,10 +213,19 @@ function constructNodes(links, nodes){
 
     pies.each(function(d)
     {
-        var doc_n = d.id;
-        var chosenDocument = csv_data[doc_n];
-        filteredData = filter(chosenDocument);
-        
+        var blog_n = d.id-1; //should probably actually fix this instead of doing this. oh well
+        var chosenBlog = aggregate_data[blog_n];
+        var temp = filter(chosenBlog);
+
+        filteredData = [];
+        for(var i = 0; i < temp.length; i++)
+        {
+            if(temp[i]["index"] !== "~")
+            {
+                filteredData.push(temp[i]);
+            }
+        }
+       
         //only add to filtered data what is new (gross way of doing it... but nothing else is working...)
         for (var i = 0; i<filteredData.length; i ++){
           var isIn = false;
@@ -241,22 +245,20 @@ function constructNodes(links, nodes){
               }
             }  
         }
-        
-       
 
         var g = d3.select(this).selectAll(".arc")
             .data(pie(filteredData))
             .enter().append("g")
             .attr("class", "arc");
 
-        getDocumentData([doc_n,0], function()
+        getDocumentData([blog_n,0], function()
         {
             g.append("path")
                 .on("mouseover", function(){return tooltip.style("visibility", "visible");}) //bind tooltip to when mouse goes over arc
                 .on("mousemove", function(d){
                     var topic_text = d3.select(this).data()[0]["data"]["topic"];
                     var index = d3.select(this).data()[0]["data"]["index"];
-                    return tooltip.style("top", (event.pageY-10)+"px").style("left",(event.pageX+10)+"px").html(generate_document_tooltip(doc_n)).style("background-color", gray).style("color", "white");})
+                    return tooltip.style("top", (event.pageY-10)+"px").style("left",(event.pageX+10)+"px").html(generate_multiblog_tooltip(blog_n)).style("background-color", gray).style("color", "white");})
                 .on("mouseout", function(){return tooltip.style("visibility", "hidden");})
                 .style("fill", function(d,i) { return d.data.color; })
                 .transition().duration(5)
@@ -270,7 +272,6 @@ function constructNodes(links, nodes){
 		    
                 })
             make_clickable("path");
-    
         
         });
 
@@ -322,11 +323,10 @@ function constructNodes(links, nodes){
       });
 
         make_clickable("button");
-    });
 }
 
 //remove everything we added for nodes
-function nodesCleanup()
+function agg_multipleCleanup()
 {
     d3.select(".tooltip").style("visibility", "hidden");
     removeCorpusButton();
