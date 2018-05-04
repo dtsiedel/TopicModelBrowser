@@ -1,5 +1,4 @@
 (GENERAL)
--introduce other metadata (i.e. aggregate by blog, or anything else given)
 -back button should really be two buttons (one for arrow) instead of holding click
 -data pipeline
 -help button/page

@@ -34,7 +34,7 @@ function removeAggregates(entry)
 //also does all of the one-time setup and calls our constructNodes function the first time
 function setUpNodes(parameters)
 {
-    addCorpusLink(pages.nodes, null, null);
+    addCorpusLink(pages.nodes, nodes_agg_link, parameters);
 
     documents = [];
     var desired_documents = parameters;
@@ -51,11 +51,33 @@ function setUpNodes(parameters)
     calculateDistance(documents);
 }
 
+function nodes_agg_link(blogs)
+{
+    var back_x = $(".aggregate-button").offset().left + 3;
+    var back_y = $(".aggregate-button").offset().top + 20;
+    d3.select(".dropdown-agg").style("visibility","visible").style("top", back_y+"px").style("left",back_x+"px")
+    d3.select(".dropdown-agg").html(generate_dropdown_aggregate_html());
+    d3.selectAll(".dropdown-element").on("mouseover", function() { d3.select(this).style("background-color", "#72a6f9"); });
+    d3.selectAll(".dropdown-element").on("mouseout", function() { d3.select(this).style("background-color", "white"); });
+    d3.selectAll(".dropdown-element").on("click", function()
+    {
+        var targets = [];
+        var type = d3.select(this).text();
+        for(var i = 0; i < blogs.length; i++)
+        {
+            var entry = get_aggregate(type, csv_data[blogs[i]][type]);
+            if(entry !== -1 && targets.indexOf(entry) === -1)
+            {
+                targets.push(entry)
+            }
+        }
+        goTo(pages.nodes, pages.agg_multiple, [type, targets], false);
+    });
+}
 
 //This needs to change to have the key be distance measures between each of the topics
 function calculateDistance(documents)
 {
-    console.log(documents);
     results = [];
     for(var i = 0; i < documents.length; i++) {
       var current = [];
