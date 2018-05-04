@@ -70,12 +70,10 @@ function filter(topic_array)
     var total = 0; //total should add to one, need this to see total of "other"
     var count = 1;
     var not_topics = all_available_aggs;
-    not_topics.push("agg_type"); //also not valid topics
-    not_topics.push("agg_name");
 
     for(key in topic_array)
     {
-        if(not_topics.indexOf(key) >= 0) 
+        if(not_topics.concat("agg_type").concat("agg_name").indexOf(key) >= 0) 
         {
             continue;
         }
@@ -344,11 +342,11 @@ function generate_dropdown_html()
 function generate_dropdown_aggregate_html()
 {
     var result = "";
-    for(var i = 0; i < aggregate_data.length; i++)
+    for(var i = 0; i < all_available_aggs.length; i++)
     {
         result += "<div class='dropdown-element' data-number='" + i;
         result += "'>";
-        result += conditional_clip(aggregate_data[i]["Group.1"], 35);
+        result += conditional_clip(all_available_aggs[i], 35);
         result += "</div>";
     } 
     return result;
@@ -806,7 +804,8 @@ function handle_dropdown_agg_click(element, source)
 
 //add a back to corpus button
 //as well as our fancy new back selector
-function addCorpusLink(source)
+//and, if *func* is not null, add an aggregate button that links to appropriate aggregate
+function addCorpusLink(source, func, params)
 {
     var pressTimer;
     var agg_timer;
@@ -840,22 +839,19 @@ function addCorpusLink(source)
         },500);
     }));
 
-    d3.select("#header").append("button").attr("class", "aggregate-button").html("See aggregates ▼").on("mouseup", function() 
+    if(func !== null)
     {
-           clearTimeout(agg_timer); 
-    }).on("mousedown", function() 
-    {
-        agg_timer = window.setTimeout(function() 
+        d3.select("#header").append("button").attr("class", "aggregate-button").html("Group By ▼").on("mouseup", function() 
         {
-            var back_x = $(".aggregate-button").offset().left + 3;
-            var back_y = $(".aggregate-button").offset().top + 20;
-            d3.select(".dropdown-agg").style("visibility","visible").style("top", back_y+"px").style("left",back_x+"px")
-            d3.select(".dropdown-agg").html(generate_dropdown_aggregate_html());
-            d3.selectAll(".dropdown-element").on("mouseover", function() { d3.select(this).style("background-color", "#72a6f9"); });
-            d3.selectAll(".dropdown-element").on("mouseout", function() { d3.select(this).style("background-color", "white"); });
-            d3.selectAll(".dropdown-element").on("click", function() { handle_dropdown_agg_click(this, source); });
-        },500); 
-    });
+               clearTimeout(agg_timer); 
+        }).on("mousedown", function() 
+        {
+            agg_timer = window.setTimeout(function() 
+            {
+                func(params);
+            },500); 
+        });
+    }
 
     window.onclick = function(event) 
     {
@@ -863,9 +859,12 @@ function addCorpusLink(source)
         {
             d3.select(".dropdown-back").style("visibility","hidden"); 
         }
-        if(!event.target.matches(".aggregate-button"))
+        if(func !== null) 
         {
-            d3.select(".dropdown-agg").style("visibility","hidden"); 
+            if(!event.target.matches(".aggregate-button"))
+            {
+                d3.select(".dropdown-agg").style("visibility","hidden"); 
+            }
         }
     }
 }

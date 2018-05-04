@@ -182,7 +182,7 @@ function define_topicname_from_url(topic, page_n, page_max)
 //also does all of the one-time setup and calls our construct function the first time
 function setUpTopic(parameters, page)
 {
-    addCorpusLink(pages.topic);
+    addCorpusLink(pages.topic, null, null);
     addNavButtons(parameters, page);
     define_topicname_from_url(parameters, page, maxPage(parameters));
     constructTopic(parameters, per_page, page);

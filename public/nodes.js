@@ -34,7 +34,7 @@ function removeAggregates(entry)
 //also does all of the one-time setup and calls our constructNodes function the first time
 function setUpNodes(parameters)
 {
-    addCorpusLink(pages.nodes);
+    addCorpusLink(pages.nodes, null, null);
 
     documents = [];
     var desired_documents = parameters;

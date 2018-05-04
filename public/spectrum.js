@@ -29,7 +29,7 @@ function setUpSpectrum(parameters)
         .append("g")
         .attr("transform", "translate(" + ((width/4)) + "," + ((height/2)+margin.top) + ")");
 
-    addCorpusLink(pages.spectrum);
+    addCorpusLink(pages.spectrum, null, null);
 
     constructSpectrum(parameters[0], parameters[1]);
 }

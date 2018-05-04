@@ -23,7 +23,7 @@ function setUpDonut(doc)
     height = width - margin.top - margin.bottom - 500;
     radius = Math.min(width, height) / 2.5;
 
-    addCorpusLink(pages.donut);
+    addCorpusLink(pages.donut, donut_agg_link, doc);
 
     // add the canvas to the DOM 
     chart = d3.select("#chart-container")
@@ -37,13 +37,40 @@ function setUpDonut(doc)
     constructDonut(doc);
 }
 
-
 //comparison function to use when sorting our topics
 function compare_value(a,b)
 {
     return (a.value < b.value) ? 1 : -1;
 }
 
+//a reverse index into the aggregate data
+function find_our_value(type, agg_name)
+{
+    for(var i = 0; i < aggregate_data.length; i++)
+    {
+        if(aggregate_data[i]["agg_type"] === type && aggregate_data[i]["agg_name"] === agg_name)
+        {
+            return i;
+        } 
+    }
+    return -1;
+}
+
+//passed to addCorpusLink
+function donut_agg_link(doc)
+{
+    var back_x = $(".aggregate-button").offset().left + 3;
+    var back_y = $(".aggregate-button").offset().top + 20;
+    d3.select(".dropdown-agg").style("visibility","visible").style("top", back_y+"px").style("left",back_x+"px")
+    d3.select(".dropdown-agg").html(generate_dropdown_aggregate_html());
+    d3.selectAll(".dropdown-element").on("mouseover", function() { d3.select(this).style("background-color", "#72a6f9"); });
+    d3.selectAll(".dropdown-element").on("mouseout", function() { d3.select(this).style("background-color", "white"); });
+    d3.selectAll(".dropdown-element").on("click", function() 
+    { 
+        var type = d3.select(this).text();
+        goTo(pages.donut, pages.agg_single, [type, find_our_value(type, csv_data[doc][type])], false);
+    });
+}
 
 //main work of making donut chart
 function constructDonut(n)

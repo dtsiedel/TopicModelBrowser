@@ -21,7 +21,7 @@ function constructBars(d1, d2)
         .attr("stroke", gray)
         .attr("stroke-width", "0.5");
 
-    addCorpusLink(pages.bars);
+    addCorpusLink(pages.bars, null, null);
 
     var filtered_1 = filter(csv_data[d1]);
     var filtered_2 = filter(csv_data[d2]);
