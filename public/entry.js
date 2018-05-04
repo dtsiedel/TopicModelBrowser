@@ -62,14 +62,17 @@ function getData()
         d3.select("#chart-container").append("div").attr("class", "loader");
         d3.select("#chart-container").append("div").attr("class", "load-text").html("<br/>Loading Data...");
         d3.select(".loader").style("border-top", "16px solid " + randomColor()); 
-        getTopicIndices(function()
+        d3.csv("/agg_data.csv", function(agg_error, agg_response) //need to do this first so you know what to exclude from topics
         {
             d3.select(".loader").style("border-top", "16px solid " + randomColor()); 
-            d3.csv("/topic_frame.csv", function(error, response) 
+            getTopicIndices(function()
             {
-                d3.csv("/aggdata_blog.csv", function(agg_error, agg_response)
+                d3.select(".loader").style("border-top", "16px solid " + randomColor()); 
+                d3.csv("/topic_frame.csv", function(error, response) 
                 {
                     aggregate_data = agg_response;
+                    all_available_aggs = build_aggregate_tables(aggregate_data);  
+
                     d3.select(".loader").style("border-top", "16px solid " + randomColor()); 
                     //get_document_full_texts(function()
                     //{
@@ -89,8 +92,8 @@ function getData()
                             var page = hash.charAt(0);
                             switch(page){
                                 case "d": //donut
-                                    current_params = hash.substr(1);
-                                    goTo(pages.corpus, pages.donut, current_params);
+                                    var parameters = hash.substr(1);
+                                    goTo(pages.corpus, pages.donut, parameters);
                                     break;
 
                                 case "t": //topic
@@ -165,8 +168,9 @@ function getData()
                                     break;
 
                                 case "a": //single aggregate
-                                    current_params = hash.substr(1);
-                                    goTo(pages.corpus, pages.agg_single, current_params);
+                                    var parameters = hash.substring(1).split(",");
+                                    parameters[1] = parseInt(parameters[1]);
+                                    goTo(pages.corpus, pages.agg_single, parameters);
                                     break;
                             }
                         }

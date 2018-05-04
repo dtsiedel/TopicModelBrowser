@@ -15,6 +15,21 @@ function nodesMain(parameters)
     setUpNodes(parameters);
 }
 
+//feels like this is duplicating what filter() is doing
+//but slightly differently
+function removeAggregates(entry)
+{
+    var result = [];
+    for(x in entry)
+    {
+        if(all_available_aggs.indexOf(x) < 0)
+        {
+            result.push(entry[x]);
+        }
+    }
+    return result;
+}
+
 //parses our csv hosted on server
 //also does all of the one-time setup and calls our constructNodes function the first time
 function setUpNodes(parameters)
@@ -26,9 +41,12 @@ function setUpNodes(parameters)
 
     for (var i = 0; i < desired_documents.length; i++) {
         //isolate values (first value is doc num)
-        var curDoc = (desired_documents[i]);
-        
-        documents.push(Object.values(csv_data[curDoc]));
+        var curDoc = desired_documents[i];
+        var docArray = csv_data[curDoc];
+
+        var filtered_entry = removeAggregates(csv_data[curDoc]);
+
+        documents.push(filtered_entry);
         documents[i] = Object.values(documents[i])
     }
     

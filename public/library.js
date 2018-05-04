@@ -39,6 +39,7 @@ var call_stack = [];
 var current_params = [];
 var dropdown;
 var dropdown_agg;
+var all_available_aggs = [];
 
 document.addEventListener("DOMContentLoaded", function(e) {
     console.log("loaded libary");
@@ -68,19 +69,24 @@ function filter(topic_array)
     var filtered = [];
     var total = 0; //total should add to one, need this to see total of "other"
     var count = 1;
-    
-    var not_topics = [0, "", "Group.1", "X", "link", "blog_domain"];
+    var not_topics = all_available_aggs;
+    not_topics.push("agg_type"); //also not valid topics
+    not_topics.push("agg_name");
 
     for(key in topic_array)
     {
-        if(not_topics.indexOf(key) > 0) //TODO: bit of a hack, needs to be sorted out for other metadata
+        if(not_topics.indexOf(key) >= 0) 
         {
-            continue
+            continue;
+        }
+        if(key === 0 || key === "") //"bad" topic names (used for other things). Just skip
+        {
+            continue;   
         }
         if(topic_array[key] < threshold)
         {
             count++; //still increment count since we want absolute index in csv, not just in this list
-            continue
+            continue;
         }
         var val = topic_array[key];
         var newEntry = {};
@@ -99,6 +105,23 @@ function filter(topic_array)
     other["color"] = gray;
     filtered.push(other);
     return filtered;
+}
+
+//take in the agg_data csv and make it usable to our application
+function build_aggregate_tables(aggregate_data)
+{
+    var result = [];
+
+    for(var i = 0; i < aggregate_data.length; i++)
+    {
+        var current = aggregate_data[i];
+        if(result.indexOf(current["agg_type"]) === -1) //get all unique aggregate names
+        {
+            result.push(current["agg_type"]);
+        }
+    }
+
+    return result;
 }
 
 //probably not necessary anymore
@@ -274,7 +297,7 @@ function prettify_one_entry(entry)
             result += second_part[0] + " and " + second_part[1];
             break;
         case 6:
-            result += "Aggregate: " + aggregate_data[second_part]["Group.1"];
+            result += "Aggregate: " + aggregate_data[second_part[1]]["agg_name"];
             break;
         default:
             result += "Error Page: ";

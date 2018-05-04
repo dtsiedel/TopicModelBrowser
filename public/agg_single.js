@@ -1,8 +1,3 @@
-
-
-//TODO: new topic model does not have the same topics
-
-
 var gray = "#7d8084";
 var arc_delay = 250;
 var margin;
@@ -59,8 +54,11 @@ Array.prototype.filter = function(callback) {
 };
 
 //main work of making donut chart
-function constructagg_single(n)
+function constructagg_single(arr)
 {
+    var type = arr[2];
+    var n = arr[1];
+   
     var chosenAgg = aggregate_data[n];
     var filteredData = filter(chosenAgg);
 
@@ -151,7 +149,7 @@ function constructagg_single(n)
         .attr("y", -200)
         .style("font-size", "35px")
         .style("fill", "white")
-        .text(aggregate_data[n]["Group.1"]) 
+        .text(aggregate_data[n]["agg_name"]);
 
     make_clickable("path");
     make_clickable(".arc_text");
