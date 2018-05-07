@@ -215,16 +215,7 @@ function constructAgg_multiple(links, nodes, agg_type){
     {
         var blog_n = d.id-1; //should probably actually fix this instead of doing this. oh well
         var chosenBlog = aggregate_data[blog_n];
-        var temp = filter(chosenBlog);
-
-        filteredData = [];
-        for(var i = 0; i < temp.length; i++)
-        {
-            if(temp[i]["index"] !== "~")
-            {
-                filteredData.push(temp[i]);
-            }
-        }
+        var filteredData = filter(chosenBlog, agg_topic_threshold);
        
         //only add to filtered data what is new (gross way of doing it... but nothing else is working...)
         for (var i = 0; i<filteredData.length; i ++){

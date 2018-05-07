@@ -1,6 +1,7 @@
 //Includes functions used by multiple views, to avoid duplication
 
-var threshold = 0.05; //how high must a topic be to be included?
+var topic_threshold = 0.05; //how high must a topic be to be included?
+var agg_topic_threshold = 0.03; //''                                 '' for agg
 var corpus_threshold = 750; //how many documents must be shared for the link to be in the corpus view?
 var chord_threshold = 500; //how many related docs should be shown in info box per chord?
 var cosineThreshold = 0.85; //threshold for force-directed graph for multiple documents
@@ -64,7 +65,7 @@ function randomTopic()
 }
 
 //filter out topics that are less than thresh or invalid
-function filter(topic_array)
+function filter(topic_array, thresh)
 {
     var filtered = [];
     var total = 0; //total should add to one, need this to see total of "other"
@@ -81,7 +82,7 @@ function filter(topic_array)
         {
             continue;   
         }
-        if(topic_array[key] < threshold)
+        if(topic_array[key] < thresh)
         {
             count++; //still increment count since we want absolute index in csv, not just in this list
             continue;

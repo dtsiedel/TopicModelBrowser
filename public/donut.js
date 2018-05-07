@@ -63,7 +63,7 @@ function donut_agg_link(doc)
 function constructDonut(n)
 {
     var chosenDocument = csv_data[n];
-    var filteredData = filter(chosenDocument);
+    var filteredData = filter(chosenDocument,topic_threshold);
 
     function arcTween(d) {
         arc = d3.svg.arc().outerRadius(radius*1.1).innerRadius(radius-50).cornerRadius(5);

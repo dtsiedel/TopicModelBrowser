@@ -242,7 +242,7 @@ function constructNodes(links, nodes){
     {
         var doc_n = d.id;
         var chosenDocument = csv_data[doc_n];
-        filteredData = filter(chosenDocument);
+        filteredData = filter(chosenDocument,topic_threshold);
         
         //only add to filtered data what is new (gross way of doing it... but nothing else is working...)
         for (var i = 0; i<filteredData.length; i ++){

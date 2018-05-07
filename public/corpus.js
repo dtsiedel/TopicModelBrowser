@@ -24,7 +24,7 @@ function processData(csv)
         for(key in current)
         {
             var t_num = topic_indices[key];
-            if(key.length !== 0 && current[key] > threshold)
+            if(key.length !== 0 && current[key] > topic_threshold)
             {
                 if(!(t_num in result))
                 {

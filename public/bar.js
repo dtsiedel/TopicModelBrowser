@@ -23,8 +23,8 @@ function constructBars(d1, d2)
 
     addCorpusLink(pages.bars, null, null);
 
-    var filtered_1 = filter(csv_data[d1]);
-    var filtered_2 = filter(csv_data[d2]);
+    var filtered_1 = filter(csv_data[d1],topic_threshold);
+    var filtered_2 = filter(csv_data[d2],topic_threshold);
 
     done = false;
     getDocumentData([d1,d2], function()

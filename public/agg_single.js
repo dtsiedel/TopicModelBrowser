@@ -60,9 +60,7 @@ function constructagg_single(arr)
     var n = arr[1];
    
     var chosenAgg = aggregate_data[n];
-    var filteredData = filter(chosenAgg);
-
-    filteredData.filter(function(d,i) { return d.index === "~"; }); //no need for other here
+    var filteredData = filter(chosenAgg,agg_topic_threshold);
 
     function arcTween(d) {
         arc = d3.svg.arc().outerRadius(radius*1.1).innerRadius(radius-50).cornerRadius(5);
