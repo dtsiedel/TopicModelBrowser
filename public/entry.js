@@ -207,3 +207,10 @@ function main(parameters)
 document.addEventListener("DOMContentLoaded", function(e) {
     main();
 });
+
+window.addEventListener( "pageshow", function ( event ) {
+    if(!!window.performance && window.performance.navigation.type == 2)
+    {
+        window.location.reload();
+    }
+  });

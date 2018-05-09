@@ -204,6 +204,7 @@ function set_topic_selector_handlers()
 //mode = "simple" or "regular"
 function constructCorpus()
 {
+    document.title = "Corpus Overview";
     //var processed = processData(csv);   //don't do this anymore, since it is done offline
 
     var matrix = ribbon_counts; 
@@ -714,6 +715,14 @@ function corpusCleanup()
     d3.select("#corpus-svg").remove();
     d3.select(".sidebar").remove();
 }
+
+
+window.addEventListener( "pageshow", function ( event ) {
+    if(!!window.performance && window.performance.navigation.type == 2)
+    {
+        window.location.reload();
+    }
+  });
 
 
 

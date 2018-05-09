@@ -9,6 +9,7 @@ function setUpBars(parameters)
 //direct comparison of two documents by their topic makeup
 function constructBars(d1, d2)
 {
+    document.title = "Documents " + d1 + " & " + d2;
     width = 600;
     height = 560;
 

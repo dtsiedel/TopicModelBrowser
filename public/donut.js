@@ -62,6 +62,7 @@ function donut_agg_link(doc)
 //main work of making donut chart
 function constructDonut(n)
 {
+    document.title = "Document " + n;
     var chosenDocument = csv_data[n];
     var filteredData = filter(chosenDocument,topic_threshold);
 

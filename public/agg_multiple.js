@@ -152,7 +152,11 @@ function constructAgg_multiple(links, nodes, agg_type){
   var svg = d3.select("#chart-container").append("svg")
     .attr("class", "nodes-svg")
     .attr("width", width)
-    .attr("height", height);
+    .attr("height", height)
+    .call(d3.behavior.zoom().on("zoom", function () {
+          svg.attr("transform", "translate(" + d3.event.translate + ")" + " scale(" + d3.event.scale + ")")
+    }))
+    .append("g");
 
 
   force.nodes(nodes)
@@ -288,7 +292,8 @@ function constructAgg_multiple(links, nodes, agg_type){
     
       node 
           .attr("cx", function(d) {
-          return d.x = Math.max(radius, Math.min(width - radius, d.x)); 
+          //return d.x = Math.max(radius, Math.min(width - radius, d.x)); 
+            return d.y;
           })
           .attr("cy", function(d) { 
             return d.y; 

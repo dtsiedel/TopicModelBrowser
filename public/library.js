@@ -772,7 +772,7 @@ function goTo(source, target, parameters, returning=false)
             break;
         case pages.topic:
             //add the topic number and the page number (always will be 1 here when entering from another page)
-            window.location.hash = '#t' + parameters[0] + '#p' + '1';
+            window.location.hash = '#t' + parameters[0] + '&p' + '1';
             topicMain(parameters);
             break;
         case pages.bars:
@@ -947,3 +947,4 @@ function make_nonclickable(selector)
 {
     d3.selectAll(selector).classed("clickable", false);
 } 
+

@@ -37,6 +37,7 @@ function setUpSpectrum(parameters)
 //make the spectrum view, including the two sides and the inner words
 function constructSpectrum(t1, t2)
 {
+    document.title = "Topics " + t1 + " & " + t2;
     var color_scale = d3.interpolateRgb(colors[t1], colors[t2]);
     var shared = ribbon_data[t1][t2];
 
