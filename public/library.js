@@ -41,6 +41,7 @@ var current_params = [];
 var dropdown;
 var dropdown_agg;
 var all_available_aggs = [];
+var node_hidden_duration = 600;
 
 document.addEventListener("DOMContentLoaded", function(e) {
     console.log("loaded libary");

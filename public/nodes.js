@@ -303,23 +303,17 @@ function constructNodes(links, nodes){
 
     });
 
-    var count = 0;
-    var count_threshold = 50;
-    var counting = true;
 
-    force.on("tick", function() {
-        if((count < count_threshold) && counting)
-        {
-            d3.selectAll(".nodes-pie").style("opacity", 0);
-            d3.selectAll(".link").style("opacity", 0);
-        }
-        else
-        {
+    //hide nodes for a few ms to prevent jangling
+    d3.selectAll(".nodes-pie").style("opacity", 0);
+    d3.selectAll(".link").style("opacity", 0);
+
+    setTimeout(function() { 
             d3.selectAll(".nodes-pie").style("opacity", 1);
             d3.selectAll(".link").style("opacity", 1);
-            counting = false;
-        }
-    
+    }, node_hidden_duration);
+
+    force.on("tick", function() {
       node 
           .attr("cx", function(d) {
               return d.y;
@@ -340,10 +334,6 @@ function constructNodes(links, nodes){
             return d.target.y;
           });
           
-        if(counting)
-        {
-            count++;
-        }
         d3.selectAll(".nodes-pie").attr("transform", function(d){ return "translate(" + d.x + "," + d.y + ")"});
       });
 
